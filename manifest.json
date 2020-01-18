@@ -1,0 +1,20 @@
+{
+  "name": "Action Reader",
+  "description": "Complete Reader",
+  "version": "0.1",
+  "author": "Jan H Croonen",
+  "permissions": [
+    "tabs", "storage"
+  ],
+  "icons": {
+    "128": "images/reader white.png"
+  },
+  "background": {
+    "scripts": ["background.js", "host.js"]
+  },
+  "browser_action": {
+    "default_icon": "images/reader white.png",
+    "default_title": "Reader"
+  },
+  "manifest_version": 2
+}
