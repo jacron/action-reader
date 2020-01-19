@@ -83,8 +83,9 @@ function show(s, host, tabId) {
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
     if (req.result) {
+        const hostName = document.getElementById('host-name');
         console.log(req.result);
-        // fillForm(req.result);
+        hostName.innerText = req.host;
         show(req.result, req.host);
     } else {
         sendResponse('no request handled');
@@ -102,9 +103,6 @@ function processJcReader(host, tabId) {
 }
 
 function initJcReader() {
-    const reader = document.getElementById('reader');
-    const hostName = document.getElementById('host-name');
-    reader.innerText = 'Reader';
     chrome.runtime.sendMessage({
         request: 'getInitial'
     },
@@ -112,16 +110,6 @@ function initJcReader() {
             console.log(response);
             processJcReader(response.host, response.tabId);
         });
-    // chrome.tabs.query({
-    //     active: true,
-    //     lastFocusedWindow: true
-    // }, function(tabs) {
-    //     const url = tabs[0].url;
-    //     const tabId = tabs[0].id;
-    //     const host = getJcReaderHost(url);
-    //     hostName.innerText = host;
-    //     processJcReader(host, tabId);
-    // });
 }
 
 function dumpStorage() {

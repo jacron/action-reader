@@ -32,7 +32,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
                 sendResponse({data: storeHost(req.host)});
                 break;
             case 'getInitial':
-                sendResponse({host, tabId})
+                sendResponse({host, tabId});
                 break;
             default:
                 sendResponse('invalid request:' + req.request);
@@ -47,6 +47,7 @@ let activeUrl;
 let tTabId;
 
 let tabId;
+let winId = null;
 let host;
 
 function openView() {
@@ -54,8 +55,10 @@ function openView() {
         url: 'popup.html',
         type: 'popup',
         width: 400,
-        height: 400
+        height: 400,
+        top: 20,
     }, win => {
+        winId = win.id;
         tTabId = win.tabs[0].id;
         // chrome.tabs.executeScript(win.tabs[0].id, {
         //     file: 'reader.js'
@@ -64,14 +67,33 @@ function openView() {
     })
 }
 
+chrome.windows.onRemoved.addListener(windowId => {
+    if (windowId === winId) {
+        winId = null;
+        console.log('the popup closed');
+    }
+});
+
+chrome.windows.onFocusChanged.addListener(windowId => {
+    if (winId !== null && windowId !== winId) {
+        console.log('the popup lost focus');
+    }
+});
+
 chrome.browserAction.onClicked.addListener(function() {
-    chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true
-    }, function(tabs) {
-        activeUrl = tabs[0].url;
-        tabId = tabs[0].id;
-        host = getJcReaderHost(activeUrl);
-        openView();
-    });
+    if (winId === null) {  /** prevent multiple popups */
+        chrome.tabs.query({
+            active: true,
+            lastFocusedWindow: true
+        }, function (tabs) {
+            activeUrl = tabs[0].url;
+            tabId = tabs[0].id;
+            host = getJcReaderHost(activeUrl);
+            openView();
+        });
+    } else {
+        chrome.windows.update(winId, {
+            focused: true
+        });
+    }
 });
