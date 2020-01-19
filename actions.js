@@ -54,6 +54,9 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
             case 'applyCss':
                 sendResponse({data: applyCss(req.css)});
                 break;
+            case 'removeCss':
+                sendResponse({data: removeCss()});
+                break;
             case 'closePopup':
                 chrome.windows.remove(winId);
                 winId = null;

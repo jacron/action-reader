@@ -1,4 +1,7 @@
 function getJcReaderHost(url) {
+    if (!url) {
+        return url;
+    }
     url = url.replace(/http[s]?:\/\//, '');
     const host = url.split('/')[0];
     return host.replace('www.', '');
@@ -45,9 +48,47 @@ chrome.windows.onRemoved.addListener(windowId => {
 //     color: red !important;
 // }
 // `;
-function injectCss(code) {
-    chrome.tabs.insertCSS(tabId, {code}, () => {});
+function injectCss(css) {
+    console.log('css', css);
+    const injectcode = `
+    console.log(document.title);
+    const css = \`${css}\`;
+    const style = document.createElement('style');
+    style.id = 'injectedstyle';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);    
+    `;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+    // chrome.tabs.insertCSS(tabId, {code}, () => {});
 }
+
+function removeCss() {
+    const injectcode = `
+    document.head.removeChild(document.getElementById('injectedstyle'));    
+    `;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+}
+
+// chrome.tabs.onUpdated.addListener((_tabId, info) => {
+//     tabId = _tabId;
+//     if (tabId === tTabId) {
+//         return;
+//     }
+//     if (info.status === 'loading') {
+//         console.log('loading url', info.url);
+//         activeUrl = info.url;
+//         activeHost = getJcReaderHost(activeUrl);
+//         console.log('activeHost', activeHost);
+//         if (activeHost) {
+//             fetchHost(activeHost).then(data => {
+//                 if (data) {
+//                     console.log(data.css);
+//                     injectCss(data.css);
+//                 }
+//             })
+//         }
+//     }
+// });
 
 chrome.browserAction.onClicked.addListener(function() {
     if (winId === null) {  /** prevent multiple popups */
@@ -55,12 +96,11 @@ chrome.browserAction.onClicked.addListener(function() {
             active: true,
             lastFocusedWindow: true
         }, function (tabs) {
+            console.log('active tab', tabs[0]);
+            // chrome.windows.get(tabs[0].windowId, win=> console.log(win));
             activeUrl = tabs[0].url;
             tabId = tabs[0].id;
             activeHost = getJcReaderHost(activeUrl);
-            console.log('activeHost', activeHost);
-            // injectScript();
-            // injectCss();
             openView();
         });
     } else {

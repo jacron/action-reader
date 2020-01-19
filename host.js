@@ -8,7 +8,6 @@ class Host {
     css = '';
 
     store() {
-        console.log('host', this);
         StorageArea.set({[this.name]: {
             selector: this.selector,
             css: this.css

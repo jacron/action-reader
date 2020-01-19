@@ -43,7 +43,7 @@ button {
 #css-editor,
 #selector-editor {
   /*position: absolute;*/
-  width: 400px;
+  /*width: 400px;*/
   height: 100px;
   border: 1px solid gray;
   background-color: #eeeeee;

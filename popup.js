@@ -8,7 +8,10 @@ function postNew() {
     sendMessage({
         request: 'storeHost',
         host: activeHost
-    }, () => toggleForms(true));
+    }, () => {
+        initEditors('');
+        toggleForms(true);
+    });
 }
 
 function setNewReaderActions() {
@@ -20,8 +23,8 @@ function setNewReaderActions() {
         () => postNew());
 }
 
-function deleteReader(host) {
-    if (confirm(`'${host}' verwijderen?`)) {
+function deleteReader() {
+    if (confirm(`'${activeHost}' verwijderen?`)) {
         sendMessage({request: 'delete', host: activeHost },
             () => toggleForms(false));
     }
@@ -40,24 +43,43 @@ function save() {
 
 function apply() {
     const value = window.cssEditor.getValue();
-    // console.log(value);
     sendMessage({
             request: 'applyCss',
             css: value,
-            host: activeHost,
         },
         response => {console.log(response)});
 }
 
+function resetReader() {
+    // const value = window.cssEditor.getValue();
+    console.log('reset');
+    sendMessage({
+        request: 'removeCss',
+    }, response => {});
+}
+
 function setReaderActions() {
-    document.getElementById('reader-save').addEventListener('click',
-        () => {save()
-    });
-    document.getElementById('reader-apply').addEventListener('click',
-        () => {apply()
-        });
-    document.getElementById('reader-delete').addEventListener('click',
-        () => deleteReader(activeHost));
+    const clickBindings = [
+        ['reader-save', save],
+        ['reader-apply', apply],
+        ['reader-delete', deleteReader],
+        ['reader-reset', resetReader],
+    ];
+    for (const binding of clickBindings) {
+        const [id, fun] = binding;
+        document.getElementById(id).addEventListener(
+            'click', () => fun());
+    }
+    // document.getElementById('reader-save').addEventListener('click',
+    //     () => {save()
+    // });
+    // document.getElementById('reader-apply').addEventListener('click',
+    //     () => {apply()
+    //     });
+    // document.getElementById('reader-delete').addEventListener('click',
+    //     () => deleteReader());
+    // document.getElementById('reader-reset').addEventListener('click',
+    //     () => resetReader())
 }
 
 function toggleForms(hostExists) {
@@ -78,7 +100,7 @@ function show(s) {
     toggleForms(hostExists);
     if (hostExists) {
         // console.log(s.css);
-        initEditors(s);
+        initEditors(s.css);
     }
 }
 
@@ -105,7 +127,7 @@ function initJcReader() {
         request: 'getInitial'
     },
         response => {
-            // console.log('initial data', response);
+            console.log('initial data', response);
             activeHost = response.activeHost;
             // console.log('activeHost', activeHost);
             sendMessage({
@@ -126,18 +148,15 @@ function createScript(src) {
     return script;
 }
 
-function initEditors(s) {
+function initEditors(css) {
     const cssEditor = document.getElementById('css-editor');
-    const demoValue = [
-        'body {',
-        '\tcolor: red !important;',
-        '}'
-    ].join('\n');
     require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
     require(['vs/editor/editor.main'], () => {
         window.cssEditor = monaco.editor.create(cssEditor, {
-            value: s.css,
-            language: 'css'
+            value: css,
+            language: 'css',
+            lineNumbers: false,
+            theme: 'vs-dark',
         });
     });
 }
