@@ -48,14 +48,12 @@ chrome.windows.onRemoved.addListener(windowId => {
 //     color: red !important;
 // }
 // `;
-function injectCss(css) {
-    console.log('css', css);
+function injectCss(css, tabId) {
+    // console.log('css', css);
     const injectcode = `
-    console.log(document.title);
-    const css = \`${css}\`;
-    const style = document.createElement('style');
+    style = document.createElement('style');
     style.id = 'injectedstyle';
-    style.appendChild(document.createTextNode(css));
+    style.appendChild(document.createTextNode(\`${css}\`));
     document.head.appendChild(style);    
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
@@ -69,26 +67,25 @@ function removeCss() {
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
-// chrome.tabs.onUpdated.addListener((_tabId, info) => {
-//     tabId = _tabId;
-//     if (tabId === tTabId) {
-//         return;
-//     }
-//     if (info.status === 'loading') {
-//         console.log('loading url', info.url);
-//         activeUrl = info.url;
-//         activeHost = getJcReaderHost(activeUrl);
-//         console.log('activeHost', activeHost);
-//         if (activeHost) {
-//             fetchHost(activeHost).then(data => {
-//                 if (data) {
-//                     console.log(data.css);
-//                     injectCss(data.css);
-//                 }
-//             })
-//         }
-//     }
-// });
+chrome.tabs.onUpdated.addListener((_tabId, info) => {
+    // tabId = _tabId;
+    // if (_tabId === tTabId) {
+    //     return;
+    // }
+    /** do not use the globals tabId and activeHost here */
+    if (info.status === 'loading') {
+        console.log('loading url', info.url);
+        const _activeHost = getJcReaderHost(info.url);
+        if (_activeHost) {
+            fetchHost(_activeHost).then(data => {
+                if (data) {
+                    console.log(data.css);
+                    injectCss(data.css, _tabId);
+                }
+            })
+        }
+    }
+});
 
 chrome.browserAction.onClicked.addListener(function() {
     if (winId === null) {  /** prevent multiple popups */
@@ -96,7 +93,7 @@ chrome.browserAction.onClicked.addListener(function() {
             active: true,
             lastFocusedWindow: true
         }, function (tabs) {
-            console.log('active tab', tabs[0]);
+            // console.log('active tab', tabs[0]);
             // chrome.windows.get(tabs[0].windowId, win=> console.log(win));
             activeUrl = tabs[0].url;
             tabId = tabs[0].id;

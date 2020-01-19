@@ -14,12 +14,12 @@ function storeHost(name) {
 }
 
 function applyCss(css) {
-    injectCss(css);
+    injectCss(css, tabId);
 }
 
 function saveCss(css) {
     // console.log(css);
-    injectCss(css);
+    injectCss(css, tabId);
     const host = new Host(activeHost);
     host.setCss(css);
     host.store();
@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         switch(req.request) {
             case 'fetchHost':
                 fetchHost(req.host).then(response => {
-                    console.log('fetched activeHost', response);
+                    // console.log('fetched activeHost', response);
                     chrome.runtime.sendMessage({
                         host: req.host,
                         result: response || {}
