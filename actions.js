@@ -14,13 +14,22 @@ function storeHost(name) {
 }
 
 function applyCss(css) {
-    console.log(css);
     injectCss(css);
-    // const style = document.createElement('style');
-    // style.appendChild(document.createTextNode(css));
+}
+
+function saveCss(css) {
+    // console.log(css);
+    injectCss(css);
+    const host = new Host(activeHost);
+    host.setCss(css);
+    host.store();
 }
 
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
+    // const bindings = [
+    //     ['fetchHost', ],
+    // ];
+    // const {host, css} = req;
     if (req.request) {
         switch(req.request) {
             case 'fetchHost':
@@ -37,7 +46,10 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
                 sendResponse({data: storeHost(req.host)});
                 break;
             case 'getInitial':
-                sendResponse({host, tabId});
+                sendResponse({activeHost});
+                break;
+            case 'saveCss':
+                sendResponse({data: saveCss(req.css)});
                 break;
             case 'applyCss':
                 sendResponse({data: applyCss(req.css)});

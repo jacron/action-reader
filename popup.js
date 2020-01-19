@@ -28,15 +28,19 @@ function deleteReader(host) {
 }
 
 function save() {
-    // const cssEditor = document.getElementById('css-editor');
+    const value = window.cssEditor.getValue();
     sendMessage({request: 'save', host: activeHost}, () => {});
+    sendMessage({
+            request: 'saveCss',
+            css: value,
+            host: activeHost,
+        },
+        response => {console.log(response)});
 }
 
 function apply() {
-    const cssEditor = document.getElementById('css-editor');
-    // console.log(window.cssEditor);
     const value = window.cssEditor.getValue();
-    console.log(value);
+    // console.log(value);
     sendMessage({
             request: 'applyCss',
             css: value,
@@ -69,9 +73,13 @@ function toggleForms(hostExists) {
 }
 
 function show(s) {
-    const entries = Object.entries(s);
-    console.log('entries', entries);
-    toggleForms(entries.length > 0);
+    const entries = Object.entries(s);  // just for counting
+    const hostExists = entries.length > 0;
+    toggleForms(hostExists);
+    if (hostExists) {
+        // console.log(s.css);
+        initEditors(s);
+    }
 }
 
 function initFormEvents() {
@@ -81,10 +89,10 @@ function initFormEvents() {
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-        console.log('req', req);
+        // console.log('req', req);
     if (req.result) {
         const hostName = document.getElementById('host-name');
-        console.log('activeHost data', req.result);
+        // console.log('activeHost data', req.result);
         hostName.innerText = req.host;
         show(req.result, req.host);
     } else {
@@ -97,8 +105,9 @@ function initJcReader() {
         request: 'getInitial'
     },
         response => {
-            console.log('initial data', response);
-            activeHost = response.host;
+            // console.log('initial data', response);
+            activeHost = response.activeHost;
+            // console.log('activeHost', activeHost);
             sendMessage({
                     request: 'fetchHost',
                     host: activeHost
@@ -106,10 +115,10 @@ function initJcReader() {
         });
 }
 
-// function dumpStorage() {
-//     chrome.storage.local.get(null,
-//             response => console.dir(response));
-// }
+function dumpStorage() {
+    chrome.storage.local.get(null,
+            response => console.dir(response));
+}
 
 function createScript(src) {
     const script = document.createElement('srcript');
@@ -117,23 +126,17 @@ function createScript(src) {
     return script;
 }
 
-function initEditors() {
+function initEditors(s) {
     const cssEditor = document.getElementById('css-editor');
-    // const selectorEditor = document.getElementById('selector-editor');
-    // const flask = new CodeFlask('#css-editor', {language: 'css'});
-    const democode =
-        `
-body {
-    color:red !important
-}`;
+    const demoValue = [
+        'body {',
+        '\tcolor: red !important;',
+        '}'
+    ].join('\n');
+    require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
     require(['vs/editor/editor.main'], () => {
-        window.cssEditor = monaco.editor.create(document
-            .getElementById('css-editor'), {
-            value: [
-                'body {',
-                '\tcolor: red !important;',
-                '}'
-            ].join('\n'),
+        window.cssEditor = monaco.editor.create(cssEditor, {
+            value: s.css,
             language: 'css'
         });
     });
@@ -143,5 +146,5 @@ document.addEventListener('DOMContentLoaded', function () {
     // dumpStorage();
     initFormEvents();
     initJcReader();
-    initEditors();
+    // initEditors();
 });

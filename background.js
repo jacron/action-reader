@@ -9,7 +9,7 @@ let tTabId;
 
 let tabId;
 let winId = null;
-let host;
+let activeHost;
 
 function openView() {
     chrome.windows.create({
@@ -57,7 +57,8 @@ chrome.browserAction.onClicked.addListener(function() {
         }, function (tabs) {
             activeUrl = tabs[0].url;
             tabId = tabs[0].id;
-            host = getJcReaderHost(activeUrl);
+            activeHost = getJcReaderHost(activeUrl);
+            console.log('activeHost', activeHost);
             // injectScript();
             // injectCss();
             openView();
