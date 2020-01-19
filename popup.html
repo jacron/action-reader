@@ -3,20 +3,22 @@
   <head>
     <title>Reader</title>
     <link href="popup.css" rel="stylesheet" type="text/css">
+    <link href="vendor/prism.css" rel="stylesheet" />
+<!--      <link rel="stylesheet" data-name="vs/editor/editor.main"-->
+<!--            href="node_modules/monaco-editor/min/vs/editor/editor.main.css">-->
   </head>
   <body>
     <h2 id="host-name"></h2>
-    <div id="existing-reader-dialog" style="display:none">
-        <div class="controls">
-          <button id="reader-css">css</button>
-          <button id="reader-selector">selector</button>
-          <button id="reader-delete">X</button>
-          <button id="reader-rebuild">reload</button>
+    <div id="existing-reader-dialog">
+        <div>
+            <div id="css-editor-header">css</div>
+            <div id="css-editor"></div>
         </div>
-        <div class="general-controls">
-          <span id="default-css">css default</span>
-          <span>&nbsp;|&nbsp;</span>
-          <span id="dark-css">css dark</span>
+<!--      <textarea id="selector-editor"></textarea>-->
+        <div class="controls">
+            <button id="reader-delete">X</button>
+            <button id="reader-apply">toepassen</button>
+            <button id="reader-save">opslaan</button>
         </div>
     </div>
     <div id="new-reader-dialog">
@@ -29,5 +31,9 @@
     </div>
     <script src="config.js"></script>
     <script src="popup.js"></script>
+    <script src="node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
+    </script>
   </body>
 </html>

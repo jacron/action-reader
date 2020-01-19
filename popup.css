@@ -19,7 +19,7 @@ button {
 }
 #existing-reader-dialog,
 #new-reader-dialog {
-  width: 200px;
+  width: 500px;
   text-align: center;
 }
 .controls {
@@ -34,7 +34,19 @@ button {
 #existing-reader-dialog,
 #new-reader-dialog {
   display: none;
+  position: relative;
+  width: 100%;
 }
 .new-controls {
   margin-top: 12px;
+}
+#css-editor,
+#selector-editor {
+  /*position: absolute;*/
+  width: 400px;
+  height: 100px;
+  border: 1px solid gray;
+  background-color: #eeeeee;
+  color: #333;
+  text-align: left;
 }

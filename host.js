@@ -22,6 +22,10 @@ class Host {
         });
     }
 
+    delete() {
+        StorageArea.remove([this.name]);
+    }
+
     setSelector(selector) { this.selector = selector}
 
     setCss(css) {this.css = css}

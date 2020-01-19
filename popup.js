@@ -1,90 +1,90 @@
-function getJcReaderHost(url) {
-    url = url.replace(/http[s]?:\/\//, '');
-    const host = url.split('/')[0];
-    return host.replace('www.', '');
-}
+let activeHost;
+// let cssEditor;
 
-function loadUserscript(tabId) {
-    const url = `${config.JcUserscript}`;
-    chrome.tabs.update(tabId, {url})
-}
+const sendMessage = chrome.runtime.sendMessage;
 
-function doActionReload(url, tabId) {
-    fetch(url)
-        .then(res => res.json())
-        .then(() => loadUserscript(tabId))
-        .catch(err => console.error(err));
-}
-
-function doAction(url) {
-    // fetch(url)
-    //     .then(res => res.json())
-    //     .then(result => console.log(result))
-    //     .catch(err => console.error(err));
-}
-
-function postNew(host) {
-    console.log('host', host);
-    // const url = `${config.JCApi}/newsite/${host}`;
-    chrome.runtime.sendMessage({
+function postNew() {
+    console.log('activeHost', activeHost);
+    sendMessage({
         request: 'storeHost',
-        host
-    }, response => {});
-    // fetch(url)
-    //     .then(res => res.json())
-    //     .then(result => console.log(result))
-    //     .catch(err => console.error(err));
+        host: activeHost
+    }, () => toggleForms(true));
 }
 
-function setNewReaderActions(host) {
+function setNewReaderActions() {
     document.getElementById('new-answer-no').addEventListener('click',
-        () => window.close());
+        () => {
+            sendMessage({request: 'closePopup'});  // suicide is painless
+        });
     document.getElementById('new-answer-yes').addEventListener('click',
-        () => postNew(host));
+        () => postNew());
 }
 
 function deleteReader(host) {
     if (confirm(`'${host}' verwijderen?`)) {
-        doAction(`${config.JCApi}/delete/${host}`);
+        sendMessage({request: 'delete', host: activeHost },
+            () => toggleForms(false));
     }
-}
-function setReaderActions(host, tabId) {
-    const actionBindings = [
-        ['reader-css', '/edit/css?name=' + host],
-        ['reader-selector', '/edit/selector?name=' + host],
-        ['default-css', '/edit/default'],
-        ['dark-css', '/edit/dark'],
-    ];
-    for (const [binding, endpoint] of actionBindings) {
-        document.getElementById(binding).addEventListener('click',
-            () => {doAction(`${config.JCApi}${endpoint}`);
-            });
-    }
-    document.getElementById('reader-rebuild').addEventListener('click',
-        () => {doActionReload(`${config.JCApi}/build/noview`, tabId);
-    });
-    document.getElementById('reader-delete').addEventListener('click',
-        () => deleteReader(host));
 }
 
-function show(s, host, tabId) {
+function save() {
+    // const cssEditor = document.getElementById('css-editor');
+    sendMessage({request: 'save', host: activeHost}, () => {});
+}
+
+function apply() {
+    const cssEditor = document.getElementById('css-editor');
+    // console.log(window.cssEditor);
+    const value = window.cssEditor.getValue();
+    console.log(value);
+    sendMessage({
+            request: 'applyCss',
+            css: value,
+            host: activeHost,
+        },
+        response => {console.log(response)});
+}
+
+function setReaderActions() {
+    document.getElementById('reader-save').addEventListener('click',
+        () => {save()
+    });
+    document.getElementById('reader-apply').addEventListener('click',
+        () => {apply()
+        });
+    document.getElementById('reader-delete').addEventListener('click',
+        () => deleteReader(activeHost));
+}
+
+function toggleForms(hostExists) {
     const existing = document.getElementById('existing-reader-dialog');
     const newview = document.getElementById('new-reader-dialog');
-    const entries = Object.entries(s);
-    if (entries.length > 0) {
+    if (hostExists) {
         existing.style.display = 'block';
-        setReaderActions(host, tabId);
+        newview.style.display = 'none';
     } else {
+        existing.style.display = 'none';
         newview.style.display = 'block';
-        setNewReaderActions(host);
     }
+}
+
+function show(s) {
+    const entries = Object.entries(s);
+    console.log('entries', entries);
+    toggleForms(entries.length > 0);
+}
+
+function initFormEvents() {
+    setReaderActions();
+    setNewReaderActions();
 }
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
+        console.log('req', req);
     if (req.result) {
         const hostName = document.getElementById('host-name');
-        console.log(req.result);
+        console.log('activeHost data', req.result);
         hostName.innerText = req.host;
         show(req.result, req.host);
     } else {
@@ -92,32 +92,56 @@ chrome.runtime.onMessage.addListener(
     }
 });
 
-function processJcReader(host, tabId) {
-    chrome.runtime.sendMessage({
-            request: 'fetchHost',
-            host
-        },
-        response => {
-        console.log(response);
-    });
-}
-
 function initJcReader() {
-    chrome.runtime.sendMessage({
+    sendMessage({
         request: 'getInitial'
     },
         response => {
-            console.log(response);
-            processJcReader(response.host, response.tabId);
+            console.log('initial data', response);
+            activeHost = response.host;
+            sendMessage({
+                    request: 'fetchHost',
+                    host: activeHost
+                }, () => { });
         });
 }
 
-function dumpStorage() {
-    chrome.storage.local.get(null,
-            response => console.dir(response));
+// function dumpStorage() {
+//     chrome.storage.local.get(null,
+//             response => console.dir(response));
+// }
+
+function createScript(src) {
+    const script = document.createElement('srcript');
+    script.src= "node_modules/monaco-editor/min/vs/loader.js";
+    return script;
+}
+
+function initEditors() {
+    const cssEditor = document.getElementById('css-editor');
+    // const selectorEditor = document.getElementById('selector-editor');
+    // const flask = new CodeFlask('#css-editor', {language: 'css'});
+    const democode =
+        `
+body {
+    color:red !important
+}`;
+    require(['vs/editor/editor.main'], () => {
+        window.cssEditor = monaco.editor.create(document
+            .getElementById('css-editor'), {
+            value: [
+                'body {',
+                '\tcolor: red !important;',
+                '}'
+            ].join('\n'),
+            language: 'css'
+        });
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    dumpStorage();
+    // dumpStorage();
+    initFormEvents();
     initJcReader();
+    initEditors();
 });
