@@ -9,7 +9,7 @@ function postNew() {
         request: 'storeHost',
         host: activeHost
     }, () => {
-        initEditors('');
+        initEditors('', '[]');
         toggleForms(true);
     });
 }
@@ -25,27 +25,32 @@ function setNewReaderActions() {
 
 function deleteReader() {
     if (confirm(`'${activeHost}' verwijderen?`)) {
-        sendMessage({request: 'delete', host: activeHost },
+        sendMessage({request: 'deleteHost', host: activeHost },
             () => toggleForms(false));
     }
 }
 
 function save() {
-    const value = window.cssEditor.getValue();
+    const css = window.cssEditor.getValue();
+    const selector = window.selectorEditor.getValue();
     sendMessage({request: 'save', host: activeHost}, () => {});
     sendMessage({
-            request: 'saveCss',
-            css: value,
+            request: 'save',
+            css,
+            selector,
             host: activeHost,
         },
         response => {console.log(response)});
 }
 
 function apply() {
-    const value = window.cssEditor.getValue();
+    const css = window.cssEditor.getValue();
+    const selector = window.selectorEditor.getValue();
     sendMessage({
-            request: 'applyCss',
-            css: value,
+            request: 'apply',
+            css,
+            selector,
+            host: activeHost,
         },
         response => {console.log(response)});
 }
@@ -70,16 +75,6 @@ function setReaderActions() {
         document.getElementById(id).addEventListener(
             'click', () => fun());
     }
-    // document.getElementById('reader-save').addEventListener('click',
-    //     () => {save()
-    // });
-    // document.getElementById('reader-apply').addEventListener('click',
-    //     () => {apply()
-    //     });
-    // document.getElementById('reader-delete').addEventListener('click',
-    //     () => deleteReader());
-    // document.getElementById('reader-reset').addEventListener('click',
-    //     () => resetReader())
 }
 
 function toggleForms(hostExists) {
@@ -123,17 +118,13 @@ chrome.runtime.onMessage.addListener(
 });
 
 function initJcReader() {
-    sendMessage({
-        request: 'getInitial'
-    },
+    sendMessage({request: 'getInitial'},
         response => {
             console.log('initial data', response);
             activeHost = response.activeHost;
-            // console.log('activeHost', activeHost);
             sendMessage({
                     request: 'fetchHost',
-                    host: activeHost
-                }, () => { });
+                    host: activeHost}, () => { });
         });
 }
 
@@ -148,13 +139,21 @@ function createScript(src) {
     return script;
 }
 
-function initEditors(css) {
+function initEditors(css, selectors) {
     const cssEditor = document.getElementById('css-editor');
+    const selectorEditor = document.getElementById('selector-editor');
+
     require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
     require(['vs/editor/editor.main'], () => {
         window.cssEditor = monaco.editor.create(cssEditor, {
             value: css,
             language: 'css',
+            lineNumbers: false,
+            theme: 'vs-dark',
+        });
+        window.selectorEditor = monaco.editor.create(selectorEditor, {
+            value: selectors,
+            language: 'javascript',
             lineNumbers: false,
             theme: 'vs-dark',
         });

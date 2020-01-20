@@ -60,7 +60,7 @@ function injectCss(css, tabId) {
     // chrome.tabs.insertCSS(tabId, {code}, () => {});
 }
 
-function removeCss() {
+function removeStyle() {
     const injectcode = `
     document.head.removeChild(document.getElementById('injectedstyle'));    
     `;
@@ -77,7 +77,7 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
         console.log('loading url', info.url);
         const _activeHost = getJcReaderHost(info.url);
         if (_activeHost) {
-            fetchHost(_activeHost).then(data => {
+            getHost(_activeHost).then(data => {
                 if (data) {
                     console.log(data.css);
                     injectCss(data.css, _tabId);
