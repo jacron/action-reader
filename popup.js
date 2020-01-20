@@ -4,12 +4,15 @@ let activeHost;
 const sendMessage = chrome.runtime.sendMessage;
 
 function postNew() {
+    const demoCss = `
+    body { color: blue !important; }
+    `;
     console.log('activeHost', activeHost);
     sendMessage({
         request: 'storeHost',
         host: activeHost
     }, () => {
-        initEditors('', '[]');
+        initEditors(demoCss, '[]');
         toggleForms(true);
     });
 }
@@ -33,7 +36,7 @@ function deleteReader() {
 function save() {
     const css = window.cssEditor.getValue();
     const selector = window.selectorEditor.getValue();
-    sendMessage({request: 'save', host: activeHost}, () => {});
+    // sendMessage({request: 'save', host: activeHost}, () => {});
     sendMessage({
             request: 'save',
             css,
@@ -95,7 +98,7 @@ function show(s) {
     toggleForms(hostExists);
     if (hostExists) {
         // console.log(s.css);
-        initEditors(s.css);
+        initEditors(s.css, s.selector);
     }
 }
 
@@ -106,10 +109,8 @@ function initFormEvents() {
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-        // console.log('req', req);
     if (req.result) {
         const hostName = document.getElementById('host-name');
-        // console.log('activeHost data', req.result);
         hostName.innerText = req.host;
         show(req.result, req.host);
     } else {
@@ -131,12 +132,6 @@ function initJcReader() {
 function dumpStorage() {
     chrome.storage.local.get(null,
             response => console.dir(response));
-}
-
-function createScript(src) {
-    const script = document.createElement('srcript');
-    script.src= "node_modules/monaco-editor/min/vs/loader.js";
-    return script;
 }
 
 function initEditors(css, selectors) {

@@ -30,39 +30,31 @@ function openView() {
 chrome.windows.onRemoved.addListener(windowId => {
     if (windowId === winId) {
         winId = null;
-        // console.log('the popup closed');
     }
 });
 
-// function injectScript() {
-//     chrome.tabs.executeScript(tabId, {
-//         code: `console.log('reader says', document.title);
-//                 document.body.style.color = 'red';
-//                 `
-//     }, () => {});
-// }
-
-// const democode =
-//     `
-// body {
-//     color: red !important;
-// }
-// `;
 function injectCss(css, tabId) {
     // console.log('css', css);
+    // chrome.runtime.sendMessage({
+    //     requestContent: 'css',
+    //     css
+    // });
     const injectcode = `
     style = document.createElement('style');
     style.id = 'injectedstyle';
     style.appendChild(document.createTextNode(\`${css}\`));
-    document.head.appendChild(style);    
+    document.head.appendChild(style);
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
-    // chrome.tabs.insertCSS(tabId, {code}, () => {});
 }
 
 function removeStyle() {
+    // chrome.runtime.sendMessage({
+    //     requestContent: 'css',
+    //     css: '',
+    // });
     const injectcode = `
-    document.head.removeChild(document.getElementById('injectedstyle'));    
+    document.head.removeChild(document.getElementById('injectedstyle'));
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }

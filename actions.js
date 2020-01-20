@@ -44,18 +44,6 @@ function removeCss(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-// function getHost(req, sendResponse) {
-//     console.log(req, sendResponse);
-//     const host = new Host(req.host);
-//     host.get().then(response => {
-//         chrome.runtime.sendMessage({
-//             host: req.host,
-//             result: response || {}
-//         });
-//     }).catch(err => console.error(err));
-//     // sendResponse({data: 'ok'});
-// }
-
 function getHost(name) {
     const host = new Host(name);
     return host.get();
@@ -74,7 +62,11 @@ function fetchHost(req, sendResponse) {
 }
 
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-    /** these functions are named identical to the request */
+
+    /** these functions are named identical to the request
+     * each function is called with the two parameters:
+     * req and sendResponse */
+
     const bindings = {
         fetchHost,
         getInitial,
@@ -84,50 +76,13 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         closePopup,
         deleteHost
     };
-    const fun = bindings[req.request];
-    if (fun) {
-        fun(req, sendResponse);
-    } else {
-        sendResponse('invalid request:' + req.request);
+    if (req.request) {
+        const fun = bindings[req.request];
+        if (fun) {
+            fun(req, sendResponse);
+        } else {
+            sendResponse('invalid request:' + req.request);
+        }
     }
-
-    // if (req.request) {
-    //     switch(req.request) {
-    //         // case 'fetchHost':
-    //         //     // getHost(req, sendResponse);
-    //         //     // sendResponse({data: 'ok'});
-    //         //     fetchHost(req, sendResponse);
-    //         //     break;
-    //         case 'storeHost':
-    //             storeHost(req, sendResponse);
-    //             // sendResponse({data: storeHost(req.host)});
-    //             break;
-    //         case 'getInitial':
-    //             getInitial(req, sendResponse);
-    //             break;
-    //         case 'save':
-    //             save(req, sendResponse);
-    //             // sendResponse({data: saveCss(req.css)});
-    //             break;
-    //         case 'apply':
-    //             apply(req, sendResponse);
-    //             // sendResponse({data: applyCss(req.css)});
-    //             break;
-    //         case 'removeCss':
-    //             removeCss(req, sendResponse);
-    //             break;
-    //         case 'closePopup':
-    //             closePopup();
-    //             break;
-    //         case 'deleteHost':
-    //             deleteHost(req, sendResponse);
-    //             break;
-    //         default:
-    //             sendResponse('invalid request:' + req.request);
-    //             break;
-    //     }
-    // } else {
-    //     sendResponse('no request handled');
-    // }
 });
 
