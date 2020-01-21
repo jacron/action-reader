@@ -9,21 +9,27 @@
   </head>
   <body>
     <h2 id="host-name"></h2>
+    <button id="reader-delete">X</button>
     <div id="existing-reader-dialog">
-        <div>
-            <div id="css-editor-header">css</div>
+        <div id="tabs">
+            <div class="css">css</div>
+            <div class="selector">selector</div>
+        </div>
+        <div id="css-container">
             <div id="css-editor"></div>
+            <div class="controls">
+                <button id="css-apply">toepassen</button>
+                <button id="css-save">opslaan</button>
+                <button id="css-reset">uitschakelen</button>
+            </div>
         </div>
-        <div>
-            <div id="selector-editor-header">selector</div>
+        <div id="selector-container">
             <div id="selector-editor"></div>
-        </div>
-<!--      <textarea id="selector-editor"></textarea>-->
-        <div class="controls">
-            <button id="reader-delete">X</button>
-            <button id="reader-apply">toepassen</button>
-            <button id="reader-save">opslaan</button>
-            <button id="reader-reset">uitschakelen</button>
+            <div class="controls">
+                <button id="selector-apply">toepassen</button>
+                <button id="selector-save">opslaan</button>
+                <button id="selector-reset">uitschakelen</button>
+            </div>
         </div>
     </div>
     <div id="new-reader-dialog">

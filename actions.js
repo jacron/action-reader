@@ -20,7 +20,8 @@ function save(req, sendResponse) {
 
 function apply(req, sendResponse) {
     injectCss(req.css, tabId);
-    // todo: implement use selectors
+    reInjectMakeReader(req.selector, tabId);
+    // save(req, sendResponse);
     sendResponse({data: 'ok'});
 }
 

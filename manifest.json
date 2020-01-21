@@ -11,7 +11,7 @@
   },
   "content_security_policy": "script-src 'self' 'sha256-WJhGi63XJGcuawHF9dp+PAw5VDY/pShGKzatzK+mqHA='",
   "background": {
-    "scripts": ["background.js", "host.js", "actions.js"]
+    "scripts": ["background.js", "host.js", "actions.js", "reader.js"]
   },
   "browser_action": {
     "default_icon": "images/reader white.png",

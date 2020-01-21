@@ -26,6 +26,38 @@ function setNewReaderActions() {
         () => postNew());
 }
 
+function selectTab(tab) {
+    const tabs = document.getElementById('tabs');
+    const cssTab = tabs.querySelector('.css');
+    const selectorTab = tabs.querySelector('.selector');
+    const cssEditor = document.getElementById('css-editor');
+    const selectorEditor = document.getElementById('selector-editor');
+
+    if (tab === 'css') {
+        cssTab.classList.add('selected');
+        selectorTab.classList.remove('selected');
+        cssEditor.style.visibility = 'visible';
+        selectorEditor.style.visibility = 'hidden';
+    } else if (tab === 'selector') {
+        cssTab.classList.remove('selected');
+        selectorTab.classList.add('selected');
+        selectorEditor.style.visibility = 'visible';
+        cssEditor.style.visibility = 'hidden';
+    }
+}
+
+function setTabActions() {
+    tabs.addEventListener('click', e => {
+        const target = e.target;
+        if (~target.classList.value.indexOf('css')) {
+            selectTab('css');
+        } else if (~target.classList.value.indexOf('selector')) {
+            selectTab('selector');
+        }
+    });
+    selectTab('css');
+}
+
 function deleteReader() {
     if (confirm(`'${activeHost}' verwijderen?`)) {
         sendMessage({request: 'deleteHost', host: activeHost },
@@ -68,10 +100,13 @@ function resetReader() {
 
 function setReaderActions() {
     const clickBindings = [
-        ['reader-save', save],
-        ['reader-apply', apply],
         ['reader-delete', deleteReader],
-        ['reader-reset', resetReader],
+        ['css-save', save],
+        ['css-apply', apply],
+        ['css-reset', resetReader],
+        ['selector-save', save],
+        ['selector-apply', apply],
+        ['selector-reset', resetReader],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -97,7 +132,6 @@ function show(s) {
     const hostExists = entries.length > 0;
     toggleForms(hostExists);
     if (hostExists) {
-        // console.log(s.css);
         initEditors(s.css, s.selector);
     }
 }
@@ -105,6 +139,7 @@ function show(s) {
 function initFormEvents() {
     setReaderActions();
     setNewReaderActions();
+    setTabActions();
 }
 
 chrome.runtime.onMessage.addListener(
@@ -145,12 +180,14 @@ function initEditors(css, selectors) {
             language: 'css',
             lineNumbers: false,
             theme: 'vs-dark',
+            automaticLayout: true,
         });
         window.selectorEditor = monaco.editor.create(selectorEditor, {
             value: selectors,
             language: 'javascript',
             lineNumbers: false,
             theme: 'vs-dark',
+            automaticLayout: true,
         });
     });
 }
@@ -159,5 +196,4 @@ document.addEventListener('DOMContentLoaded', function () {
     // dumpStorage();
     initFormEvents();
     initJcReader();
-    // initEditors();
 });

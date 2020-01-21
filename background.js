@@ -33,34 +33,49 @@ chrome.windows.onRemoved.addListener(windowId => {
     }
 });
 
-function injectCss(css, tabId) {
-    // console.log('css', css);
-    // chrome.runtime.sendMessage({
-    //     requestContent: 'css',
-    //     css
-    // });
+const INJECTED_STYLE_ID = 'splash-style';
+
+function initInject(tabId) {
     const injectcode = `
-    style = document.createElement('style');
-    style.id = 'injectedstyle';
-    style.appendChild(document.createTextNode(\`${css}\`));
-    document.head.appendChild(style);
+    const splashStyle = document.createElement('style');
+    splashStyle.id = '${INJECTED_STYLE_ID}';
+    document.head.appendChild(splashStyle);    
+`;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+}
+
+function injectCss(css, tabId) {
+    css += `
+#readercontainer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  background-color: #888;
+}
+#readerarticle {
+    width: 600px;
+    margin: auto;
+    background-color: #ccc;
+}
+    `;
+    /** injected css may contain whitespace, so use backticks */
+    const injectcode = `
+    document.getElementById('${INJECTED_STYLE_ID}').innerText = \`${css}\`;
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
 function removeStyle() {
-    // chrome.runtime.sendMessage({
-    //     requestContent: 'css',
-    //     css: '',
-    // });
     const injectcode = `
-    document.head.removeChild(document.getElementById('injectedstyle'));
+    document.getElementById('${INJECTED_STYLE_ID}').innerText = '';
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
 chrome.tabs.onUpdated.addListener((_tabId, info) => {
-    // tabId = _tabId;
     // if (_tabId === tTabId) {
     //     return;
     // }
@@ -71,8 +86,9 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
         if (_activeHost) {
             getHost(_activeHost).then(data => {
                 if (data) {
-                    console.log(data.css);
+                    initInject(_tabId);
                     injectCss(data.css, _tabId);
+                    injectMakeReader(data.selector, _tabId);
                 }
             })
         }
@@ -93,6 +109,7 @@ chrome.browserAction.onClicked.addListener(function() {
             openView();
         });
     } else {
+        /** bring popup to front */
         chrome.windows.update(winId, {
             focused: true
         });

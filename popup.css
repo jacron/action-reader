@@ -3,12 +3,13 @@ body {
   background-color: #00485b;
   color: #eee;
 }
-
+html, body {
+  height: 100%;
+}
 h2 {
   color: #ccc;
   text-align: center;
 }
-
 button {
   background-color: #555555;
   color: #eeffff;
@@ -22,20 +23,16 @@ button {
   width: 500px;
   text-align: center;
 }
-.controls {
-  margin-bottom: 3px;
-}
-.general-controls span {
-  cursor: default;
-}
-.general-controls span:hover {
-  text-decoration: underline;
-}
 #existing-reader-dialog,
 #new-reader-dialog {
   display: none;
   position: relative;
   width: 100%;
+  height: calc(100% - 70px);
+}
+.controls {
+  position: absolute;
+  bottom: 0;
 }
 .new-controls {
   margin-top: 12px;
@@ -43,14 +40,38 @@ button {
 #css-editor,
 #selector-editor {
   border: 1px solid gray;
-  background-color: #eeeeee;
-  color: #333;
   text-align: left;
-  margin-bottom: 12px;
+  height: calc(100% - 70px);
+  visibility: hidden;
+  position: absolute;
+  width: 100%;
 }
-#css-editor {
-  height: 230px;
+#tabs > div {
+  display: inline-block;
+  padding: 7px;
+  cursor: default;
+  background-color: rgba(50,50,250,.5);
 }
-#selector-editor {
-  height: 100px;
+#tabs > div.selected {
+  background-color: blue;
+}
+#tabs {
+  text-align: left;
+}
+.monaco-editor {
+  width: 100%;
+  height: 100%;
+}
+#reader-delete {
+  float: right;
+}
+
+/** temporarily */
+#article {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
 }
