@@ -9,7 +9,7 @@ function storeHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function save(req, sendResponse) {
+function saveHost(req, sendResponse) {
     injectCss(req.css, tabId);
     const host = new Host(req.host);
     host.setCss(req.css);
@@ -18,20 +18,14 @@ function save(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function apply(req, sendResponse) {
+function applyHost(req, sendResponse) {
     injectCss(req.css, tabId);
     reInjectMakeReader(req.selector, tabId);
-    // save(req, sendResponse);
     sendResponse({data: 'ok'});
 }
 
 function getInitial(req, sendResponse) {
     sendResponse({activeHost});
-}
-
-function closePopup() {
-    chrome.windows.remove(winId);
-    winId = null;
 }
 
 function deleteHost(req, sendResponse) {
@@ -42,6 +36,7 @@ function deleteHost(req, sendResponse) {
 
 function removeCss(req, sendResponse) {
     removeStyle();
+    removeReader();
     sendResponse({data: 'ok'});
 }
 
@@ -56,25 +51,20 @@ function fetchHost(req, sendResponse) {
         console.log('fetched activeHost', response);
         chrome.runtime.sendMessage({
             host: req.host,
-            result: response || {}
+            result: response[req.host]
         });
     }).catch(err => console.error(err));
     sendResponse({data: 'ok'});
 }
 
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-
-    /** these functions are named identical to the request
-     * each function is called with the two parameters:
-     * req and sendResponse */
-
     const bindings = {
         fetchHost,
         getInitial,
-        save,
-        apply,
+        saveHost,
+        applyHost,
         removeCss,
-        closePopup,
+        closePopup: closeView,
         deleteHost
     };
     if (req.request) {

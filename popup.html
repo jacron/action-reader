@@ -3,33 +3,25 @@
   <head>
     <title>Reader</title>
     <link href="popup.css" rel="stylesheet" type="text/css">
-    <link href="vendor/prism.css" rel="stylesheet" />
-<!--      <link rel="stylesheet" data-name="vs/editor/editor.main"-->
-<!--            href="node_modules/monaco-editor/min/vs/editor/editor.main.css">-->
   </head>
   <body>
     <h2 id="host-name"></h2>
-    <button id="reader-delete">X</button>
     <div id="existing-reader-dialog">
+        <button id="reader-delete">X</button>
         <div id="tabs">
             <div class="css">css</div>
             <div class="selector">selector</div>
+            <div class="default">default</div>
+            <div class="dark">dark</div>
         </div>
-        <div id="css-container">
-            <div id="css-editor"></div>
-            <div class="controls">
-                <button id="css-apply">toepassen</button>
-                <button id="css-save">opslaan</button>
-                <button id="css-reset">uitschakelen</button>
-            </div>
-        </div>
-        <div id="selector-container">
-            <div id="selector-editor"></div>
-            <div class="controls">
-                <button id="selector-apply">toepassen</button>
-                <button id="selector-save">opslaan</button>
-                <button id="selector-reset">uitschakelen</button>
-            </div>
+        <div class="editor" id="editor-css"></div>
+        <div class="editor" id="editor-selector"></div>
+        <div class="editor" id="editor-default"></div>
+        <div class="editor" id="editor-dark"></div>
+        <div class="controls">
+            <button id="cmd-apply">toepassen</button>
+            <button id="cmd-save">opslaan</button>
+            <button id="cmd-reset">uitschakelen</button>
         </div>
     </div>
     <div id="new-reader-dialog">
@@ -40,7 +32,7 @@
         <button id="new-answer-no">Nee</button>
       </div>
     </div>
-    <script src="config.js"></script>
+    <script src="shared/constants.js"></script>
     <script src="popup.js"></script>
     <script src="node_modules/monaco-editor/min/vs/loader.js"></script>
   </body>

@@ -1,7 +1,5 @@
 let activeHost;
-// let cssEditor;
-
-const sendMessage = chrome.runtime.sendMessage;
+let activeDoc;
 
 function postNew() {
     const demoCss = `
@@ -12,50 +10,57 @@ function postNew() {
         request: 'storeHost',
         host: activeHost
     }, () => {
-        initEditors(demoCss, '[]');
+        // initEditor(demoCss, '[]');
+        documents.css.text = demoCss;
+        documents.selector.text = '[]';
+        setEditor(documents.css);
         toggleForms(true);
     });
 }
 
-function setNewReaderActions() {
-    document.getElementById('new-answer-no').addEventListener('click',
-        () => {
-            sendMessage({request: 'closePopup'});  // suicide is painless
-        });
-    document.getElementById('new-answer-yes').addEventListener('click',
-        () => postNew());
+function setEditor(doc) {
+    activeDoc = doc;
+    if (doc.editor === null) {
+        initEditor(doc);
+    }
+    showEditor(doc);
+}
+
+function initTab(tab) {
+    const tabs = document.getElementById('tabs');
+    const doc = documents[tab];
+    tabs.querySelector(doc.selector).classList.add(dynClass.SELECTED.className);
+}
+
+function removeSelected(tabs) {
+    const selectedTabs = tabs.querySelectorAll(dynClass.SELECTED.selector);
+
+    for (let i = 0; i < selectedTabs.length; i++) {
+        selectedTabs[i].classList.remove(dynClass.SELECTED.className);
+    }
+
 }
 
 function selectTab(tab) {
     const tabs = document.getElementById('tabs');
-    const cssTab = tabs.querySelector('.css');
-    const selectorTab = tabs.querySelector('.selector');
-    const cssEditor = document.getElementById('css-editor');
-    const selectorEditor = document.getElementById('selector-editor');
+    const doc = documents[tab];
 
-    if (tab === 'css') {
-        cssTab.classList.add('selected');
-        selectorTab.classList.remove('selected');
-        cssEditor.style.visibility = 'visible';
-        selectorEditor.style.visibility = 'hidden';
-    } else if (tab === 'selector') {
-        cssTab.classList.remove('selected');
-        selectorTab.classList.add('selected');
-        selectorEditor.style.visibility = 'visible';
-        cssEditor.style.visibility = 'hidden';
-    }
+    removeSelected(tabs);
+    tabs.querySelector(doc.selector).classList.add(dynClass.SELECTED.className);
+    setEditor(doc);
 }
 
 function setTabActions() {
+    const tabs = document.getElementById('tabs');
     tabs.addEventListener('click', e => {
         const target = e.target;
-        if (~target.classList.value.indexOf('css')) {
-            selectTab('css');
-        } else if (~target.classList.value.indexOf('selector')) {
-            selectTab('selector');
+        const tabs = ['css', 'selector', 'default', 'dark'];
+        for (const tab of tabs) {
+            if (~target.classList.value.indexOf(tab)) {
+                selectTab(tab);
+            }
         }
     });
-    selectTab('css');
 }
 
 function deleteReader() {
@@ -66,23 +71,21 @@ function deleteReader() {
 }
 
 function save() {
-    const css = window.cssEditor.getValue();
-    const selector = window.selectorEditor.getValue();
-    // sendMessage({request: 'save', host: activeHost}, () => {});
+    /** saveHost css and selector */
     sendMessage({
-            request: 'save',
-            css,
-            selector,
+            request: 'saveHost',
+            css: documents.css.text,
+            selector: documents.selector.text,
             host: activeHost,
         },
         response => {console.log(response)});
 }
 
 function apply() {
-    const css = window.cssEditor.getValue();
-    const selector = window.selectorEditor.getValue();
+    const css = documents.css.editor.getValue();
+    const selector = documents.selector.editor.getValue();
     sendMessage({
-            request: 'apply',
+            request: 'applyHost',
             css,
             selector,
             host: activeHost,
@@ -91,22 +94,23 @@ function apply() {
 }
 
 function resetReader() {
-    // const value = window.cssEditor.getValue();
-    console.log('reset');
     sendMessage({
         request: 'removeCss',
-    }, response => {});
+    }, () => {});
+}
+
+function closeMe() {
+    sendMessage({request: 'closePopup'});
 }
 
 function setReaderActions() {
     const clickBindings = [
+        ['new-answer-no', closeMe],
+        ['new-answer-yes', postNew],
         ['reader-delete', deleteReader],
-        ['css-save', save],
-        ['css-apply', apply],
-        ['css-reset', resetReader],
-        ['selector-save', save],
-        ['selector-apply', apply],
-        ['selector-reset', resetReader],
+        ['cmd-saveHost', save],
+        ['cmd-applyHost', apply],
+        ['cmd-reset', resetReader],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -132,31 +136,37 @@ function show(s) {
     const hostExists = entries.length > 0;
     toggleForms(hostExists);
     if (hostExists) {
-        initEditors(s.css, s.selector);
+        initTab('css');
+        const selEntries = Object.entries(s.selector);
+        if (selEntries && selEntries.length === 0) {
+            s.selector = '';
+        }
+        documents.css.text = s.css;
+        documents.selector.text = s.selector;
+        initEditor(s.css);
     }
 }
 
 function initFormEvents() {
     setReaderActions();
-    setNewReaderActions();
     setTabActions();
 }
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-    if (req.result) {
-        const hostName = document.getElementById('host-name');
-        hostName.innerText = req.host;
-        show(req.result, req.host);
-    } else {
-        sendResponse('no request handled');
-    }
+        // console.log('req', req);
+        if (req.result) {
+            document.getElementById('host-name').innerText = req.host;
+            show(req.result, req.host);
+        } else {
+            sendResponse('no request handled');
+        }
 });
 
 function initJcReader() {
     sendMessage({request: 'getInitial'},
         response => {
-            console.log('initial data', response);
+            // console.log('initial data', response);
             activeHost = response.activeHost;
             sendMessage({
                     request: 'fetchHost',
@@ -166,26 +176,32 @@ function initJcReader() {
 
 function dumpStorage() {
     chrome.storage.local.get(null,
-            response => console.dir(response));
+            response => {
+                console.log('storage dump');
+                console.dir(response);
+            });
 }
 
-function initEditors(css, selectors) {
-    const cssEditor = document.getElementById('css-editor');
-    const selectorEditor = document.getElementById('selector-editor');
+function hideEditors() {
+    for (const doc of documents) {
+        document.getElementById(doc.id).style.visibility = 'hidden';
+    }
+}
+
+function showEditor(doc) {
+    hideEditors();
+    document.getElementById(doc.id).style.visibility = 'visible';
+}
+
+function initEditor(doc) {
+    const editorElement = document.getElementById(doc.id);
 
     require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
     require(['vs/editor/editor.main'], () => {
-        window.cssEditor = monaco.editor.create(cssEditor, {
-            value: css,
-            language: 'css',
+        doc.editor = monaco.editor.create(editorElement, {
             lineNumbers: false,
-            theme: 'vs-dark',
-            automaticLayout: true,
-        });
-        window.selectorEditor = monaco.editor.create(selectorEditor, {
-            value: selectors,
-            language: 'javascript',
-            lineNumbers: false,
+            value: doc.text,
+            language: doc.language,
             theme: 'vs-dark',
             automaticLayout: true,
         });
@@ -193,7 +209,7 @@ function initEditors(css, selectors) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // dumpStorage();
+    dumpStorage();
     initFormEvents();
     initJcReader();
 });

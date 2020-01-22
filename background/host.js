@@ -1,4 +1,6 @@
 StorageArea = chrome.storage.local;
+const KEY_DEFAULT = '_default';
+const KEY_DARK = '_dark';
 
 class Host {
     constructor(name) {
@@ -15,9 +17,10 @@ class Host {
     }
 
     get() {
+        const keys = [this.name, KEY_DEFAULT, KEY_DARK];
         return new Promise((resolve, reject) => {
-            StorageArea.get([this.name], results => {
-                resolve(results[this.name])
+            StorageArea.get(keys, results => {
+                resolve(results)
             });
         });
     }

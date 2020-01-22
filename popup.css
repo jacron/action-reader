@@ -20,15 +20,13 @@ button {
 }
 #existing-reader-dialog,
 #new-reader-dialog {
-  width: 500px;
-  text-align: center;
-}
-#existing-reader-dialog,
-#new-reader-dialog {
-  display: none;
   position: relative;
   width: 100%;
   height: calc(100% - 70px);
+  text-align: center;
+}
+#existing-reader-dialog {
+  display: none;
 }
 .controls {
   position: absolute;
@@ -37,14 +35,13 @@ button {
 .new-controls {
   margin-top: 12px;
 }
-#css-editor,
-#selector-editor {
+.editor {
   border: 1px solid gray;
   text-align: left;
   height: calc(100% - 70px);
-  visibility: hidden;
   position: absolute;
   width: 100%;
+  visibility: hidden;
 }
 #tabs > div {
   display: inline-block;
@@ -63,7 +60,8 @@ button {
   height: 100%;
 }
 #reader-delete {
-  float: right;
+  position: absolute;
+  right: 10px;
 }
 
 /** temporarily */

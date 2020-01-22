@@ -1,3 +1,9 @@
+/** the code that getArticleCode returns will be injected into the DOM.
+ * TIP:
+ * to edit the code, comment out the lines with the backticks temporarily.
+ * @param selector
+ * @returns {string}
+ */
 function getArticleCode(selector) {
     return `
 function createContainer(nodes) {
@@ -8,7 +14,6 @@ function createContainer(nodes) {
 
     article.id = 'readerarticle';
     for (let i = 0; i < nodes.length; i++) {
-        console.log(nodes[i]);
         const clone = nodes[i].cloneNode(true);
         article.appendChild(clone);
     }
@@ -50,9 +55,7 @@ const Nodes = function(nodes) {
 
     this.injectArticle = () => {
         if (nodes.length > 0) {
-            // document.body.innerHTML = '';
             const container = createContainer(nodes);
-            // document.body.innerHTML = container.innerHTML;
             document.body.appendChild(container);
             document.getElementById('readerarticle').className = 'dark';
         } else {
@@ -62,14 +65,15 @@ const Nodes = function(nodes) {
     };
 };
 
-function themeSite(selector) {
+function deleteReader() {
     const article = document.getElementById('readercontainer');
     if (article) {
         document.body.removeChild(article);
-        console.log('article removed');
-    } else {
-        console.log('article not found', article);
     }
+}
+
+function themeSite(selector) {
+    deleteReader();
     if (selector && selector.length) {
         new Nodes([])
             .get(selector)
@@ -80,7 +84,6 @@ function themeSite(selector) {
 themeSite(JSON.parse(\`${selector}\`));
     `;
 }
-// document.cloneNode()
 
 function injectMakeReader(selector, tabId) {
     console.log('selector', selector);
@@ -92,5 +95,9 @@ function reInjectMakeReader(selector, tabId) {
 themeSite(JSON.parse(\`${selector}\`));
     `;
     chrome.tabs.executeScript(tabId,{code}, () => {});
+}
 
+function removeReader() {
+    const code = `deleteReader();`;
+    chrome.tabs.executeScript(tabId,{code}, () => {});
 }
