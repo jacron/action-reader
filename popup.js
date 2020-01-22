@@ -71,14 +71,14 @@ function deleteReader() {
 }
 
 function save() {
-    /** saveHost css and selector */
+    /** saveHost css and selector => saveHost active document */
     sendMessage({
-            request: 'saveHost',
-            css: documents.css.text,
-            selector: documents.selector.text,
-            host: activeHost,
-        },
-        response => {console.log(response)});
+        request: 'saveHost',
+        doc: activeDoc,
+        // css: documents.css.text,
+        // selector: documents.selector.text,
+        host: activeHost,
+    }, response => {console.log(response)});
 }
 
 function apply() {

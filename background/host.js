@@ -6,14 +6,16 @@ class Host {
     constructor(name) {
         this.name = name;
     }
-    selector = {};
+    selector = [];
     css = '';
 
-    store() {
-        StorageArea.set({[this.name]: {
-            selector: this.selector,
-            css: this.css
-        }}, () => {});
+    store(changes) {
+        this.get().then(oldHost => {
+            const newHost = {};
+            newHost.css = changes.css || oldHost.css;
+            newHost.selector = changes.selector || oldHost.selector;
+            StorageArea.set({[this.name]: newHost}, () => {});
+        });
     }
 
     get() {
@@ -29,8 +31,16 @@ class Host {
         StorageArea.remove([this.name]);
     }
 
-    setSelector(selector) { this.selector = selector}
+    // setSelector(selector) { this.selector = selector}
 
-    setCss(css) {this.css = css}
+    // setCss(css) {this.css = css}
+}
+
+function storeDefault(css) {
+    StorageArea.set({[KEY_DEFAULT]: css})
+}
+
+function storeDark(css) {
+    StorageArea.set({[KEY_DARK]: css})
 }
 

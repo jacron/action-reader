@@ -41,10 +41,10 @@ defaultStyle.innerHTML = \`${css}\`;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
-function injectCss(css, tabId) {
+function injectCss(doc, tabId) {
     /** injected css may contain whitespace, so use (nested) backticks */
     const injectcode = `
-    document.getElementById('${documents.css.styleId}').innerHTML = \`${css}\`;
+    document.getElementById('${doc.styleId}').innerHTML = \`${doc.text}\`;
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }

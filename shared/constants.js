@@ -1,5 +1,6 @@
 const documents = {
     css: {
+        name: 'css',
         text: '',
         language: 'css',
         className: 'css',
@@ -9,6 +10,7 @@ const documents = {
         styleId: 'splash-custom-style',
     },
     selector: {
+        name: 'selector',
         text: '',
         language: 'javascript',
         className: 'selector',
@@ -17,6 +19,7 @@ const documents = {
         id: 'editor-selector',
     },
     default: {
+        name: 'default',
         text: '',
         language: 'css',
         className: 'default',
@@ -26,6 +29,7 @@ const documents = {
         styleId: 'splash-default-style',
     },
     dark: {
+        name: 'dark',
         text: '',
         language: 'css',
         className: 'dark',

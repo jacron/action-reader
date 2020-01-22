@@ -10,17 +10,37 @@ function storeHost(req, sendResponse) {
 }
 
 function saveHost(req, sendResponse) {
-    injectCss(req.css, tabId);
     const host = new Host(req.host);
-    host.setCss(req.css);
-    host.setSelector(req.selector);
-    host.store();
+
+    applyHost(req, sendResponse);
+    if (req.doc.language === 'css') {
+        switch (req.doc.name) {
+            case 'css':
+                // host.setCss(req.doc.text);
+                host.store({css: req.doc.text});
+                break;
+            case 'default':
+                storeDefault(req.doc.text);
+                break;
+            case 'dark':
+                storeDark(req.doc.text);
+                break;
+        }
+    }
+    if (req.doc.language === 'javascript') {
+        // host.setSelector(req.doc.text);
+        host.store({selector: req.doc.text});
+    }
     sendResponse({data: 'ok'});
 }
 
 function applyHost(req, sendResponse) {
-    injectCss(req.css, tabId);
-    reInjectMakeReader(req.selector, tabId);
+    if (req.doc.language === 'css') {
+        injectCss(req.doc, tabId);
+    }
+    if (req.doc.language === 'javascript') {
+        reInjectMakeReader(req.doc.text, tabId);
+    }
     sendResponse({data: 'ok'});
 }
 
