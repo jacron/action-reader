@@ -15,11 +15,11 @@
   "background": {
     "scripts": [
       "shared/constants.js",
-      "background.js",
-      "host.js",
-      "actions.js",
-      "reader.js",
-      "styling.js"
+      "background/background.js",
+      "background/host.js",
+      "background/actions.js",
+      "background/reader.js",
+      "background/styling.js"
     ]
   },
   "browser_action": {

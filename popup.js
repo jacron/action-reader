@@ -20,7 +20,9 @@ function postNew() {
 
 function setEditor(doc) {
     activeDoc = doc;
+    // console.log(doc);
     if (doc.editor === null) {
+        console.log('init editor');
         initEditor(doc);
     }
     showEditor(doc);
@@ -108,13 +110,17 @@ function setReaderActions() {
         ['new-answer-no', closeMe],
         ['new-answer-yes', postNew],
         ['reader-delete', deleteReader],
-        ['cmd-saveHost', save],
-        ['cmd-applyHost', apply],
+        ['cmd-save', save],
+        ['cmd-apply', apply],
         ['cmd-reset', resetReader],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
-        document.getElementById(id).addEventListener(
+        const element = document.getElementById(id);
+        if (!element) {
+            console.error('no element found with id:', id);
+        }
+        element.addEventListener(
             'click', () => fun());
     }
 }
@@ -143,7 +149,9 @@ function show(s) {
         }
         documents.css.text = s.css;
         documents.selector.text = s.selector;
-        initEditor(s.css);
+        console.log('documents', documents);
+        // initEditor(documents.css);
+        setEditor(documents.css);
     }
 }
 
@@ -183,8 +191,8 @@ function dumpStorage() {
 }
 
 function hideEditors() {
-    for (const doc of documents) {
-        document.getElementById(doc.id).style.visibility = 'hidden';
+    for (const [key,value] of Object.entries(documents)) {
+        document.getElementById(value.id).style.visibility = 'hidden';
     }
 }
 
@@ -195,6 +203,9 @@ function showEditor(doc) {
 
 function initEditor(doc) {
     const editorElement = document.getElementById(doc.id);
+    if (!editorElement) {
+        console.error('no element with id:', doc.id);
+    }
 
     require.config({ paths: { 'vs': 'node_modules/monaco-editor/min/vs' }});
     require(['vs/editor/editor.main'], () => {

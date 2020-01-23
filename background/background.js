@@ -46,16 +46,21 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     }
     /** do not use the globals tabId and activeHost here */
     if (info.status === 'loading') {
-        console.log('loading url', info.url);
+        // console.log('loading url', info.url);
         const _activeHost = getJcReaderHost(info.url);
         if (_activeHost) {
             getHost(_activeHost).then(data => {
-                console.log('data', data);
-                if (data && data.css) {
+                if (data) {
+                    // console.log('data', data);
                     data = data[_activeHost];
-                    initInject(_tabId);
-                    injectCss(data.css, _tabId);
-                    injectMakeReader(data.selector, _tabId);
+                    if (data) {
+                        console.log('data', data);
+                        initInject(_tabId);
+                        documents.css.text = data.css;
+                        documents.selector.text = data.selector;
+                        injectCss(documents.css, _tabId);
+                        injectMakeReader(documents.selector, _tabId);
+                    }
                 }
             })
         }

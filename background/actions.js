@@ -13,23 +13,20 @@ function saveHost(req, sendResponse) {
     const host = new Host(req.host);
 
     applyHost(req, sendResponse);
-    if (req.doc.language === 'css') {
-        switch (req.doc.name) {
-            case 'css':
-                // host.setCss(req.doc.text);
-                host.store({css: req.doc.text});
-                break;
-            case 'default':
-                storeDefault(req.doc.text);
-                break;
-            case 'dark':
-                storeDark(req.doc.text);
-                break;
-        }
-    }
-    if (req.doc.language === 'javascript') {
-        // host.setSelector(req.doc.text);
-        host.store({selector: req.doc.text});
+    switch (req.doc.name) {
+        case 'css':
+            // host.setCss(req.doc.text);
+            host.store({css: req.doc.text});
+            break;
+        case 'selector':
+            host.store({selector: req.doc.text});
+            break;
+        case 'default':
+            storeDefault(req.doc.text);
+            break;
+        case 'dark':
+            storeDark(req.doc.text);
+            break;
     }
     sendResponse({data: 'ok'});
 }
@@ -68,7 +65,7 @@ function getHost(name) {
 function fetchHost(req, sendResponse) {
     const host = new Host(req.host);
     host.get().then(response => {
-        console.log('fetched activeHost', response);
+        // console.log('fetched activeHost', response);
         chrome.runtime.sendMessage({
             host: req.host,
             result: response[req.host]
