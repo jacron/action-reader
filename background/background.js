@@ -54,12 +54,13 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
                     // console.log('data', data);
                     data = data[_activeHost];
                     if (data) {
-                        console.log('data', data);
+                        // console.log('data', data);
                         initInject(_tabId);
                         documents.css.text = data.css;
                         documents.selector.text = data.selector;
                         injectCss(documents.css, _tabId);
-                        injectMakeReader(documents.selector, _tabId);
+                        injectMakeReader(_tabId);
+                        // reInjectMakeReader(documents.selector.text, _tabId);
                     }
                 }
             })
@@ -73,10 +74,13 @@ chrome.browserAction.onClicked.addListener(function() {
             active: true,
             lastFocusedWindow: true
         }, function (tabs) {
-            activeUrl = tabs[0].url;
-            tabId = tabs[0].id;
-            activeHost = getJcReaderHost(activeUrl);
-            openView();
+            // console.log(tabs);
+            if (tabs[0]) {
+                activeUrl = tabs[0].url;
+                tabId = tabs[0].id;
+                activeHost = getJcReaderHost(activeUrl);
+                openView();
+            }
         });
     } else {
         /** bring popup to front */

@@ -1,8 +1,3 @@
-// function getHost(name) {
-//     const host = new Host(name);
-//     return host.get();
-// }
-
 function storeHost(req, sendResponse) {
     const host = new Host(req.host);
     host.store();
@@ -13,30 +8,31 @@ function saveHost(req, sendResponse) {
     const host = new Host(req.host);
 
     applyHost(req, sendResponse);
-    switch (req.doc.name) {
+    switch (req.name) {
         case 'css':
             // host.setCss(req.doc.text);
-            host.store({css: req.doc.text});
+            host.store({css: req.text});
             break;
         case 'selector':
-            host.store({selector: req.doc.text});
+            host.store({selector: req.text});
             break;
         case 'default':
-            storeDefault(req.doc.text);
+            storeDefault(req.text);
             break;
         case 'dark':
-            storeDark(req.doc.text);
+            storeDark(req.text);
             break;
     }
     sendResponse({data: 'ok'});
 }
 
 function applyHost(req, sendResponse) {
-    if (req.doc.language === 'css') {
-        injectCss(req.doc, tabId);
+    console.log(req);
+    if (req.name === 'css') {
+        injectCss(req, tabId);
     }
-    if (req.doc.language === 'javascript') {
-        reInjectMakeReader(req.doc.text, tabId);
+    if (req.name === 'selector') {
+        reInjectMakeReader(req.text, tabId);
     }
     sendResponse({data: 'ok'});
 }

@@ -72,25 +72,31 @@ function deleteReader() {
     }
 }
 
+function updateDocument(doc) {
+    doc.text = doc.editor.getValue();
+}
+
 function save() {
     /** saveHost css and selector => saveHost active document */
+    updateDocument(activeDoc);
+    console.log('activeDoc', activeDoc);
     sendMessage({
         request: 'saveHost',
-        doc: activeDoc,
-        // css: documents.css.text,
-        // selector: documents.selector.text,
+        name: activeDoc.name,
+        text: activeDoc.text,
+        styleId: activeDoc.styleId,
         host: activeHost,
     }, response => {console.log(response)});
 }
 
 function apply() {
-    const css = documents.css.editor.getValue();
-    const selector = documents.selector.editor.getValue();
+    updateDocument(activeDoc);
     sendMessage({
             request: 'applyHost',
-            css,
-            selector,
+            name: activeDoc.name,
+            text: activeDoc.text,
             host: activeHost,
+            styleId: activeDoc.styleId,
         },
         response => {console.log(response)});
 }
@@ -143,9 +149,11 @@ function show(s) {
     toggleForms(hostExists);
     if (hostExists) {
         initTab('css');
-        const selEntries = Object.entries(s.selector);
-        if (selEntries && selEntries.length === 0) {
-            s.selector = '';
+        if (s.selector) {
+            const selEntries = Object.entries(s.selector);
+            if (!selEntries || selEntries.length === 0) {
+                s.selector = '';
+            }
         }
         documents.css.text = s.css;
         documents.selector.text = s.selector;
