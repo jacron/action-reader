@@ -119,7 +119,7 @@ function setReaderActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        ['cmd-reset', resetReader],
+        // ['cmd-reset', resetReader],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -135,22 +135,26 @@ function setReaderActions() {
 function toggleForms(hostExists) {
     const existing = document.getElementById('existing-reader-dialog');
     const newview = document.getElementById('new-reader-dialog');
+    const generalControls = document.querySelector('.general-controls');
     if (hostExists) {
         existing.style.display = 'block';
         newview.style.display = 'none';
+        generalControls.style.display = 'block';
     } else {
         existing.style.display = 'none';
         newview.style.display = 'block';
+        generalControls.style.display = 'none';
     }
 }
 
 function show(req) {
     const {host, result, darkText, defaultText} = req;
     const custom = result[host];
-    const entries = Object.entries(custom);  // just for counting
-    const hostExists = entries.length > 0;
-    toggleForms(hostExists);
-    if (hostExists) {
+    // if (custom)
+    // const entries = Object.entries(custom);  // just for counting
+    // const hostExists = entries.length > 0;
+    toggleForms(custom);
+    if (custom) {
         initTab('css');
         documents.css.text = custom.css;
         documents.selector.text = custom.selector;
@@ -205,6 +209,7 @@ function hideEditors() {
 function showEditor(doc) {
     hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
+    doc.editor.focus();
 }
 
 function initEditor(doc) {
@@ -230,3 +235,4 @@ document.addEventListener('DOMContentLoaded', function () {
     initFormEvents();
     initJcReader();
 });
+

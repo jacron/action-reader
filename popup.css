@@ -1,14 +1,10 @@
 body {
-  margin: 5px 10px 10px;
+  margin: 10px;
   background-color: #00485b;
   color: #eee;
 }
 html, body {
   height: 100%;
-}
-h2 {
-  color: #ccc;
-  text-align: center;
 }
 button {
   background-color: #555555;
@@ -18,19 +14,26 @@ button {
   font-size: 12px;
   height: 26px;
 }
+button:hover {
+  background-color: #333;
+}
+#host-name {
+  font-size: large;
+  padding: 2px;
+}
 #existing-reader-dialog,
 #new-reader-dialog {
   position: relative;
   width: 100%;
   height: calc(100% - 70px);
   text-align: center;
-}
-#existing-reader-dialog {
   display: none;
 }
 .controls {
   position: absolute;
-  bottom: 0;
+  bottom: 5px;
+  width: 100%;
+  text-align: left;
 }
 .new-controls {
   margin-top: 12px;
@@ -38,7 +41,7 @@ button {
 .editor {
   border: 1px solid gray;
   text-align: left;
-  height: calc(100% - 70px);
+  height: calc(100% - 80px);
   position: absolute;
   width: 100%;
   visibility: hidden;
@@ -61,15 +64,40 @@ button {
 }
 #reader-delete {
   position: absolute;
-  right: 10px;
-}
-
-/** temporarily */
-#article {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
   right: 0;
-  overflow: auto;
+  padding: 2px 8px;
+}
+.switch {
+  background: url('images/toggle.png');
+  width: 32px;
+  height: 16px;
+}
+.switch.on {
+  background-position: 0 0;
+}
+.switch.off {
+  background-position: 0 16px;
+}
+.general-controls {
+  display: none;
+}
+.banner {
+  display: flex;
+  align-content: space-around;
+  align-items: baseline;
+}
+.horizontal-spacer {
+  flex: 1 1 auto;
+}
+#general-toggle,
+#dark-toggle {
+  display: flex;
+  align-items: center;
+  text-align: right;
+}
+.label {
+  display: inline-block;
+  width: 60px;
+  margin-right: 6px;
+  margin-bottom: 6px;
 }

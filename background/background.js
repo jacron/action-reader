@@ -38,8 +38,6 @@ chrome.windows.onRemoved.addListener(windowId => {
     }
 });
 
-// todo: handle tabs event to rebuild after refresh
-
 function injectDefaultDark(_tabId) {
     retrieveDefaultDark().then(data => {
         documents.default.text = data['_default'];
@@ -48,6 +46,9 @@ function injectDefaultDark(_tabId) {
         injectCss(documents.dark, _tabId);
     });
 }
+
+// todo: handle tabs event to rebuild after refresh
+// todo: close popup when tab looses focus
 
 chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (_tabId === tTabId) {

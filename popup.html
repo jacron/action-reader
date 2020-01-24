@@ -5,9 +5,23 @@
     <link href="popup.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h2 id="host-name"></h2>
+  <div class="banner">
+      <div>
+          <span id="host-name"></span>
+      </div>
+      <div class="horizontal-spacer"></div>
+      <div class="general-controls">
+          <div id="general-toggle">
+              <span class="label">general</span>
+              <span class="switch"></span>
+          </div>
+          <div id="dark-toggle">
+              <span class="label">dark</span>
+              <span class="switch"></span>
+          </div>
+      </div>
+  </div>
     <div id="existing-reader-dialog">
-        <button id="reader-delete">X</button>
         <div id="tabs">
             <div class="css">css</div>
             <div class="selector">selector</div>
@@ -21,7 +35,8 @@
         <div class="controls">
             <button id="cmd-apply">toepassen</button>
             <button id="cmd-save">opslaan</button>
-            <button id="cmd-reset">uitschakelen</button>
+            <button id="reader-delete">X</button>
+<!--            <button id="cmd-reset">uitschakelen</button>-->
         </div>
     </div>
     <div id="new-reader-dialog">
