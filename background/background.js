@@ -40,6 +40,15 @@ chrome.windows.onRemoved.addListener(windowId => {
 
 // todo: handle tabs event to rebuild after refresh
 
+function injectDefaultDark(_tabId) {
+    retrieveDefaultDark().then(data => {
+        documents.default.text = data['_default'];
+        documents.dark.text = data['_dark'];
+        injectCss(documents.default, _tabId);
+        injectCss(documents.dark, _tabId);
+    });
+}
+
 chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (_tabId === tTabId) {
         return;
@@ -48,20 +57,22 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (info.status === 'loading') {
         // console.log('loading url', info.url);
         const _activeHost = getJcReaderHost(info.url);
+        console.log(_activeHost);
         if (_activeHost) {
-            getHost(_activeHost).then(data => {
-                if (data) {
+            const host = new Host(_activeHost);
+            host.get().then(data => {
+                data = data[_activeHost];
+                if (data) { // we have data for this host
+                    console.log('data', data);
                     // console.log('data', data);
-                    data = data[_activeHost];
-                    if (data) {
-                        // console.log('data', data);
-                        initInject(_tabId);
-                        documents.css.text = data.css;
-                        documents.selector.text = data.selector;
-                        injectCss(documents.css, _tabId);
-                        injectMakeReader(_tabId);
-                        // reInjectMakeReader(documents.selector.text, _tabId);
-                    }
+                    initInject(_tabId);
+                    injectDefaultDark(_tabId);
+
+                    documents.css.text = data.css;
+                    documents.selector.text = data.selector;
+                    injectCss(documents.css, _tabId);
+                    injectMakeReader(documents.selector.text, _tabId);
+                    // reInjectMakeReader(documents.selector.text, _tabId);
                 }
             })
         }

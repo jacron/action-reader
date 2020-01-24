@@ -14,16 +14,14 @@ class Host {
         this.get().then(oldHost => {
             const newHost = {};
             oldHost = oldHost[this.name];
-            // console.log('oldHost', oldHost);
             newHost.css = changes.css || oldHost.css;
             newHost.selector = changes.selector || oldHost.selector;
-            // console.log('newHost', newHost);
             StorageArea.set({[this.name]: newHost}, () => {});
         });
     }
 
     get() {
-        const keys = [this.name];  // , KEY_DEFAULT, KEY_DARK];
+        const keys = [this.name];
         return new Promise((resolve, reject) => {
             StorageArea.get(keys, results => {
                 resolve(results)
@@ -38,6 +36,15 @@ class Host {
     // setSelector(selector) { this.selector = selector}
 
     // setCss(css) {this.css = css}
+}
+
+function retrieveDefaultDark() {
+    const keys = [KEY_DEFAULT, KEY_DARK];
+    return new Promise((resolve, reject) => {
+        StorageArea.get(keys, results => {
+            resolve(results)
+        });
+    });
 }
 
 function storeDefault(css) {

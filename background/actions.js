@@ -27,8 +27,8 @@ function saveHost(req, sendResponse) {
 }
 
 function applyHost(req, sendResponse) {
-    console.log(req);
-    if (req.name === 'css') {
+    // console.log('req (apply)', req);
+    if (~['css', 'default', 'dark'].indexOf(req.name )) {
         injectCss(req, tabId);
     }
     if (req.name === 'selector') {
@@ -53,18 +53,13 @@ function removeCss(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function getHost(name) {
-    const host = new Host(name);
-    return host.get();
-}
-
 function fetchHost(req, sendResponse) {
     const host = new Host(req.host);
     host.get().then(response => {
         // console.log('fetched activeHost', response);
         chrome.runtime.sendMessage({
             host: req.host,
-            result: response[req.host]
+            result: response
         });
     }).catch(err => console.error(err));
     sendResponse({data: 'ok'});
@@ -81,6 +76,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         deleteHost
     };
     if (req.request) {
+        // console.log('req.request', req.request);
         const fun = bindings[req.request];
         if (fun) {
             fun(req, sendResponse);

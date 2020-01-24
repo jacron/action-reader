@@ -1,13 +1,13 @@
-function injectMakeReader(tabId) {
+function injectMakeReader(selector, tabId) {
     chrome.tabs.executeScript(tabId,{file: 'background/reader.js'},
-        () => {});
+        () => {reInjectMakeReader(selector, tabId)});
 }
 
 function reInjectMakeReader(selector, tabId) {
-    console.log('selector', selector);
-    const code = `
-themeSite(JSON.parse(\`${selector}\`));
+    // console.log('selector', selector);
+    const code = `themeSite(JSON.parse(\`${selector}\`));
     `;
+    console.log('code', code);
     chrome.tabs.executeScript(tabId,{code}, () => {});
 }
 

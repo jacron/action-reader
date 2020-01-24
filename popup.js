@@ -91,6 +91,7 @@ function save() {
 
 function apply() {
     updateDocument(activeDoc);
+    console.log('activeDoc', activeDoc);
     sendMessage({
             request: 'applyHost',
             name: activeDoc.name,
@@ -144,19 +145,23 @@ function toggleForms(hostExists) {
 }
 
 function show(s) {
+    console.log('s', s);
     const entries = Object.entries(s);  // just for counting
     const hostExists = entries.length > 0;
     toggleForms(hostExists);
     if (hostExists) {
         initTab('css');
-        if (s.selector) {
-            const selEntries = Object.entries(s.selector);
-            if (!selEntries || selEntries.length === 0) {
-                s.selector = '';
-            }
-        }
-        documents.css.text = s.css;
-        documents.selector.text = s.selector;
+        const t = s[activeHost];
+        // if (t.selector) {
+        //     const selEntries = Object.entries(s.selector);
+        //     if (!selEntries || selEntries.length === 0) {
+        //         t.selector = '';
+        //     }
+        // }
+        documents.css.text = t.css;
+        documents.selector.text = t.selector;
+        documents.default.text = s['_default'];
+        documents.dark.text = s['_dark'];
         console.log('documents', documents);
         // initEditor(documents.css);
         setEditor(documents.css);
@@ -170,7 +175,7 @@ function initFormEvents() {
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-        // console.log('req', req);
+        console.log('req', req);
         if (req.result) {
             document.getElementById('host-name').innerText = req.host;
             show(req.result, req.host);

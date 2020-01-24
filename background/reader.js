@@ -16,7 +16,6 @@ function createContainer(nodes) {
 
 const Nodes = function(nodes) {
     this.get = selector => {
-        console.log('selector', selector);
         for (let i = 0; i < selector.length; i++) {
             let sel = selector[i];
             let optional = false;
@@ -25,7 +24,6 @@ const Nodes = function(nodes) {
                 optional = true;
             }
             let node = null;
-            console.log('sel', sel);
             if (Array.isArray(sel)) {
                 for (let j = 0; j < sel.length; j++) {
                     node = document.querySelector(sel[j]);
