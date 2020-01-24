@@ -144,26 +144,19 @@ function toggleForms(hostExists) {
     }
 }
 
-function show(s) {
-    console.log('s', s);
-    const entries = Object.entries(s);  // just for counting
+function show(req) {
+    const {host, result, darkText, defaultText} = req;
+    const custom = result[host];
+    const entries = Object.entries(custom);  // just for counting
     const hostExists = entries.length > 0;
     toggleForms(hostExists);
     if (hostExists) {
         initTab('css');
-        const t = s[activeHost];
-        // if (t.selector) {
-        //     const selEntries = Object.entries(s.selector);
-        //     if (!selEntries || selEntries.length === 0) {
-        //         t.selector = '';
-        //     }
-        // }
-        documents.css.text = t.css;
-        documents.selector.text = t.selector;
-        documents.default.text = s['_default'];
-        documents.dark.text = s['_dark'];
+        documents.css.text = custom.css;
+        documents.selector.text = custom.selector;
+        documents.default.text = defaultText;
+        documents.dark.text = darkText;
         console.log('documents', documents);
-        // initEditor(documents.css);
         setEditor(documents.css);
     }
 }
@@ -178,7 +171,7 @@ chrome.runtime.onMessage.addListener(
         console.log('req', req);
         if (req.result) {
             document.getElementById('host-name').innerText = req.host;
-            show(req.result, req.host);
+            show(req);
         } else {
             sendResponse('no request handled');
         }

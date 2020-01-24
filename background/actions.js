@@ -57,9 +57,15 @@ function fetchHost(req, sendResponse) {
     const host = new Host(req.host);
     host.get().then(response => {
         // console.log('fetched activeHost', response);
-        chrome.runtime.sendMessage({
-            host: req.host,
-            result: response
+        retrieveDefaultDark().then(data => {
+            // documents.default.text = data['_default'];
+            // documents.dark.text = data['_dark'];
+            chrome.runtime.sendMessage({
+                host: req.host,
+                result: response,
+                defaultText: data['_default'],
+                darkText: data['_dark']
+            });
         });
     }).catch(err => console.error(err));
     sendResponse({data: 'ok'});

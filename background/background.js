@@ -55,15 +55,13 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     }
     /** do not use the globals tabId and activeHost here */
     if (info.status === 'loading') {
-        // console.log('loading url', info.url);
         const _activeHost = getJcReaderHost(info.url);
-        console.log(_activeHost);
         if (_activeHost) {
             const host = new Host(_activeHost);
             host.get().then(data => {
                 data = data[_activeHost];
                 if (data) { // we have data for this host
-                    console.log('data', data);
+                    console.log(_activeHost);
                     // console.log('data', data);
                     initInject(_tabId);
                     injectDefaultDark(_tabId);

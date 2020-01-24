@@ -43,7 +43,6 @@ document.head.appendChild(darkStyle);
 }
 
 function injectCss(doc, tabId) {
-    console.log('doc', doc);
     /** injected css may contain whitespace, so use (nested) backticks */
     const injectcode = `
     document.getElementById('${doc.styleId}').innerHTML = \`${doc.text}\`;
