@@ -102,11 +102,11 @@ function apply() {
         response => {console.log(response)});
 }
 
-function resetReader() {
-    sendMessage({
-        request: 'removeCss',
-    }, () => {});
-}
+// function resetReader() {
+//     sendMessage({
+//         request: 'removeCss',
+//     }, () => {});
+// }
 
 function closeMe() {
     sendMessage({request: 'closePopup'});
@@ -124,7 +124,7 @@ function toggle(classList, set) {
     }
 }
 
-function toggleGeneral(e) {
+function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
         sendMessage({
             request: 'toggleGeneral',
@@ -133,7 +133,7 @@ function toggleGeneral(e) {
     })
 }
 
-function toggleDark(e) {
+function toggleDarkSettings(e) {
     toggle(e.target.classList, mode => {
         sendMessage({
             request: 'toggleDark',
@@ -149,8 +149,8 @@ function setReaderActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        ['general-toggle-switch', toggleGeneral],
-        ['dark-toggle-switch', toggleDark],
+        ['general-toggle-switch', toggleGeneralSettings],
+        ['dark-toggle-switch', toggleDarkSettings],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;

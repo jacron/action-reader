@@ -50,9 +50,9 @@ function injectCss(doc, tabId) {
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
-function removeStyle() {
+function removeStyle(doc, tabId) {
     const injectcode = `
-    document.getElementById('${documents.css.styleId}').innerHTML = '';
+    document.getElementById('${doc.styleId}').innerHTML = '';
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }

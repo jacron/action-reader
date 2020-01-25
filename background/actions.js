@@ -47,19 +47,10 @@ function deleteHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function removeCss(req, sendResponse) {
-    removeStyle();
-    removeReader();
-    sendResponse({data: 'ok'});
-}
-
 function fetchHost(req, sendResponse) {
     const host = new Host(req.host);
     host.get().then(response => {
-        // console.log('fetched activeHost', response);
         retrieveDefaultDark().then(data => {
-            // documents.default.text = data['_default'];
-            // documents.dark.text = data['_dark'];
             chrome.runtime.sendMessage({
                 host: req.host,
                 result: response,
@@ -74,20 +65,15 @@ function fetchHost(req, sendResponse) {
 function reInit(name) {
     const host = new Host(name);
     host.get().then(data => {
-        console.log(name, data);
         data = data[name];
-        // initInject(tabId);
         injectDefaultDark(tabId);
-
         documents.css.text = data.css;
         documents.selector.text = data.selector;
         injectCss(documents.css, tabId);
-        // injectMakeReader(documents.selector.text, tabId);
         reInjectMakeReader(documents.selector.text, tabId);
     })
 }
 function toggleGeneral(req, sendResponse) {
-    console.log(req);
     const {mode, host} = req;
     if (mode === 'off') {
         removeStyles();
@@ -99,7 +85,16 @@ function toggleGeneral(req, sendResponse) {
 }
 
 function toggleDark(req, sendResponse) {
-    console.log(req);
+    const {mode, host} = req;
+    if (mode === 'off') {
+        removeStyle(documents.dark, tabId);
+        sendResponse({data: 'dark styles removed'});
+    } else {
+        retrieveDefaultDark().then(data => {
+            documents.dark.text = data['_dark'];
+            injectCss(documents.dark, tabId);
+        });
+    }
 }
 
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
@@ -108,7 +103,6 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         getInitial,
         saveHost,
         applyHost,
-        removeCss,
         closePopup: closeView,
         deleteHost,
         toggleGeneral,
