@@ -70,6 +70,7 @@ function reInit(name) {
         documents.css.text = data.css;
         documents.selector.text = data.selector;
         injectCss(documents.css, tabId);
+        articleAddDark(tabId);
         reInjectMakeReader(documents.selector.text, tabId);
     })
 }
@@ -78,6 +79,7 @@ function toggleGeneral(req, sendResponse) {
     if (mode === 'off') {
         removeStyles();
         removeReader();
+        articleRemoveDark(tabId);
         sendResponse({data: 'general styles and selector removed'});
     } else {
         reInit(host);
@@ -88,8 +90,10 @@ function toggleDark(req, sendResponse) {
     const {mode, host} = req;
     if (mode === 'off') {
         removeStyle(documents.dark, tabId);
+        articleRemoveDark(tabId);
         sendResponse({data: 'dark styles removed'});
     } else {
+        articleAddDark(tabId);
         retrieveDefaultDark().then(data => {
             documents.dark.text = data['_dark'];
             injectCss(documents.dark, tabId);

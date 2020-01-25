@@ -42,6 +42,21 @@ document.head.appendChild(darkStyle);
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
+function articleAddDark(tabId) {
+    const injectcode = `
+    document.getElementById('readerarticle').classList.add('dark');
+    `;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+}
+
+function articleRemoveDark(tabId) {
+    const injectcode = `
+    console.log(document.getElementById('readerarticle').classList);
+    document.getElementById('readerarticle').classList.remove('dark');
+    `;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+}
+
 function injectCss(doc, tabId) {
     /** injected css may contain whitespace, so use (nested) backticks */
     const injectcode = `

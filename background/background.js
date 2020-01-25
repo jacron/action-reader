@@ -44,6 +44,7 @@ function injectDefaultDark(_tabId) {
         documents.dark.text = data['_dark'];
         injectCss(documents.default, _tabId);
         injectCss(documents.dark, _tabId);
+        articleAddDark(_tabId);
     });
 }
 

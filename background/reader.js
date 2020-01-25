@@ -26,14 +26,16 @@ const Nodes = function(nodes) {
             let node = null;
             if (Array.isArray(sel)) {
                 for (let j = 0; j < sel.length; j++) {
-                    node = document.querySelector(sel[j]);
+                    node = document.querySelectorAll(sel[j]);
                     if (node) break;
                 }
             } else if (sel) {
-                node = document.querySelector(sel);
+                node = document.querySelectorAll(sel);
             }
             if (node) {
-                nodes.push(node);
+                for (let k = 0; k < node.length; k++) {
+                    nodes.push(node[k]);
+                }
             } else {
                 console.log(sel + ' is not a node');
                 if (!optional) {
