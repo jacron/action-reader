@@ -63,7 +63,7 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
                 data = data[_activeHost];
                 if (data) { // we have data for this host
                     console.log(_activeHost);
-                    // console.log('data', data);
+                    console.log('data', data);
                     initInject(_tabId);
                     injectDefaultDark(_tabId);
 

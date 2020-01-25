@@ -112,6 +112,36 @@ function closeMe() {
     sendMessage({request: 'closePopup'});
 }
 
+function toggle(classList, set) {
+    if (classList.contains('on')) {
+        classList.remove('on');
+        classList.add('off');
+        set('off');
+    } else {
+        classList.remove('off');
+        classList.add('on');
+        set('on');
+    }
+}
+
+function toggleGeneral(e) {
+    toggle(e.target.classList, mode => {
+        sendMessage({
+            request: 'toggleGeneral',
+            host: activeHost,
+            mode});
+    })
+}
+
+function toggleDark(e) {
+    toggle(e.target.classList, mode => {
+        sendMessage({
+            request: 'toggleDark',
+            host: activeHost,
+            mode});
+    })
+}
+
 function setReaderActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -119,7 +149,8 @@ function setReaderActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        // ['cmd-reset', resetReader],
+        ['general-toggle-switch', toggleGeneral],
+        ['dark-toggle-switch', toggleDark],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -128,7 +159,7 @@ function setReaderActions() {
             console.error('no element found with id:', id);
         }
         element.addEventListener(
-            'click', () => fun());
+            'click', fun);
     }
 }
 

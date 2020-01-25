@@ -56,3 +56,12 @@ function removeStyle() {
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
+
+function removeStyles() {
+    const injectcode = `
+    document.getElementById('${documents.css.styleId}').innerHTML = '';
+    document.getElementById('${documents.default.styleId}').innerHTML = '';
+    document.getElementById('${documents.dark.styleId}').innerHTML = '';
+    `;
+    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+}

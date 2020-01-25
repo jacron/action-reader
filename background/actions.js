@@ -71,6 +71,37 @@ function fetchHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
+function reInit(name) {
+    const host = new Host(name);
+    host.get().then(data => {
+        console.log(name, data);
+        data = data[name];
+        // initInject(tabId);
+        injectDefaultDark(tabId);
+
+        documents.css.text = data.css;
+        documents.selector.text = data.selector;
+        injectCss(documents.css, tabId);
+        // injectMakeReader(documents.selector.text, tabId);
+        reInjectMakeReader(documents.selector.text, tabId);
+    })
+}
+function toggleGeneral(req, sendResponse) {
+    console.log(req);
+    const {mode, host} = req;
+    if (mode === 'off') {
+        removeStyles();
+        removeReader();
+        sendResponse({data: 'general styles and selector removed'});
+    } else {
+        reInit(host);
+    }
+}
+
+function toggleDark(req, sendResponse) {
+    console.log(req);
+}
+
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     const bindings = {
         fetchHost,
@@ -79,7 +110,9 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         applyHost,
         removeCss,
         closePopup: closeView,
-        deleteHost
+        deleteHost,
+        toggleGeneral,
+        toggleDark
     };
     if (req.request) {
         // console.log('req.request', req.request);

@@ -6,7 +6,7 @@ function injectMakeReader(selector, tabId) {
 function reInjectMakeReader(selector, tabId) {
     const code = `themeSite(JSON.parse(\`${selector}\`));
     `;
-    // console.log('code', code);
+    console.log('code', code);
     chrome.tabs.executeScript(tabId,{code}, () => {});
 }
 
