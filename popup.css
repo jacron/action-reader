@@ -46,6 +46,18 @@ button:hover {
   width: 100%;
   visibility: hidden;
 }
+#editor-selector {
+  height: calc(100% - 200px);
+}
+#selector-tool {
+  position: absolute;
+  top: 250px;
+  min-height: 80px;
+  background-color: cadetblue;
+  width: 100%;
+  visibility: hidden;
+  text-align: left;
+}
 #tabs > div {
   display: inline-block;
   padding: 7px;
@@ -71,6 +83,7 @@ button:hover {
   background: url('images/toggle.png');
   width: 32px;
   height: 16px;
+  display: inline-block;
 }
 .switch.on {
   background-position: 0 0;

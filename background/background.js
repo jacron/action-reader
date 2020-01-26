@@ -32,6 +32,30 @@ function closeView() {
     winId = null;
 }
 
+/**
+ * try to get message from scan
+ */
+chrome.runtime.onConnect.addListener(port => {
+    console.log(port.name); // should be 'scanning'
+    port.onMessage.addListener(message => console.log(message));
+});
+
+/**
+ * try to get message from scan
+ */
+chrome.runtime.onMessage.addListener(
+    (req, sender, sendResponse) => {
+        console.log('req', req);
+        // sendResponse('no request handled');
+    });
+
+/**
+ * try etc
+ */
+chrome.extension.onRequest.addListener((req, sender) => {
+    console.log(req, sender);
+});
+
 chrome.windows.onRemoved.addListener(windowId => {
     if (windowId === winId) {
         winId = null;
@@ -72,6 +96,9 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
                     documents.selector.text = data.selector;
                     injectCss(documents.css, _tabId);
                     injectMakeReader(documents.selector.text, _tabId);
+
+                    scanOn(_tabId); // EXPERIMENTAL
+
                     // reInjectMakeReader(documents.selector.text, _tabId);
                 }
             })

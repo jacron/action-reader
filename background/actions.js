@@ -80,9 +80,10 @@ function toggleGeneral(req, sendResponse) {
         removeStyles();
         removeReader();
         articleRemoveDark(tabId);
-        sendResponse({data: 'general styles and selector removed'});
+        sendResponse({data: 'general and custom styles and selector removed'});
     } else {
         reInit(host);
+        sendResponse({data: 'general and custom styles and selector added'});
     }
 }
 
@@ -97,7 +98,41 @@ function toggleDark(req, sendResponse) {
         retrieveDefaultDark().then(data => {
             documents.dark.text = data['_dark'];
             injectCss(documents.dark, tabId);
+            sendResponse({data: 'dark styles added'});
         });
+    }
+}
+
+function scanOn(tabId, sendResponse) {
+    const code = `
+function scanDom(e) {
+    const elements = document.elementsFromPoint(e.x, e.y);
+    console.dir(elements);
+    chrome.runtime.sendMessage({feedback: elements}, res => {
+        console.log(res);
+    })
+}
+
+document.addEventListener('click', scanDom);`;
+
+    chrome.tabs.executeScript(tabId,{
+        file: 'background/scan.js'
+        // code
+    }, response => {
+        // console.log(response);
+        if (sendResponse) {
+            sendResponse('tool set on')
+        }});
+}
+
+function toggleSelectorTool(req, sendResponse) {
+    if (req.mode === 'on') {
+        console.log('mode', req.mode);
+        scanOn(tabId, sendResponse);
+    } else {
+        chrome.tabs.executeScript(tabId,{
+            code: 'document.removeEventListener(\'click\', scanDom);\n'
+        }, () => {sendResponse('tool set off')});
     }
 }
 
@@ -110,7 +145,8 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         closePopup: closeView,
         deleteHost,
         toggleGeneral,
-        toggleDark
+        toggleDark,
+        toggleSelectorTool,
     };
     if (req.request) {
         // console.log('req.request', req.request);
@@ -118,6 +154,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         if (fun) {
             fun(req, sendResponse);
         } else {
+            console.error('invalid request', req.request);
             sendResponse('invalid request:' + req.request);
         }
     }

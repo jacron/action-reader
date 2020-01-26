@@ -26,5 +26,6 @@
     "default_icon": "images/reader white.png",
     "default_title": "Reader"
   },
+  "web_accessible_resources": ["background/scan.js"],
   "manifest_version": 2
 }

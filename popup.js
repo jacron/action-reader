@@ -142,6 +142,16 @@ function toggleDarkSettings(e) {
     })
 }
 
+function toggleSelectorTool(e) {
+    toggle(e.target.classList, mode => {
+        console.log(mode);
+        sendMessage({
+            request: 'toggleSelectorTool',
+            host: activeHost,
+            mode});
+    })
+}
+
 function setReaderActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -151,6 +161,7 @@ function setReaderActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
+        ['selector-tool-switch', toggleSelectorTool],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -238,6 +249,8 @@ function hideEditors() {
 }
 
 function showEditor(doc) {
+    const selectorTool = document.getElementById('selector-tool');
+    selectorTool.style.visibility = doc.name === 'selector' ? 'visible' : 'hidden';
     hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
     doc.editor.focus();
