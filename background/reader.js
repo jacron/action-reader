@@ -14,14 +14,44 @@ function createContainer(nodes) {
     return container;
 }
 
+function parse(s) {
+    let selector = [];
+    let lines = s.split('\n');
+    if (lines.length > 1) {
+        for (let line of lines) {
+            line = line.trim();
+            let words = line.split(',');
+            if (words.length > 1) {
+                let selectorWords = [];
+                for (let word of words) {
+                    word = word.trim();
+                    if (word.length > 0) {
+                        selectorWords.push(word);
+                    }
+                }
+                selector.push(selectorWords);
+            } else {
+                if (line.length > 0) {
+                    selector.push(line);
+                }
+            }
+        }
+    } else {
+        if (s.length > 0) {
+            selector.push(s);
+        }
+    }
+    return selector;
+}
+
 const Nodes = function(nodes) {
     this.get = selector => {
         for (let i = 0; i < selector.length; i++) {
             let sel = selector[i];
-            let optional = false;
+            // let optional = false;
             if (sel[0] === '@') {
                 sel = sel.substr(1);
-                optional = true;
+                // optional = true;
             }
             let node = null;
             if (Array.isArray(sel)) {
@@ -38,10 +68,10 @@ const Nodes = function(nodes) {
                 }
             } else {
                 console.log(sel + ' is not a node');
-                if (!optional) {
-                    nodes = [];
-                    break;
-                }
+                // if (!optional) {
+                //     nodes = [];
+                //     break;
+                // }
             }
         }
         return this;
@@ -70,7 +100,7 @@ function themeSite(selector) {
     deleteReader();
     if (selector && selector.length) {
         new Nodes([])
-            .get(selector)
+            .get(parse(selector))
             .injectArticle()
     }
 }

@@ -32,48 +32,59 @@ function closeView() {
     winId = null;
 }
 
-/**
- * try to get message from scan
- */
-chrome.runtime.onConnect.addListener(port => {
-    console.log(port.name); // should be 'scanning'
-    port.onMessage.addListener(message => console.log(message));
-});
-
-/**
- * try to get message from scan
- */
-chrome.runtime.onMessage.addListener(
-    (req, sender, sendResponse) => {
-        console.log('req', req);
-        // sendResponse('no request handled');
-    });
-
-/**
- * try etc
- */
-chrome.extension.onRequest.addListener((req, sender) => {
-    console.log(req, sender);
-});
-
-chrome.windows.onRemoved.addListener(windowId => {
-    if (windowId === winId) {
-        winId = null;
-    }
-});
-
 function injectDefaultDark(_tabId) {
     retrieveDefaultDark().then(data => {
         documents.default.text = data['_default'];
         documents.dark.text = data['_dark'];
         injectCss(documents.default, _tabId);
         injectCss(documents.dark, _tabId);
-        articleAddDark(_tabId);
+        // articleAddDark(_tabId);
     });
 }
 
 // todo: handle tabs event to rebuild after refresh
 // todo: close popup when tab looses focus
+
+function initExistingHost(_activeHost, _tabId) {
+    const host = new Host(_activeHost);
+    host.get().then(_data => {
+        // console.log('_data', _data);
+        const data = _data[_activeHost];
+        if (data) { // we have data for this host
+            console.log(_activeHost);
+            console.log('data', data);
+            initInject(_tabId);
+            injectDefaultDark(_tabId);
+
+            documents.css.text = data.css;
+            documents.selector.text = data.selector;
+            injectCss(documents.css, _tabId);
+            injectMakeReader(documents.selector.text, _tabId);
+            injectScan(tabId);
+            articleAddDark(_tabId);
+        }
+    })
+}
+
+function initView() {
+    chrome.tabs.query({
+        active: true,
+        lastFocusedWindow: true
+    }, function (tabs) {
+        if (tabs[0]) {
+            activeUrl = tabs[0].url;
+            tabId = tabs[0].id;
+            activeHost = getJcReaderHost(activeUrl);
+            openView();
+        }
+    });
+}
+
+chrome.windows.onRemoved.addListener(windowId => {
+    if (windowId === winId) {
+        winId = null;
+    }
+});
 
 chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (_tabId === tTabId) {
@@ -83,47 +94,27 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (info.status === 'loading') {
         const _activeHost = getJcReaderHost(info.url);
         if (_activeHost) {
-            const host = new Host(_activeHost);
-            host.get().then(data => {
-                data = data[_activeHost];
-                if (data) { // we have data for this host
-                    console.log(_activeHost);
-                    console.log('data', data);
-                    initInject(_tabId);
-                    injectDefaultDark(_tabId);
-
-                    documents.css.text = data.css;
-                    documents.selector.text = data.selector;
-                    injectCss(documents.css, _tabId);
-                    injectMakeReader(documents.selector.text, _tabId);
-
-                    scanOn(_tabId); // EXPERIMENTAL
-
-                    // reInjectMakeReader(documents.selector.text, _tabId);
-                }
-            })
+            initExistingHost(_activeHost, _tabId);
         }
     }
 });
 
+// chrome.tabs.onActivated.addListener(activeInfo => {
+//     console.log(activeInfo)
+// });
+//
+// chrome.tabs.onReplaced.addListener((added, removed) => {
+//     console.log(added, removed)
+// });
+//
+// chrome.tabs.onCreated.addListener(tab => {
+//     console.log(tab)
+// });
+
 chrome.browserAction.onClicked.addListener(function() {
     if (winId === null) {  /** prevent multiple popups */
-        chrome.tabs.query({
-            active: true,
-            lastFocusedWindow: true
-        }, function (tabs) {
-            // console.log(tabs);
-            if (tabs[0]) {
-                activeUrl = tabs[0].url;
-                tabId = tabs[0].id;
-                activeHost = getJcReaderHost(activeUrl);
-                openView();
-            }
-        });
+        initView();
     } else {
-        /** bring popup to front */
-        chrome.windows.update(winId, {
-            focused: true
-        });
+        closeView();
     }
 });

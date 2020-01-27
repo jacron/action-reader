@@ -44,15 +44,20 @@ document.head.appendChild(darkStyle);
 
 function articleAddDark(tabId) {
     const injectcode = `
-    document.getElementById('readerarticle').classList.add('dark');
+    if (document.getElementById('readerarticle')) { 
+        document.getElementById('readerarticle').classList.add('dark') 
+    }
+    document.body.classList.add('dark');
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 
 function articleRemoveDark(tabId) {
     const injectcode = `
-    console.log(document.getElementById('readerarticle').classList);
-    document.getElementById('readerarticle').classList.remove('dark');
+    if (document.getElementById('readerarticle')) {
+        document.getElementById('readerarticle').classList.remove('dark');
+    }
+    document.body.classList.remove('dark');
     `;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }

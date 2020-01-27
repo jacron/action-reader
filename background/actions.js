@@ -78,7 +78,7 @@ function toggleGeneral(req, sendResponse) {
     const {mode, host} = req;
     if (mode === 'off') {
         removeStyles();
-        removeReader();
+        removeReader(tabId);
         articleRemoveDark(tabId);
         sendResponse({data: 'general and custom styles and selector removed'});
     } else {
@@ -103,35 +103,16 @@ function toggleDark(req, sendResponse) {
     }
 }
 
-function scanOn(tabId, sendResponse) {
-    const code = `
-function scanDom(e) {
-    const elements = document.elementsFromPoint(e.x, e.y);
-    console.dir(elements);
-    chrome.runtime.sendMessage({feedback: elements}, res => {
-        console.log(res);
-    })
-}
-
-document.addEventListener('click', scanDom);`;
-
-    chrome.tabs.executeScript(tabId,{
-        file: 'background/scan.js'
-        // code
-    }, response => {
-        // console.log(response);
-        if (sendResponse) {
-            sendResponse('tool set on')
-        }});
-}
-
 function toggleSelectorTool(req, sendResponse) {
     if (req.mode === 'on') {
         console.log('mode', req.mode);
-        scanOn(tabId, sendResponse);
+        chrome.tabs.executeScript(tabId,{
+            code: 'document.addEventListener(\'click\', scanDom);\n'
+        }, () => {sendResponse('tool set off')});
     } else {
         chrome.tabs.executeScript(tabId,{
-            code: 'document.removeEventListener(\'click\', scanDom);\n'
+            code: 'document.removeEventListener(\'click\', scanDom);\n' +
+                'document.body.removeChild(document.getElementById(\'elements-dump\'));\n'
         }, () => {sendResponse('tool set off')});
     }
 }
@@ -147,6 +128,7 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
         toggleGeneral,
         toggleDark,
         toggleSelectorTool,
+        storeHost,
     };
     if (req.request) {
         // console.log('req.request', req.request);

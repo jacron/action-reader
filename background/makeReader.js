@@ -4,13 +4,19 @@ function injectMakeReader(selector, tabId) {
 }
 
 function reInjectMakeReader(selector, tabId) {
-    const code = `themeSite(JSON.parse(\`${selector}\`));
-    `;
+    const code = `themeSite(\`${selector}\`);
+`;
     console.log('code', code);
     chrome.tabs.executeScript(tabId,{code}, () => {});
 }
 
-function removeReader() {
+function removeReader(tabId) {
     const code = `deleteReader();`;
     chrome.tabs.executeScript(tabId,{code}, () => {});
 }
+
+function injectScan(tabId) {
+    chrome.tabs.executeScript(tabId,{file: 'background/scan.js'},
+        () => {reInjectMakeReader(selector, tabId)});
+}
+

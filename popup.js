@@ -10,7 +10,6 @@ function postNew() {
         request: 'storeHost',
         host: activeHost
     }, () => {
-        // initEditor(demoCss, '[]');
         documents.css.text = demoCss;
         documents.selector.text = '[]';
         setEditor(documents.css);
@@ -20,7 +19,6 @@ function postNew() {
 
 function setEditor(doc) {
     activeDoc = doc;
-    // console.log(doc);
     if (doc.editor === null) {
         console.log('init editor');
         initEditor(doc);
@@ -86,7 +84,10 @@ function save() {
         text: activeDoc.text,
         styleId: activeDoc.styleId,
         host: activeHost,
-    }, response => {console.log(response)});
+    }, () => {
+        // console.log(response)
+        activeDoc.editor.focus();
+    });
 }
 
 function apply() {
@@ -99,7 +100,10 @@ function apply() {
             host: activeHost,
             styleId: activeDoc.styleId,
         },
-        response => {console.log(response)});
+        () => {
+        // console.log(response)
+            activeDoc.editor.focus();
+    });
 }
 
 // function resetReader() {
@@ -142,16 +146,6 @@ function toggleDarkSettings(e) {
     })
 }
 
-function toggleSelectorTool(e) {
-    toggle(e.target.classList, mode => {
-        console.log(mode);
-        sendMessage({
-            request: 'toggleSelectorTool',
-            host: activeHost,
-            mode});
-    })
-}
-
 function setReaderActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -161,7 +155,6 @@ function setReaderActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
-        ['selector-tool-switch', toggleSelectorTool],
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -249,8 +242,6 @@ function hideEditors() {
 }
 
 function showEditor(doc) {
-    const selectorTool = document.getElementById('selector-tool');
-    selectorTool.style.visibility = doc.name === 'selector' ? 'visible' : 'hidden';
     hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
     doc.editor.focus();

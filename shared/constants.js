@@ -12,7 +12,6 @@ const documents = {
     selector: {
         name: 'selector',
         text: '',
-        language: 'javascript',
         className: 'selector',
         selector: '.selector',
         editor: null,
