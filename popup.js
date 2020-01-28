@@ -10,10 +10,11 @@ function postNew() {
         request: 'storeHost',
         host: activeHost
     }, () => {
-        documents.css.text = demoCss;
-        documents.selector.text = '[]';
-        setEditor(documents.css);
-        toggleForms(true);
+        // documents.css.text = demoCss;
+        // documents.selector.text = '';
+        // setEditor(documents.css);
+        // toggleForms(true);
+        initJcReader();
     });
 }
 
@@ -22,8 +23,9 @@ function setEditor(doc) {
     if (doc.editor === null) {
         console.log('init editor');
         initEditor(doc);
+    } else {
+        showEditor(doc);
     }
-    showEditor(doc);
 }
 
 function initTab(tab) {
@@ -262,6 +264,8 @@ function initEditor(doc) {
             theme: 'vs-dark',
             automaticLayout: true,
         });
+        document.getElementById(doc.id).style.visibility = 'visible';
+        doc.editor.focus();
     });
 }
 

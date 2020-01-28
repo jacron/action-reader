@@ -1,19 +1,3 @@
-function createContainer(nodes) {
-    const container = document.createElement('div');
-    const article = document.createElement('div');
-
-    container.className = 'content-container';
-
-    article.id = 'readerarticle';
-    for (let i = 0; i < nodes.length; i++) {
-        const clone = nodes[i].cloneNode(true);
-        article.appendChild(clone);
-    }
-    container.appendChild(article);
-    container.id = 'readercontainer';
-    return container;
-}
-
 function parse(s) {
     let selector = [];
     let lines = s.split('\n');
@@ -45,33 +29,55 @@ function parse(s) {
 }
 
 const Nodes = function(nodes) {
+    function createContainer(nodes) {
+        const container = document.createElement('div');
+        const article = document.createElement('div');
+
+        container.className = 'content-container';
+
+        article.id = 'readerarticle';
+        for (let i = 0; i < nodes.length; i++) {
+            const clone = nodes[i].cloneNode(true);
+            article.appendChild(clone);
+        }
+        container.appendChild(article);
+        container.id = 'readercontainer';
+        return container;
+    }
+
+    function getNodes(sel) {
+        let nodes = null;
+        if (Array.isArray(sel)) {
+            for (let j = 0; j < sel.length; j++) {
+                nodes = document.querySelectorAll(sel[j]);
+                if (nodes) break;
+            }
+        } else if (sel) {
+            nodes = document.querySelectorAll(sel);
+        }
+        return nodes;
+    }
+
     this.get = selector => {
         for (let i = 0; i < selector.length; i++) {
             let sel = selector[i];
-            // let optional = false;
+            let optional = false;
             if (sel[0] === '@') {
                 sel = sel.substr(1);
-                // optional = true;
+                optional = true;
             }
-            let node = null;
-            if (Array.isArray(sel)) {
-                for (let j = 0; j < sel.length; j++) {
-                    node = document.querySelectorAll(sel[j]);
-                    if (node) break;
-                }
-            } else if (sel) {
-                node = document.querySelectorAll(sel);
-            }
-            if (node) {
+            const node = getNodes(sel);
+            console.log(sel, node);
+            if (node && node.length > 0) {
                 for (let k = 0; k < node.length; k++) {
                     nodes.push(node[k]);
                 }
             } else {
-                console.log(sel + ' is not a node');
-                // if (!optional) {
-                //     nodes = [];
-                //     break;
-                // }
+                console.log(sel, ' is not a node');
+                if (!optional) {
+                    nodes = [];
+                    break;
+                }
             }
         }
         return this;

@@ -15,8 +15,8 @@ function removeReader(tabId) {
     chrome.tabs.executeScript(tabId,{code}, () => {});
 }
 
-function injectScan(tabId) {
-    chrome.tabs.executeScript(tabId,{file: 'background/scan.js'},
-        () => {reInjectMakeReader(selector, tabId)});
-}
+// function injectScan(tabId) {
+//     chrome.tabs.executeScript(tabId,{file: 'background/scan.js'},
+//         () => {reInjectMakeReader(selector, tabId)});
+// }
 

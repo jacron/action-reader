@@ -60,7 +60,7 @@ function initExistingHost(_activeHost, _tabId) {
             documents.selector.text = data.selector;
             injectCss(documents.css, _tabId);
             injectMakeReader(documents.selector.text, _tabId);
-            injectScan(tabId);
+            // injectScan(tabId);
             articleAddDark(_tabId);
         }
     })
