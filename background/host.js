@@ -13,13 +13,15 @@ class Host {
         console.log('changes', changes);
         this.get().then(oldHost => {
             const newHost = {};
-            oldHost = oldHost[this.name];
-            if (!oldHost) {
-                newHost.css = changes.css || '';
-                newHost.selector = changes.selector || '';
-            } else {
-                newHost.css = changes.css || oldHost.css || '';
-                newHost.selector = changes.selector || oldHost.selector || '';
+            if (changes) {
+                oldHost = oldHost[this.name];
+                if (!oldHost) {
+                    newHost.css = changes.css || '';
+                    newHost.selector = changes.selector || '';
+                } else {
+                    newHost.css = changes.css || oldHost.css || '';
+                    newHost.selector = changes.selector || oldHost.selector || '';
+                }
             }
             StorageArea.set({[this.name]: newHost}, () => {});
         });

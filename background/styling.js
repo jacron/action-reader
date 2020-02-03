@@ -2,25 +2,7 @@
 // const INJECTED_DEFAULT_STYLE_ID = 'splash-default-style';
 // const INJECTED_CUSTOM_STYLE_ID = 'splash-custom-style';
 
-function initInject(tabId) {
-    // todo: get and set the default style in the view
-//     const css = `
-// #readercontainer {
-//   position: fixed;
-//   top: 0;
-//   bottom: 0;
-//   left: 0;
-//   right: 0;
-//   overflow: auto;
-//   background-color: #888;
-//   z-index: 9999999999999;
-// }
-// #readerarticle {
-//     width: 600px;
-//     margin: auto;
-//     background-color: #ccc;
-// }
-//     `;
+function initInject(tabId, hostdata, dd_data) {
     const injectcode = `
 function createStyle(id) {
     const styleElement = document.createElement('style');
@@ -37,8 +19,11 @@ document.head.appendChild(defaultStyle);
 const darkStyle = createStyle('${documents.dark.styleId}');
 document.head.appendChild(darkStyle);    
 
+cssStyle.innerHTML = \`${hostdata.css}\`;
+defaultStyle.innerHTML = \`${dd_data['_default']}\`;
+darkStyle.innerHTML = \`${dd_data['_dark']}\`;
+
 `;
-    //defaultStyle.innerHTML = \`${css}\`;
     chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
 }
 

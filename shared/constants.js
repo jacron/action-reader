@@ -12,6 +12,7 @@ const documents = {
     selector: {
         name: 'selector',
         text: '',
+        language: 'css',
         className: 'selector',
         selector: '.selector',
         editor: null,

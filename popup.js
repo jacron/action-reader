@@ -2,18 +2,11 @@ let activeHost;
 let activeDoc;
 
 function postNew() {
-    const demoCss = `
-    body { color: blue !important; }
-    `;
     console.log('activeHost', activeHost);
     sendMessage({
         request: 'storeHost',
         host: activeHost
     }, () => {
-        // documents.css.text = demoCss;
-        // documents.selector.text = '';
-        // setEditor(documents.css);
-        // toggleForms(true);
         initJcReader();
     });
 }
@@ -108,12 +101,6 @@ function apply() {
     });
 }
 
-// function resetReader() {
-//     sendMessage({
-//         request: 'removeCss',
-//     }, () => {});
-// }
-
 function closeMe() {
     sendMessage({request: 'closePopup'});
 }
@@ -187,9 +174,6 @@ function toggleForms(hostExists) {
 function show(req) {
     const {host, result, darkText, defaultText} = req;
     const custom = result[host];
-    // if (custom)
-    // const entries = Object.entries(custom);  // just for counting
-    // const hostExists = entries.length > 0;
     toggleForms(custom);
     if (custom) {
         initTab('css');

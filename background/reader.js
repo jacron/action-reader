@@ -67,7 +67,7 @@ const Nodes = function(nodes) {
                 optional = true;
             }
             const node = getNodes(sel);
-            console.log(sel, node);
+            // console.log(sel, node);
             if (node && node.length > 0) {
                 for (let k = 0; k < node.length; k++) {
                     nodes.push(node[k]);
@@ -87,6 +87,7 @@ const Nodes = function(nodes) {
         if (nodes.length > 0) {
             const container = createContainer(nodes);
             document.body.appendChild(container);
+            // document.body.innerHTML = container.innerHTML;
             document.getElementById('readerarticle').className = 'dark';
         } else {
             console.log('No content for reader found');
