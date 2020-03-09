@@ -1,5 +1,6 @@
 import {setActiveDoc} from "./form.js";
 import {monacoDocuments, dynClass} from '../shared/constants.js';
+import {popup} from "./popupState.js";
 
 function hideEditors() {
     for (const entry of Object.entries(monacoDocuments)) {
@@ -11,6 +12,23 @@ function showEditor(doc) {
     hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
     doc.editor.focus();
+}
+
+function setDirty(dirty, doc) {
+    // console.log(dirty);
+
+    const name = doc.name;
+    // console.log(name);
+    const tabs = document.getElementById('tabs');
+
+    tabs.querySelector('.' + name).innerText =
+        dirty ? name + '*' : name;
+
+}
+
+function checkDirty(model, doc) {
+    setDirty(doc.lastSavedVersion !== model.getAlternativeVersionId(),
+        doc);
 }
 
 function initEditor(doc) {
@@ -40,10 +58,13 @@ function initEditor(doc) {
             codeLens: false,
             hover: {
                 enabled: false
-            }
+            },
         });
         document.getElementById(doc.id).style.visibility = 'visible';
         doc.editor.focus();
+        const model = doc.editor.getModel();
+        doc.lastSavedVersion = model.getAlternativeVersionId();
+        model.onDidChangeContent(() => checkDirty(model, doc))
     });
 }
 
@@ -89,4 +110,4 @@ function setTabActions() {
     });
 }
 
-export {setTabActions, setEditor}
+export {setTabActions, setEditor, setDirty}

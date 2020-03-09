@@ -91,8 +91,9 @@ let Nodes = function (nodes) {
     this.injectArticle = () => {
         if (nodes.length > 0) {
             const container = createContainer(nodes);
-            document.body.appendChild(container);
-            // document.body.innerHTML = container.innerHTML;
+            // document.body.appendChild(container);
+            // console.log('container', container);
+            document.body.innerHTML = container.innerHTML;
             document.getElementById('readerarticle').className = 'dark';
         } else {
             console.log('No content for reader found');
@@ -111,8 +112,10 @@ function deleteReader() {
 function themeSite(selector) {
     deleteReader();
     if (selector && selector.length) {
+        const selectors = parse(selector);
+        console.log('selectors', selectors);
         new Nodes([])
-            .get(parse(selector))
+            .get(selectors)
             .injectArticle()
     }
 }

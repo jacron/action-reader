@@ -3,16 +3,16 @@ import {setTabActions} from './tab.js';
 
 // let activeHost;
 
-// function dumpStorage() {
-//     chrome.storage.local.get(null,
-//         response => {
-//             console.log('storage dump');
-//             console.dir(response);
-//         });
-// }
+function dumpStorage() {
+    chrome.storage.local.get(null,
+        response => {
+            console.log('storage dump');
+            console.dir(response);
+        });
+}
 
 document.addEventListener('DOMContentLoaded', function () {
-    // dumpStorage();
+    dumpStorage();
     setFormActions();
     setTabActions();
 });

@@ -3,6 +3,7 @@
   "description": "Complete Reader",
   "version": "0.1",
   "author": "Jan H Croonen",
+  "options_page": "options/options.html",
   "permissions": [
     "tabs",
     "storage",

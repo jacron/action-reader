@@ -1,9 +1,12 @@
 import {sendMessage} from '../shared/constants.js';
 import {dynClass, monacoDocuments} from "../shared/constants.js";
-import {setEditor} from "./tab.js";
+import {setEditor, setDirty} from "./tab.js";
+import {popup} from "./popupState.js";
 
-let _activeDoc;
-let _activeHost;
+// let popup.activeDoc;
+// let popup.activeHost;
+
+
 
 function closeMe() {
     sendMessage({request: 'closePopup'});
@@ -12,27 +15,26 @@ function closeMe() {
 function initJcReader() {
     sendMessage({request: 'getInitial'},
         response => {
-            // console.log('initial data', response);
-            _activeHost = response.activeHost;
+            popup.activeHost = response.activeHost;
             sendMessage({
                 request: 'fetchHost',
-                host: _activeHost}, () => { });
+                host: popup.activeHost}, () => { });
         });
 }
 
 function postNew() {
-    console.log('activeHost', _activeHost);
+    console.log('activeHost', popup.activeHost);
     sendMessage({
         request: 'storeHost',
-        host: _activeHost
+        host: popup.activeHost
     }, () => {
         initJcReader();
     });
 }
 
 function deleteReader() {
-    if (confirm(`'${_activeHost}' verwijderen?`)) {
-        sendMessage({request: 'deleteHost', host: _activeHost },
+    if (confirm(`'${popup.activeHost}' verwijderen?`)) {
+        sendMessage({request: 'deleteHost', host: popup.activeHost },
             () => toggleForms(false));
     }
 }
@@ -43,33 +45,37 @@ function updateDocument(doc) {
 
 function save() {
     /** saveHost active document */
-    updateDocument(_activeDoc);
-    console.log('activeDoc', _activeDoc);
+    updateDocument(popup.activeDoc);
+    // console.log('activeDoc', popup.activeDoc);
     sendMessage({
         request: 'saveHost',
-        name: _activeDoc.name,
-        text: _activeDoc.text,
-        styleId: _activeDoc.styleId,
-        host: _activeHost,
+        name: popup.activeDoc.name,
+        text: popup.activeDoc.text,
+        styleId: popup.activeDoc.styleId,
+        host: popup.activeHost,
     }, () => {
         // console.log(response)
-        _activeDoc.editor.focus();
+        popup.activeDoc.editor.focus();
+        popup.activeDoc.lastSavedVersion =
+            popup.activeDoc.editor.getModel().getAlternativeVersionId();
+        setDirty(false, popup.activeDoc);
     });
 }
 
 function apply() {
-    updateDocument(_activeDoc);
-    console.log('activeDoc', _activeDoc);
+    updateDocument(popup.activeDoc);
+    console.log('activeDoc', popup.activeDoc);
     sendMessage({
             request: 'applyHost',
-            name: _activeDoc.name,
-            text: _activeDoc.text,
-            host: _activeHost,
-            styleId: _activeDoc.styleId,
+            name: popup.activeDoc.name,
+            text: popup.activeDoc.text,
+            host: popup.activeHost,
+            styleId: popup.activeDoc.styleId,
         },
         () => {
             // console.log(response)
-            _activeDoc.editor.focus();
+            popup.activeDoc.editor.focus();
+            setDirty(false, popup.activeDoc);
         });
 }
 
@@ -77,7 +83,7 @@ function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
         sendMessage({
             request: 'toggleGeneral',
-            host: _activeHost,
+            host: popup.activeHost,
             mode});
     })
 }
@@ -98,13 +104,14 @@ function toggleDarkSettings(e) {
     toggle(e.target.classList, mode => {
         sendMessage({
             request: 'toggleDark',
-            host: _activeHost,
-            mode});
+            host: popup.activeHost,
+            mode
+        });
     })
 }
 
 function setActiveDoc(activeDoc) {
-    _activeDoc = activeDoc;
+    popup.activeDoc = activeDoc;
 }
 
 function toggleForms(hostExists) {

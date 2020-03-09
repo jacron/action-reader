@@ -51,9 +51,15 @@ button:hover {
   padding: 7px;
   cursor: default;
   background-color: rgba(50,50,250,.5);
+  width: 50px;
+  z-index: 1;
+  height: 15px;
+  text-align: center;
 }
 #tabs > div.selected {
   background-color: blue;
+  position: relative;
+  top: 2px;
 }
 #tabs {
   text-align: left;

@@ -13,6 +13,7 @@ const monacoDocuments = {
         editor: null,
         id: 'editor-css',
         styleId: 'splash-custom-style',
+        lastSavedVersion: null,
     },
     selector: {
         name: 'selector',
@@ -22,6 +23,7 @@ const monacoDocuments = {
         selector: '.selector',
         editor: null,
         id: 'editor-selector',
+        lastSavedVersion: null,
     },
     default: {
         name: 'default',
@@ -32,6 +34,7 @@ const monacoDocuments = {
         editor: null,
         id: 'editor-default',
         styleId: 'splash-default-style',
+        lastSavedVersion: null,
     },
     dark: {
         name: 'dark',
@@ -42,6 +45,7 @@ const monacoDocuments = {
         editor: null,
         id: 'editor-dark',
         styleId: 'splash-dark-style',
+        lastSavedVersion: null,
     },
 };
 /**

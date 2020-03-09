@@ -1,5 +1,5 @@
 import {monacoDocuments} from "../shared/constants.js";
-import {app} from './state.js';
+import {background} from './backgroundState.js';
 
 function initInject(tabId, hostdata, dd_data) {
     const injectcode = `
@@ -67,7 +67,7 @@ function removeStyles() {
     document.getElementById('${monacoDocuments.default.styleId}').innerHTML = '';
     document.getElementById('${monacoDocuments.dark.styleId}').innerHTML = '';
     `;
-    chrome.tabs.executeScript(app.tabId,{code: injectcode}, () => {});
+    chrome.tabs.executeScript(background.tabId,{code: injectcode}, () => {});
 }
 
 export {articleAddDark, initInject, injectCss, removeStyles,

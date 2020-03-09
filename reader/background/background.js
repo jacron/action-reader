@@ -1,4 +1,4 @@
-import {app} from './state.js';
+import {background} from './backgroundState.js';
 import {initActions} from "./actions.js";
 import {initView, closeView} from "./view.js";
 import {getJcReaderHost} from "./util.js";
@@ -9,8 +9,8 @@ import {initExistingHost} from "./host.js";
 // reader styling - does Safari reader work that way also? no.
 
 chrome.windows.onRemoved.addListener(windowId => {
-    if (windowId === app.winId) {
-        app.winId = null;
+    if (windowId === background.winId) {
+        background.winId = null;
     }
 });
 
@@ -18,7 +18,7 @@ let lastActiveTabId;
 
 chrome.tabs.onUpdated.addListener((_tabId, info) => {
     lastActiveTabId = _tabId;
-    if (_tabId === app.tTabId) {
+    if (_tabId === background.tTabId) {
         return;
     }
     /** do not use the globals tabId and activeHost here */
@@ -46,7 +46,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 // });
 
 chrome.browserAction.onClicked.addListener(function() {
-    if (app.winId === null) {  /** prevent multiple popups */
+    if (background.winId === null) {  /** prevent multiple popups */
         initView();
     } else {
         closeView();

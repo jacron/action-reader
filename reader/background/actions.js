@@ -2,7 +2,7 @@ import {Host, storeDefault, storeDark, retrieveDefaultDark} from "./host.js";
 import {injectCss, removeStyles, removeStyle, articleRemoveDark,
     articleAddDark} from "./styling.js";
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
-import {app} from './state.js';
+import {background} from './state.js';
 import {monacoDocuments} from "../shared/constants.js";
 
 function storeHost(req, sendResponse) {
@@ -36,16 +36,16 @@ function saveHost(req, sendResponse) {
 function applyHost(req, sendResponse) {
     // console.log('req (apply)', req);
     if (~['css', 'default', 'dark'].indexOf(req.name )) {
-        injectCss(req, app.tabId);
+        injectCss(req, background.tabId);
     }
     if (req.name === 'selector') {
-        reInjectMakeReader(req.text, app.tabId);
+        reInjectMakeReader(req.text, background.tabId);
     }
     sendResponse({data: 'ok'});
 }
 
 function getInitial(req, sendResponse) {
-    sendResponse({activeHost: app.activeHost});
+    sendResponse({activeHost: background.activeHost});
 }
 
 function deleteHost(req, sendResponse) {
@@ -83,20 +83,20 @@ function reInit(name) {
     const host = new Host(name);
     host.get().then(data => {
         data = data[name];
-        injectDefaultDark(app.tabId);
+        injectDefaultDark(background.tabId);
         monacoDocuments.css.text = data.css;
         monacoDocuments.selector.text = data.selector;
-        injectCss(monacoDocuments.css, app.tabId);
-        articleAddDark(app.tabId);
-        reInjectMakeReader(monacoDocuments.selector.text, app.tabId);
+        injectCss(monacoDocuments.css, background.tabId);
+        articleAddDark(background.tabId);
+        reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
     })
 }
 function toggleGeneral(req, sendResponse) {
     const {mode, host} = req;
     if (mode === 'off') {
         removeStyles();
-        removeReader(app.tabId);
-        articleRemoveDark(app.tabId);
+        removeReader(background.tabId);
+        articleRemoveDark(background.tabId);
         sendResponse({data: 'general and custom styles and selector removed'});
     } else {
         reInit(host);
@@ -107,58 +107,42 @@ function toggleGeneral(req, sendResponse) {
 function toggleDark(req, sendResponse) {
     const {mode} = req;
     if (mode === 'off') {
-        removeStyle(monacoDocuments.dark, app.tabId);
-        articleRemoveDark(app.tabId);
+        removeStyle(monacoDocuments.dark, background.tabId);
+        articleRemoveDark(background.tabId);
         sendResponse({data: 'dark styles removed'});
     } else {
-        articleAddDark(app.tabId);
+        articleAddDark(background.tabId);
         retrieveDefaultDark().then(data => {
             monacoDocuments.dark.text = data['_dark'];
-            injectCss(monacoDocuments.dark, app.tabId);
+            injectCss(monacoDocuments.dark, background.tabId);
             sendResponse({data: 'dark styles added'});
         });
     }
 }
 
-function toggleSelectorTool(req, sendResponse) {
-    if (req.mode === 'on') {
-        console.log('mode', req.mode);
-        chrome.tabs.executeScript(app.tabId,{
-            code: 'document.addEventListener(\'click\', scanDom);\n'
-        }, () => {sendResponse('tool set off')});
-    } else {
-        chrome.tabs.executeScript(app.tabId,{
-            code: 'document.removeEventListener(\'click\', scanDom);\n' +
-                'document.body.removeChild(document.getElementById(\'elements-dump\'));\n'
-        }, () => {sendResponse('tool set off')});
-    }
-}
-
 function closePopup() {
-    if (app.winId) {
-        chrome.windows.remove(app.winId, () => {
-            app.winId = null
+    if (background.winId) {
+        chrome.windows.remove(background.winId, () => {
+            background.winId = null
         });
     }
 }
 
+const actionBindings = {
+    fetchHost,
+    getInitial,
+    saveHost,
+    applyHost,
+    closePopup,
+    deleteHost,
+    toggleGeneral,
+    toggleDark,
+    storeHost,
+};
 
 function initActions(req, sendResponse) {
-    const bindings = {
-        fetchHost,
-        getInitial,
-        saveHost,
-        applyHost,
-        closePopup,
-        deleteHost,
-        toggleGeneral,
-        toggleDark,
-        toggleSelectorTool,
-        storeHost,
-    };
     if (req.request) {
-        // console.log('req.request', req.request);
-        const fun = bindings[req.request];
+        const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse);
         } else {

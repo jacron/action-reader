@@ -1,4 +1,4 @@
-import {app} from "./state.js";
+import {background} from "./backgroundState.js";
 import {getJcReaderHost} from "./util.js";
 
 function openView() {
@@ -9,15 +9,15 @@ function openView() {
         height: 500,
         top: 20,
     }, win => {
-        app.winId = win.id;
-        app.tTabId = win.tabs[0].id;
+        background.winId = win.id;
+        background.tTabId = win.tabs[0].id;
     })
 }
 
 function closeView() {
-    if (app.winId) {
-        chrome.windows.remove(app.winId, () => {
-            app.winId = null
+    if (background.winId) {
+        chrome.windows.remove(background.winId, () => {
+            background.winId = null
         });
     }
 }
@@ -28,9 +28,11 @@ function initView() {
         lastFocusedWindow: true
     }, function (tabs) {
         if (tabs[0]) {
-            app.activeUrl = tabs[0].url;
-            app.tabId = tabs[0].id;
-            app.activeHost = getJcReaderHost(app.activeUrl);
+            const {url, id} = tabs[0];
+            // console.log('active url', url);
+            background.activeUrl = url;
+            background.tabId = id;
+            background.activeHost = getJcReaderHost(url);
             openView();
         }
     });
