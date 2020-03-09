@@ -1,6 +1,5 @@
-// todo: move these constants to the struct documents
-// const INJECTED_DEFAULT_STYLE_ID = 'splash-default-style';
-// const INJECTED_CUSTOM_STYLE_ID = 'splash-custom-style';
+import {monacoDocuments} from "../shared/constants.js";
+import {app} from './state.js';
 
 function initInject(tabId, hostdata, dd_data) {
     const injectcode = `
@@ -10,13 +9,13 @@ function createStyle(id) {
     return styleElement;
 }
 
-const cssStyle = createStyle('${documents.css.styleId}');
+const cssStyle = createStyle('${monacoDocuments.css.styleId}');
 document.head.appendChild(cssStyle);    
 
-const defaultStyle = createStyle('${documents.default.styleId}');
+const defaultStyle = createStyle('${monacoDocuments.default.styleId}');
 document.head.appendChild(defaultStyle);    
 
-const darkStyle = createStyle('${documents.dark.styleId}');
+const darkStyle = createStyle('${monacoDocuments.dark.styleId}');
 document.head.appendChild(darkStyle);    
 
 cssStyle.innerHTML = \`${hostdata.css}\`;
@@ -64,9 +63,12 @@ function removeStyle(doc, tabId) {
 
 function removeStyles() {
     const injectcode = `
-    document.getElementById('${documents.css.styleId}').innerHTML = '';
-    document.getElementById('${documents.default.styleId}').innerHTML = '';
-    document.getElementById('${documents.dark.styleId}').innerHTML = '';
+    document.getElementById('${monacoDocuments.css.styleId}').innerHTML = '';
+    document.getElementById('${monacoDocuments.default.styleId}').innerHTML = '';
+    document.getElementById('${monacoDocuments.dark.styleId}').innerHTML = '';
     `;
-    chrome.tabs.executeScript(tabId,{code: injectcode}, () => {});
+    chrome.tabs.executeScript(app.tabId,{code: injectcode}, () => {});
 }
+
+export {articleAddDark, initInject, injectCss, removeStyles,
+    removeStyle, articleRemoveDark}

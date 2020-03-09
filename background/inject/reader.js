@@ -1,3 +1,8 @@
+/*
+ * this script is injected
+ * (not a part of the moldule)
+ */
+
 function parse(s) {
     let selector = [];
     let lines = s.split('\n');
@@ -28,7 +33,7 @@ function parse(s) {
     return selector;
 }
 
-const Nodes = function(nodes) {
+let Nodes = function (nodes) {
     function createContainer(nodes) {
         const container = document.createElement('div');
         const article = document.createElement('div');

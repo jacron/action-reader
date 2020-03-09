@@ -68,7 +68,7 @@ button:hover {
   padding: 2px 8px;
 }
 .switch {
-  background: url('images/toggle.png');
+  background: url('../images/toggle.png');
   width: 32px;
   height: 16px;
   display: inline-block;

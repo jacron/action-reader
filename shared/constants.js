@@ -1,4 +1,9 @@
-const documents = {
+/**
+ * tabs that hold instances of the monaco editor
+ *
+ * @type {{css: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, default: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, dark: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, selector: {editor: null, name: string, language: string, className: string, selector: string, text: string, id: string}}}
+ */
+const monacoDocuments = {
     css: {
         name: 'css',
         text: '',
@@ -39,11 +44,21 @@ const documents = {
         styleId: 'splash-dark-style',
     },
 };
+/**
+ * 'selected' or '.selected'
+ *
+ * @type {{SELECTED: {className: string, selector: string}}}
+ */
 const dynClass = {
     SELECTED: {
         className: 'selected',
         selector: '.selected',
     },
 };
+/**
+ * shorthand function call
+ *
+ */
 const sendMessage = chrome.runtime.sendMessage;
 
+export {monacoDocuments, dynClass, sendMessage}

@@ -1,3 +1,10 @@
+import {Host, storeDefault, storeDark, retrieveDefaultDark} from "./host.js";
+import {injectCss, removeStyles, removeStyle, articleRemoveDark,
+    articleAddDark} from "./styling.js";
+import {reInjectMakeReader, removeReader} from "./makeReader.js";
+import {app} from './state.js';
+import {monacoDocuments} from "../shared/constants.js";
+
 function storeHost(req, sendResponse) {
     const host = new Host(req.host);
     host.store();
@@ -29,16 +36,16 @@ function saveHost(req, sendResponse) {
 function applyHost(req, sendResponse) {
     // console.log('req (apply)', req);
     if (~['css', 'default', 'dark'].indexOf(req.name )) {
-        injectCss(req, tabId);
+        injectCss(req, app.tabId);
     }
     if (req.name === 'selector') {
-        reInjectMakeReader(req.text, tabId);
+        reInjectMakeReader(req.text, app.tabId);
     }
     sendResponse({data: 'ok'});
 }
 
 function getInitial(req, sendResponse) {
-    sendResponse({activeHost});
+    sendResponse({activeHost: app.activeHost});
 }
 
 function deleteHost(req, sendResponse) {
@@ -62,24 +69,34 @@ function fetchHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
+function injectDefaultDark(_tabId) {
+    retrieveDefaultDark().then(data => {
+        monacoDocuments.default.text = data['_default'];
+        monacoDocuments.dark.text = data['_dark'];
+        injectCss(monacoDocuments.default, _tabId);
+        injectCss(monacoDocuments.dark, _tabId);
+        // articleAddDark(_tabId);
+    });
+}
+
 function reInit(name) {
     const host = new Host(name);
     host.get().then(data => {
         data = data[name];
-        injectDefaultDark(tabId);
-        documents.css.text = data.css;
-        documents.selector.text = data.selector;
-        injectCss(documents.css, tabId);
-        articleAddDark(tabId);
-        reInjectMakeReader(documents.selector.text, tabId);
+        injectDefaultDark(app.tabId);
+        monacoDocuments.css.text = data.css;
+        monacoDocuments.selector.text = data.selector;
+        injectCss(monacoDocuments.css, app.tabId);
+        articleAddDark(app.tabId);
+        reInjectMakeReader(monacoDocuments.selector.text, app.tabId);
     })
 }
 function toggleGeneral(req, sendResponse) {
     const {mode, host} = req;
     if (mode === 'off') {
         removeStyles();
-        removeReader(tabId);
-        articleRemoveDark(tabId);
+        removeReader(app.tabId);
+        articleRemoveDark(app.tabId);
         sendResponse({data: 'general and custom styles and selector removed'});
     } else {
         reInit(host);
@@ -88,16 +105,16 @@ function toggleGeneral(req, sendResponse) {
 }
 
 function toggleDark(req, sendResponse) {
-    const {mode, host} = req;
+    const {mode} = req;
     if (mode === 'off') {
-        removeStyle(documents.dark, tabId);
-        articleRemoveDark(tabId);
+        removeStyle(monacoDocuments.dark, app.tabId);
+        articleRemoveDark(app.tabId);
         sendResponse({data: 'dark styles removed'});
     } else {
-        articleAddDark(tabId);
+        articleAddDark(app.tabId);
         retrieveDefaultDark().then(data => {
-            documents.dark.text = data['_dark'];
-            injectCss(documents.dark, tabId);
+            monacoDocuments.dark.text = data['_dark'];
+            injectCss(monacoDocuments.dark, app.tabId);
             sendResponse({data: 'dark styles added'});
         });
     }
@@ -106,24 +123,33 @@ function toggleDark(req, sendResponse) {
 function toggleSelectorTool(req, sendResponse) {
     if (req.mode === 'on') {
         console.log('mode', req.mode);
-        chrome.tabs.executeScript(tabId,{
+        chrome.tabs.executeScript(app.tabId,{
             code: 'document.addEventListener(\'click\', scanDom);\n'
         }, () => {sendResponse('tool set off')});
     } else {
-        chrome.tabs.executeScript(tabId,{
+        chrome.tabs.executeScript(app.tabId,{
             code: 'document.removeEventListener(\'click\', scanDom);\n' +
                 'document.body.removeChild(document.getElementById(\'elements-dump\'));\n'
         }, () => {sendResponse('tool set off')});
     }
 }
 
-chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
+function closePopup() {
+    if (app.winId) {
+        chrome.windows.remove(app.winId, () => {
+            app.winId = null
+        });
+    }
+}
+
+
+function initActions(req, sendResponse) {
     const bindings = {
         fetchHost,
         getInitial,
         saveHost,
         applyHost,
-        closePopup: closeView,
+        closePopup,
         deleteHost,
         toggleGeneral,
         toggleDark,
@@ -140,5 +166,6 @@ chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
             sendResponse('invalid request:' + req.request);
         }
     }
-});
+}
 
+export {initActions}
