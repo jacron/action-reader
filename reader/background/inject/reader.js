@@ -91,9 +91,11 @@ let Nodes = function (nodes) {
     this.injectArticle = () => {
         if (nodes.length > 0) {
             const container = createContainer(nodes);
+            const div = document.createElement('div');
+            div.appendChild(container);
             // document.body.appendChild(container);
             // console.log('container', container);
-            document.body.innerHTML = container.innerHTML;
+            document.body.innerHTML = div.innerHTML;
             document.getElementById('readerarticle').className = 'dark';
         } else {
             console.log('No content for reader found');

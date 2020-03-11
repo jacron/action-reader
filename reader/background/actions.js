@@ -2,7 +2,7 @@ import {Host, storeDefault, storeDark, retrieveDefaultDark} from "./host.js";
 import {injectCss, removeStyles, removeStyle, articleRemoveDark,
     articleAddDark} from "./styling.js";
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
-import {background} from './state.js';
+import {background} from './backgroundState.js';
 import {monacoDocuments} from "../shared/constants.js";
 
 function storeHost(req, sendResponse) {

@@ -26,6 +26,14 @@ function setDirty(dirty, doc) {
 
 }
 
+/**
+ * https://github.com/Microsoft/monaco-editor/issues/353
+ * Get the alternative version id of the model.
+ * This alternative version id is not always incremented,
+ * it will return the same values in the case of undo-redo.
+ * @param model
+ * @param doc
+ */
 function checkDirty(model, doc) {
     setDirty(doc.lastSavedVersion !== model.getAlternativeVersionId(),
         doc);

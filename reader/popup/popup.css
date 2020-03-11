@@ -39,7 +39,7 @@ button:hover {
   margin-top: 12px;
 }
 .editor {
-  border: 1px solid gray;
+  border: 2px solid blue;
   text-align: left;
   height: calc(100% - 80px);
   position: absolute;
