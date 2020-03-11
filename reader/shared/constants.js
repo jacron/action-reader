@@ -65,4 +65,13 @@ const dynClass = {
  */
 const sendMessage = chrome.runtime.sendMessage;
 
-export {monacoDocuments, dynClass, sendMessage}
+/**
+ * url for server handling read/write json file
+ */
+const jsonStorage = {
+    url: 'http://localhost:3006',
+    jsonmap: '/Volumes/Media/Download',
+    jsonfile: 'readerdata.json',
+};
+
+export {monacoDocuments, dynClass, sendMessage, jsonStorage}

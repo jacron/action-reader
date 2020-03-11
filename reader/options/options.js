@@ -1,16 +1,8 @@
-import {sendMessage} from '../shared/constants.js';
-// import {popup} from "../popup/popupState.js";
+import {jsonStorage} from "../shared/constants.js";
 
 function getStorage(cb) {
     chrome.storage.local.get(null,
         response => cb(response));
-}
-
-function dumpStorage() {
-    getStorage(data => {
-        console.log('storage dump');
-        console.dir(data);
-    })
 }
 
 function listStorage() {
@@ -28,15 +20,14 @@ function listStorage() {
 }
 
 function store(data, sendResponse) {
-    const filename = 'readerdata.json'; // should contain date
     const json = JSON.stringify(data);
-    const systemlibraryurl = 'http://localhost:3006';
+    const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
     const opts = {
-        path: '/Volumes/Media/Download/' + filename,
+        path,
         data: json
     };
     // console.log(opts);
-    fetch(systemlibraryurl + '/save', {
+    fetch(`${jsonStorage.url}/save`, {
         method: 'post',
         body: JSON.stringify(opts),
         headers: {
@@ -53,14 +44,25 @@ function save() {
     })
 }
 
-function restore() {
+function restore(cb) {
+    const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
+    fetch(`${jsonStorage.url}/text?path=${path}`)
+        .then(response => response.json())
+        .then(cb);
+}
 
+function load() {
+    restore(data => {
+        // console.log(data);
+        const sites = JSON.parse(data);
+        console.log(sites);
+    })
 }
 
 function bindControls() {
     const bindings = [
         ['save', save],
-        ['restore', restore]
+        ['load', load]
     ];
     for (const [id, fun] of bindings) {
         document.getElementById(id)
@@ -68,6 +70,5 @@ function bindControls() {
     }
 }
 
-// dumpStorage();
 listStorage();
 bindControls();
