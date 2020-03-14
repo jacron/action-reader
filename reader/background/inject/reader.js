@@ -50,15 +50,25 @@ let Nodes = function (nodes) {
         return container;
     }
 
+    function getNode(sel) {
+        if (sel[0] === '*') {
+            return document.querySelectorAll(sel.substr(1));
+        } else {
+            console.log('sel', sel);
+            return document.querySelector(sel);
+        }
+    }
+
     function getNodes(sel) {
+        // console.log('sel', sel);
         let nodes = null;
         if (Array.isArray(sel)) {
             for (let j = 0; j < sel.length; j++) {
-                nodes = document.querySelectorAll(sel[j]);
+                nodes = getNode(sel[j]);
                 if (nodes) break;
             }
         } else if (sel) {
-            nodes = document.querySelectorAll(sel);
+            nodes = getNode(sel);
         }
         return nodes;
     }
@@ -73,11 +83,21 @@ let Nodes = function (nodes) {
             }
             const node = getNodes(sel);
             // console.log(sel, node);
-            if (node && node.length > 0) {
-                for (let k = 0; k < node.length; k++) {
-                    nodes.push(node[k]);
+            let found = false;
+            if (Array.isArray(node)) {
+                if (node && node.length > 0) {
+                    found = true;
+                    for (let k = 0; k < node.length; k++) {
+                        nodes.push(node[k]);
+                    }
                 }
             } else {
+                if (node) {
+                    found = true;
+                    nodes.push(node);
+                }
+            }
+            if (!found) {
                 console.log(sel, ' is not a node');
                 if (!optional) {
                     nodes = [];
@@ -91,11 +111,11 @@ let Nodes = function (nodes) {
     this.injectArticle = () => {
         if (nodes.length > 0) {
             const container = createContainer(nodes);
-            const div = document.createElement('div');
-            div.appendChild(container);
-            // document.body.appendChild(container);
+            // const div = document.createElement('div');
+            // div.appendChild(container);
+            // document.body.innerHTML = div.innerHTML;
+            document.body.appendChild(container);
             // console.log('container', container);
-            document.body.innerHTML = div.innerHTML;
             document.getElementById('readerarticle').className = 'dark';
         } else {
             console.log('No content for reader found');
@@ -111,14 +131,23 @@ function deleteReader() {
     }
 }
 
-function themeSite(selector) {
+const delayedSites =
+    {'the-tls.co.uk': 500}
+;
+
+function themeSite(selector, host) {
     deleteReader();
     if (selector && selector.length) {
         const selectors = parse(selector);
-        console.log('selectors', selectors);
-        new Nodes([])
-            .get(selectors)
-            .injectArticle()
+        // console.log('selectors', selectors);
+        // console.log('host', host);
+        const timeout = delayedSites[host] || 0;
+        // console.log('timeout', timeout);
+        setTimeout(() => {
+            new Nodes([])
+                .get(selectors)
+                .injectArticle()
+        }, timeout);
     }
 }
 

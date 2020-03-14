@@ -58,7 +58,8 @@ function initExistingHost(_activeHost, _tabId) {
                 initInject(_tabId, hostdata, dd_data);
             });
             monacoDocuments.selector.text = hostdata.selector;
-            injectMakeReader(monacoDocuments.selector.text, _tabId);
+            injectMakeReader(monacoDocuments.selector.text,
+                _tabId, _activeHost);
             articleAddDark(_tabId);
         }
     })

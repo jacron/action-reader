@@ -6,17 +6,21 @@ function getStorage(cb) {
 }
 
 function listStorage() {
-    const list = document.getElementById('list');
-    const itemTemplate = document.getElementById('item');
     getStorage(data => {
-        const entries = Object.entries(data);
-        // console.log('entries', entries);
-        for (const entry of entries) {
-            const item = itemTemplate.cloneNode(false);
-            item.innerText = entry[0];
-            list.appendChild(item);
-        }
+        listSites(data, 'storagelist', 'item');
     })
+}
+
+function listSites(data, rlist, item) {
+    const list = document.getElementById(rlist);
+    const itemTemplate = document.getElementById(item);
+    const entries = Object.entries(data);
+    // console.log('entries', entries);
+    for (const entry of entries) {
+        const item = itemTemplate.cloneNode(false);
+        item.innerText = entry[0];
+        list.appendChild(item);
+    }
 }
 
 function store(data, sendResponse) {
@@ -44,25 +48,34 @@ function save() {
     })
 }
 
-function restore(cb) {
+function read(cb) {
     const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
     fetch(`${jsonStorage.url}/text?path=${path}`)
         .then(response => response.json())
         .then(cb);
 }
 
+function restore() {
+    read(data => {
+        const sites = JSON.parse(data);
+        console.log('to be restored', sites);
+    });
+}
+
 function load() {
-    restore(data => {
-        // console.log(data);
+    read(data => {
         const sites = JSON.parse(data);
         console.log(sites);
+        listSites(sites, 'retrievedlist', 'r-item');
+        showRestoreButton(true);
     })
 }
 
 function bindControls() {
     const bindings = [
         ['save', save],
-        ['load', load]
+        ['load', load],
+        ['restore', restore],
     ];
     for (const [id, fun] of bindings) {
         document.getElementById(id)
@@ -70,5 +83,11 @@ function bindControls() {
     }
 }
 
+function showRestoreButton(mode) {
+    const button = document.getElementById('restore');
+    button.style.visibility = mode ? 'visible' : 'hidden';
+}
+
 listStorage();
 bindControls();
+showRestoreButton(false);

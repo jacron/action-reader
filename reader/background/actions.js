@@ -39,7 +39,7 @@ function applyHost(req, sendResponse) {
         injectCss(req, background.tabId);
     }
     if (req.name === 'selector') {
-        reInjectMakeReader(req.text, background.tabId);
+        reInjectMakeReader(req.text, background.tabId, background.activeHost);
     }
     sendResponse({data: 'ok'});
 }
@@ -88,7 +88,8 @@ function reInit(name) {
         monacoDocuments.selector.text = data.selector;
         injectCss(monacoDocuments.css, background.tabId);
         articleAddDark(background.tabId);
-        reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
+        reInjectMakeReader(monacoDocuments.selector.text,
+            background.tabId, background.activeHost);
     })
 }
 function toggleGeneral(req, sendResponse) {
