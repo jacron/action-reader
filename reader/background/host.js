@@ -14,7 +14,7 @@ class Host {
     css = '';
 
     store(changes) {
-        console.log('changes', changes);
+        // console.log('changes', changes);
         this.get().then(oldHost => {
             const newHost = {};
             if (changes) {
@@ -22,11 +22,15 @@ class Host {
                 if (!oldHost) {
                     newHost.css = changes.css || '';
                     newHost.selector = changes.selector || '';
+                    newHost.active = changes.active || 'on';
                 } else {
                     newHost.css = changes.css || oldHost.css || '';
                     newHost.selector = changes.selector || oldHost.selector || '';
+                    newHost.active = changes.active || oldHost.active || 'on';
                 }
             }
+            // console.log('newHost', newHost);
+            // console.log(this.name);
             StorageArea.set({[this.name]: newHost}, () => {});
         });
     }
@@ -53,7 +57,7 @@ function initExistingHost(_activeHost, _tabId) {
     const host = new Host(_activeHost);
     host.get().then(_data => {
         const hostdata = _data[_activeHost];
-        if (hostdata) { // we have data for this host
+        if (hostdata && hostdata.active === 'on') { // we have data for this host
             retrieveDefaultDark().then(dd_data => {
                 initInject(_tabId, hostdata, dd_data);
             });

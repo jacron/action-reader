@@ -69,9 +69,10 @@ button:hover {
   height: 100%;
 }
 #reader-delete {
-  position: absolute;
-  right: 0;
+  /*position: absolute;*/
+  /*right: 0;*/
   padding: 2px 8px;
+  float: right;
 }
 .switch {
   background: url('../images/toggle.png');
@@ -101,6 +102,15 @@ button:hover {
   display: flex;
   align-items: center;
   text-align: right;
+}
+#active-toggle {
+  float: right;
+  text-align: right;
+  margin-right: 32px;
+}
+#active-toggle .switch {
+  position: relative;
+  top: 5px;
 }
 .label {
   display: inline-block;

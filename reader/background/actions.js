@@ -7,7 +7,7 @@ import {monacoDocuments} from "../shared/constants.js";
 
 function storeHost(req, sendResponse) {
     const host = new Host(req.host);
-    host.store();
+    host.store();  // empty changes
     sendResponse({data: 'ok'});
 }
 
@@ -75,7 +75,6 @@ function injectDefaultDark(_tabId) {
         monacoDocuments.dark.text = data['_dark'];
         injectCss(monacoDocuments.default, _tabId);
         injectCss(monacoDocuments.dark, _tabId);
-        // articleAddDark(_tabId);
     });
 }
 
@@ -94,6 +93,26 @@ function reInit(name) {
 }
 function toggleGeneral(req, sendResponse) {
     const {mode, host} = req;
+    if (mode === 'off') {
+        removeStyles();
+        removeReader(background.tabId);
+        articleRemoveDark(background.tabId);
+        sendResponse({data: 'general and custom styles and selector removed'});
+    } else {
+        reInit(host);
+        sendResponse({data: 'general and custom styles and selector added'});
+    }
+}
+
+function setActive(mode, name) {
+    const host = new Host(name);
+    // console.log(mode);
+    host.store({active: mode});
+}
+
+function toggleActive(req, sendResponse) {
+    const {mode, host} = req;
+    setActive(mode, host);
     if (mode === 'off') {
         removeStyles();
         removeReader(background.tabId);
@@ -137,6 +156,7 @@ const actionBindings = {
     closePopup,
     deleteHost,
     toggleGeneral,
+    toggleActive,
     toggleDark,
     storeHost,
 };

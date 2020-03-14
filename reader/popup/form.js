@@ -79,6 +79,18 @@ function apply() {
         });
 }
 
+function toggle(classList, cb) {
+    if (classList.contains('on')) {
+        classList.remove('on');
+        classList.add('off');
+        cb('off');
+    } else {
+        classList.remove('off');
+        classList.add('on');
+        cb('on');
+    }
+}
+
 function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
         sendMessage({
@@ -88,16 +100,13 @@ function toggleGeneralSettings(e) {
     })
 }
 
-function toggle(classList, set) {
-    if (classList.contains('on')) {
-        classList.remove('on');
-        classList.add('off');
-        set('off');
-    } else {
-        classList.remove('off');
-        classList.add('on');
-        set('on');
-    }
+function toggleActive(e) {
+    toggle(e.target.classList, mode => {
+        sendMessage({
+            request: 'toggleActive',
+            host: popup.activeHost,
+            mode});
+    });
 }
 
 function toggleDarkSettings(e) {
@@ -138,6 +147,7 @@ function setFormActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
+        ['active-toggle-switch', toggleActive]
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;
@@ -157,7 +167,16 @@ function initTab(tab) {
     tabs.querySelector(doc.selector).classList.add(dynClass.SELECTED.className);
 }
 
+function setActive(mode) {
+    const switchActive = document.getElementById('active-toggle-switch');
+    if (mode === 'off') {
+        switchActive.classList.remove('on');
+        switchActive.classList.add('off');
+    }
+}
+
 function show(req) {
+    // console.log('req', req);
     const {host, result, darkText, defaultText} = req;
     const custom = result[host];
     toggleForms(custom);
@@ -169,6 +188,7 @@ function show(req) {
         monacoDocuments.dark.text = darkText;
         // console.log('documents', monacoDocuments);
         setEditor(monacoDocuments.css);
+        setActive(custom.active);
     }
 }
 

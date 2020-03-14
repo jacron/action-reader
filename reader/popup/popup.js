@@ -1,8 +1,6 @@
 import {setFormActions, show} from './form.js';
 import {setTabActions} from './tab.js';
 
-// let activeHost;
-
 document.addEventListener('DOMContentLoaded', function () {
     setFormActions();
     setTabActions();

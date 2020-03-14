@@ -28,7 +28,7 @@ function saveToStorage() {
             const [site, options] = entry;
             for (let i = 0; i < inputEls.length; i++) {
                 if (inputEls[i].dataset.site === site) {
-                    options.active = inputEls[i].checked;
+                    options.active = inputEls[i].checked ? 'on' : 'off';
                 }
             }
         }
@@ -66,7 +66,7 @@ function listSites(data, rlist, item) {
         if (site[0] === '_') {
             item.innerText = site;
         } else {
-            const checkbox = createCheckbox(site, active);
+            const checkbox = createCheckbox(site, active === 'on');
             item.appendChild(checkbox);
             const anchor = createAnchor(site);
             item.appendChild(anchor);

@@ -1,7 +1,7 @@
 {
   "name": "Action Reader",
   "description": "Complete Reader",
-  "version": "0.1",
+  "version": "1.0",
   "author": "Jan H Croonen",
   "options_page": "options/options.html",
   "permissions": [
