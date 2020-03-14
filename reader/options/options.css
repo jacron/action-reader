@@ -1,3 +1,13 @@
 li {
     list-style: none;
 }
+a {
+    text-decoration: none;
+    color: #333333;
+}
+a:visited {
+    color: brown;
+}
+a:hover {
+    text-decoration: underline;
+}
