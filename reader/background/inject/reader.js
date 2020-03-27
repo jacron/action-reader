@@ -42,8 +42,10 @@ let Nodes = function (nodes) {
 
         article.id = 'readerarticle';
         for (let i = 0; i < nodes.length; i++) {
-            const clone = nodes[i].cloneNode(true);
-            article.appendChild(clone);
+            // if (nodes[i].cloneNode) {
+                const clone = nodes[i].cloneNode(true);
+                article.appendChild(clone);
+            // }
         }
         container.appendChild(article);
         container.id = 'readercontainer';
@@ -51,10 +53,11 @@ let Nodes = function (nodes) {
     }
 
     function getNode(sel) {
+        // console.log(sel);
         if (sel[0] === '*') {
             return document.querySelectorAll(sel.substr(1));
         } else {
-            console.log('sel', sel);
+            // console.log('sel', sel);
             return document.querySelector(sel);
         }
     }
@@ -110,13 +113,16 @@ let Nodes = function (nodes) {
 
     this.injectArticle = () => {
         if (nodes.length > 0) {
+            console.log('nodes', nodes);
             const container = createContainer(nodes);
             // const div = document.createElement('div');
             // div.appendChild(container);
             // document.body.innerHTML = div.innerHTML;
-            document.body.appendChild(container);
+            setTimeout(() => {
+                document.body.appendChild(container);
+                document.getElementById('readerarticle').className = 'dark';
+            }, 100);
             // console.log('container', container);
-            document.getElementById('readerarticle').className = 'dark';
         } else {
             console.log('No content for reader found');
         }
@@ -135,6 +141,7 @@ const delayedSites =
     {'the-tls.co.uk': 500}
 ;
 
+/** themeSite is called by injected script from makeReader.js */
 function themeSite(selector, host) {
     deleteReader();
     if (selector && selector.length) {
@@ -151,4 +158,4 @@ function themeSite(selector, host) {
     }
 }
 
-console.log('injected script loaded');
+// console.log('injected script loaded');

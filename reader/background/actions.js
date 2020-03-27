@@ -148,6 +148,15 @@ function closePopup() {
     }
 }
 
+function bodyStyle(req, sendResponse) {
+    // console.log(req);
+    sendResponse({
+        bodyStyle: {
+            color: '#eeeeee'
+        }
+    })
+}
+
 const actionBindings = {
     fetchHost,
     getInitial,
@@ -159,6 +168,7 @@ const actionBindings = {
     toggleActive,
     toggleDark,
     storeHost,
+    bodyStyle,
 };
 
 function initActions(req, sendResponse) {
