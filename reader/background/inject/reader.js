@@ -102,10 +102,10 @@ let Nodes = function (nodes) {
             }
             if (!found) {
                 console.log(sel, ' is not a node');
-                if (!optional) {
-                    nodes = [];
-                    break;
-                }
+                // if (!optional) {
+                //     nodes = [];
+                //     break;
+                // }
             }
         }
         return this;
@@ -146,10 +146,7 @@ function themeSite(selector, host) {
     deleteReader();
     if (selector && selector.length) {
         const selectors = parse(selector);
-        // console.log('selectors', selectors);
-        // console.log('host', host);
         const timeout = delayedSites[host] || 0;
-        // console.log('timeout', timeout);
         setTimeout(() => {
             new Nodes([])
                 .get(selectors)

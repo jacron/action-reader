@@ -4,6 +4,7 @@ import {injectCss, removeStyles, removeStyle, articleRemoveDark,
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
 import {monacoDocuments} from "../shared/constants.js";
+import {getJcReaderHost} from "./util.js";
 
 function storeHost(req, sendResponse) {
     const host = new Host(req.host);
@@ -148,6 +149,11 @@ function closePopup() {
     }
 }
 
+/**
+ * experimental
+ * @param req
+ * @param sendResponse
+ */
 function bodyStyle(req, sendResponse) {
     // console.log(req);
     sendResponse({
@@ -155,6 +161,32 @@ function bodyStyle(req, sendResponse) {
             color: '#eeeeee'
         }
     })
+}
+
+function initHost(req, sendResponse) {
+    chrome.tabs.query({active: true}, tabs => {
+        if (tabs.length > 0) {
+            const tab = tabs[0];
+            const _activeHost = getJcReaderHost(tab.url);
+            // console.log('host name', _activeHost);
+            const host = new Host(_activeHost);
+            host.get().then(response => {
+                retrieveDefaultDark().then(data => {
+                    chrome.tabs.sendMessage(tab.id, {
+                        message: 'onInitHost',
+                        host: _activeHost,
+                        result: response,
+                        defaultText: data['_default'],
+                        darkText: data['_dark']
+                    });
+                });
+            }).catch(err => {
+                console.error(err);
+                // sendResponse(err);
+            });
+
+        }
+    });
 }
 
 const actionBindings = {
@@ -169,6 +201,7 @@ const actionBindings = {
     toggleDark,
     storeHost,
     bodyStyle,
+    initHost,
 };
 
 function initActions(req, sendResponse) {

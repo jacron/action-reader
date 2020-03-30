@@ -57,7 +57,7 @@ function initExistingHost(_activeHost, _tabId) {
     const host = new Host(_activeHost);
     host.get().then(_data => {
         const hostdata = _data[_activeHost];
-        if (hostdata && hostdata.active === 'on') { // we have data for this host
+        if (hostdata && hostdata.active === 'on') { // we have and use data for this host
             retrieveDefaultDark().then(dd_data => {
                 initInject(_tabId, hostdata, dd_data);
             });

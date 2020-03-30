@@ -25,7 +25,7 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     if (info.status === 'loading') {
         const _activeHost = getJcReaderHost(info.url);
         if (_activeHost) {
-            initExistingHost(_activeHost, _tabId);
+            // initExistingHost(_activeHost, _tabId);
         }
     }
 });
