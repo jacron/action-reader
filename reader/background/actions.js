@@ -10,8 +10,6 @@ function storeHost(req, sendResponse) {
     const host = new Host(req.host);
     host.store();  // empty changes
     sendResponse({data: 'ok'});
-    // getInitial(req, sendResponse);
-    // sendResponse({activeHost: background.activeHost});
 }
 
 function saveHost(req, sendResponse) {
@@ -42,13 +40,9 @@ function applyHost(req, sendResponse) {
         injectCss(req, background.tabId);
     }
     if (req.name === 'selector') {
-        reInjectMakeReader(req.text, background.tabId, background.activeHost);
+        reInjectMakeReader(req.text, background.tabId);
     }
     sendResponse({data: 'ok'});
-}
-
-function getInitial(req, sendResponse) {
-    sendResponse({activeHost: background.activeHost});
 }
 
 function deleteHost(req, sendResponse) {
@@ -85,22 +79,6 @@ function initHost(req) {
     });
 }
 
-function fetchHost(req, sendResponse) {
-    const host = new Host(req.host);
-    host.get().then(response => {
-        retrieveDefaultDark().then(data => {
-            chrome.runtime.sendMessage({
-                message: 'onFetchHost',
-                host: req.host,
-                custom: response[req.host],
-                defaultText: data['_default'],
-                darkText: data['_dark']
-            });
-        });
-    }).catch(err => console.error(err));
-    sendResponse({data: 'ok'});
-}
-
 function injectDefaultDark(_tabId) {
     retrieveDefaultDark().then(data => {
         monacoDocuments.default.text = data['_default'];
@@ -119,8 +97,7 @@ function reInit(name) {
         monacoDocuments.selector.text = data.selector;
         injectCss(monacoDocuments.css, background.tabId);
         articleAddDark(background.tabId);
-        reInjectMakeReader(monacoDocuments.selector.text,
-            background.tabId, background.activeHost);
+        reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
     })
 }
 function toggleGeneral(req, sendResponse) {
@@ -159,6 +136,7 @@ function toggleActive(req, sendResponse) {
 function toggleDark(req, sendResponse) {
     const {mode} = req;
     if (mode === 'off') {
+        // console.log('remove dark...');
         removeStyle(monacoDocuments.dark, background.tabId);
         articleRemoveDark(background.tabId);
         sendResponse({data: 'dark styles removed'});
@@ -196,8 +174,6 @@ function bodyStyle(req, sendResponse) {
 
 const actionBindings = {
     // popup
-    fetchHost,
-    getInitial,
     saveHost,
     applyHost,
     closePopup,
@@ -207,13 +183,13 @@ const actionBindings = {
     toggleDark,
     storeHost,
     bodyStyle,
-    // content
+    // content, popup
     initHost,
 };
 
 function initActions(req, sendResponse) {
     if (req.request) {
-        console.log('req', req);
+        // console.log('req', req);
         const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse);

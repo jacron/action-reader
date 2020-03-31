@@ -9,13 +9,14 @@ function closeMe() {
 function postNew() {
     console.log('activeHost', popup.activeHost);
     sendMessage({
-        request: 'storeHost', // includes getInitial
+        request: 'storeHost',
         host: popup.activeHost
     }, () => {
         // initJcReader();
         sendMessage({
-            request: 'fetchHost',
-            host: popup.activeHost}, () => { });
+            request: 'initHost',
+            client: 'popup'
+        }, () => { });
     });
 }
 
@@ -33,7 +34,6 @@ function updateDocument(doc) {
 function save() {
     /** saveHost active document */
     updateDocument(popup.activeDoc);
-    // console.log('activeDoc', popup.activeDoc);
     sendMessage({
         request: 'saveHost',
         name: popup.activeDoc.name,
@@ -41,7 +41,6 @@ function save() {
         styleId: popup.activeDoc.styleId,
         host: popup.activeHost,
     }, () => {
-        // console.log(response)
         popup.activeDoc.editor.focus();
         popup.activeDoc.lastSavedVersion =
             popup.activeDoc.editor

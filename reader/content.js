@@ -5,6 +5,8 @@ function injectStyle(style, id) {
         styleElement.id = id;
         styleElement.innerHTML = style;
         document.head.appendChild(styleElement);
+    } else {
+        document.getElementById(id).innerHTML = style;
     }
 }
 
@@ -162,6 +164,13 @@ function addDark() {
     document.body.classList.add('dark');
 }
 
+function removeDark() {
+    if (document.getElementById('readerarticle')) {
+        document.getElementById('readerarticle').classList.remove('dark');
+    }
+    document.body.classList.remove('dark');
+}
+
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
     if (custom.active === 'on')
@@ -174,15 +183,39 @@ function onInitHost(req) {
     }
 }
 
+function reSelect(req) {
+    select(req.selector);
+}
+
+function deleteReaderArticle() {
+    deleteReader();
+}
+
+function replaceStyle(req) {
+    injectStyle(req.css, req.id);
+}
+
+function voidStyle(req) {
+    document.getElementById(req.id).innerHTML = '';
+}
+
 const actionBindings = {
     onInitHost,
+    replaceStyle,
+    reSelect,
+    deleteReaderArticle,
+    removeDark,
+    addDark,
+    voidStyle,
 };
 
 function initActions(req, sendResponse) {
+    // console.log('req', req);
     if (req.message) {
         const fun = actionBindings[req.message];
         if (fun) {
-            fun(req, sendResponse);
+            fun(req);
+            sendResponse('okay');
         } else {
             console.error('invalid request', req.message);
             sendResponse('invalid request:' + req.message);
@@ -195,7 +228,10 @@ chrome.runtime.onMessage.addListener(
         initActions(req, sendResponse);
     });
 
-chrome.runtime.sendMessage({request: 'initHost', client: 'content'},
+chrome.runtime.sendMessage({
+        request: 'initHost',
+        client: 'content'
+    },
         response => {
     console.log('response', response);
 });

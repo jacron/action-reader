@@ -1,27 +1,14 @@
-function injectMakeReader(selector, tabId, host) {
-    chrome.tabs.executeScript(tabId,{
-            file: 'background/inject/reader.js'
-        },
-        () => {reInjectMakeReader(selector, tabId, host)});
-}
-
-function reInjectMakeReader(selector, tabId, host) {
-    /**
-     * call themesite() in injected script reader.js
-     * @type {string}
-     */
-    const code = `themeSite(\`${selector}\`,\`${host}\`);
-`;
-    chrome.tabs.executeScript(tabId,{code}, () => {});
+function reInjectMakeReader(selector, tabId) {
+    chrome.tabs.sendMessage(tabId, {
+        message: 'reSelect',
+        selector
+    });
 }
 
 function removeReader(tabId) {
-    /**
-     * call deleteReader() in injected script reader.js
-     * @type {string}
-     */
-    const code = `deleteReader();`;
-    chrome.tabs.executeScript(tabId,{code}, () => {});
+    chrome.tabs.sendMessage(tabId, {
+        message: 'deleteReaderArticle'
+    });
 }
 
-export {injectMakeReader, removeReader, reInjectMakeReader}
+export {removeReader, reInjectMakeReader}

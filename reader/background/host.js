@@ -1,7 +1,3 @@
-import {articleAddDark, initInject} from "./styling.js";
-import {monacoDocuments} from "../shared/constants.js";
-import {injectMakeReader} from "./makeReader.js";
-
 const StorageArea = chrome.storage.local;
 const KEY_DEFAULT = '_default';
 const KEY_DARK = '_dark';
@@ -53,21 +49,21 @@ class Host {
     // setCss(css) {this.css = css}
 }
 
-function initExistingHost(_activeHost, _tabId) {
-    const host = new Host(_activeHost);
-    host.get().then(_data => {
-        const hostdata = _data[_activeHost];
-        if (hostdata && hostdata.active === 'on') { // we have and use data for this host
-            retrieveDefaultDark().then(dd_data => {
-                initInject(_tabId, hostdata, dd_data);
-            });
-            monacoDocuments.selector.text = hostdata.selector;
-            injectMakeReader(monacoDocuments.selector.text,
-                _tabId, _activeHost);
-            articleAddDark(_tabId);
-        }
-    })
-}
+// function initExistingHost(_activeHost, _tabId) {
+//     const host = new Host(_activeHost);
+//     host.get().then(_data => {
+//         const hostdata = _data[_activeHost];
+//         if (hostdata && hostdata.active === 'on') { // we have and use data for this host
+//             retrieveDefaultDark().then(dd_data => {
+//                 initInject(_tabId, hostdata, dd_data);
+//             });
+//             monacoDocuments.selector.text = hostdata.selector;
+//             injectMakeReader(monacoDocuments.selector.text,
+//                 _tabId, _activeHost);
+//             articleAddDark(_tabId);
+//         }
+//     })
+// }
 
 function retrieveDefaultDark() {
     const keys = [KEY_DEFAULT, KEY_DARK];
@@ -86,5 +82,4 @@ function storeDark(css) {
     StorageArea.set({[KEY_DARK]: css})
 }
 
-export { Host, storeDark, storeDefault, initExistingHost,
-    retrieveDefaultDark}
+export { Host, storeDark, storeDefault, retrieveDefaultDark}

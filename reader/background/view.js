@@ -29,7 +29,7 @@ function initView() {
     }, function (tabs) {
         if (tabs[0]) {
             const {url, id} = tabs[0];
-            // console.log('active url', url);
+            // console.log('active id', id);
             background.activeUrl = url;
             background.tabId = id;
             background.activeHost = getJcReaderHost(url);
