@@ -1,4 +1,3 @@
-import {setActiveDoc} from "./form.js";
 import {monacoDocuments, dynClass} from '../shared/constants.js';
 import {popup} from "./popupState.js";
 
@@ -75,12 +74,15 @@ function initEditor(doc) {
         model.onDidChangeContent(() => checkDirty(model, doc))
     });
 }
+// function setActiveDoc(activeDoc) {
+//     popup.activeDoc = activeDoc;
+// }
+
 
 function setEditor(doc) {
-    // activeDoc = doc;;
-    setActiveDoc(doc);
+    popup.activeDoc = doc;
+    // setActiveDoc(doc);
     if (doc.editor === null) {
-        // console.log('init editor');
         initEditor(doc);
     } else {
         showEditor(doc);

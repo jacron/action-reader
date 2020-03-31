@@ -35,6 +35,16 @@ button:hover {
   width: 100%;
   text-align: left;
 }
+.controls a {
+  color: #eeffff;
+  text-decoration: none;
+  float: right;
+  position: relative;
+  top: 5px;
+}
+.controls a:hover {
+  text-decoration: underline;
+}
 .new-controls {
   margin-top: 12px;
 }

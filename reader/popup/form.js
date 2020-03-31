@@ -1,34 +1,21 @@
 import {sendMessage} from '../shared/constants.js';
-import {dynClass, monacoDocuments} from "../shared/constants.js";
-import {setEditor, setDirty} from "./tab.js";
+import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
-
-// let popup.activeDoc;
-// let popup.activeHost;
-
-
 
 function closeMe() {
     sendMessage({request: 'closePopup'});
 }
 
-function initJcReader() {
-    sendMessage({request: 'getInitial'},
-        response => {
-            popup.activeHost = response.activeHost;
-            sendMessage({
-                request: 'fetchHost',
-                host: popup.activeHost}, () => { });
-        });
-}
-
 function postNew() {
     console.log('activeHost', popup.activeHost);
     sendMessage({
-        request: 'storeHost',
+        request: 'storeHost', // includes getInitial
         host: popup.activeHost
     }, () => {
-        initJcReader();
+        // initJcReader();
+        sendMessage({
+            request: 'fetchHost',
+            host: popup.activeHost}, () => { });
     });
 }
 
@@ -57,7 +44,9 @@ function save() {
         // console.log(response)
         popup.activeDoc.editor.focus();
         popup.activeDoc.lastSavedVersion =
-            popup.activeDoc.editor.getModel().getAlternativeVersionId();
+            popup.activeDoc.editor
+                .getModel()
+                .getAlternativeVersionId();
         setDirty(false, popup.activeDoc);
     });
 }
@@ -119,10 +108,6 @@ function toggleDarkSettings(e) {
     })
 }
 
-function setActiveDoc(activeDoc) {
-    popup.activeDoc = activeDoc;
-}
-
 function toggleForms(hostExists) {
     const existing = document.getElementById('existing-reader-dialog');
     const newview = document.getElementById('new-reader-dialog');
@@ -158,38 +143,6 @@ function setFormActions() {
         element.addEventListener(
             'click', fun);
     }
-    initJcReader();
 }
 
-function initTab(tab) {
-    const tabs = document.getElementById('tabs');
-    const doc = monacoDocuments[tab];
-    tabs.querySelector(doc.selector).classList.add(dynClass.SELECTED.className);
-}
-
-function setActive(mode) {
-    const switchActive = document.getElementById('active-toggle-switch');
-    if (mode === 'off') {
-        switchActive.classList.remove('on');
-        switchActive.classList.add('off');
-    }
-}
-
-function show(req) {
-    // console.log('req', req);
-    const {host, result, darkText, defaultText} = req;
-    const custom = result[host];
-    toggleForms(custom);
-    if (custom) {
-        initTab('css');
-        monacoDocuments.css.text = custom.css;
-        monacoDocuments.selector.text = custom.selector;
-        monacoDocuments.default.text = defaultText;
-        monacoDocuments.dark.text = darkText;
-        // console.log('documents', monacoDocuments);
-        setEditor(monacoDocuments.css);
-        setActive(custom.active);
-    }
-}
-
-export {setFormActions, setActiveDoc, show}
+export {setFormActions, toggleForms}

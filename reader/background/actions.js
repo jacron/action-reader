@@ -10,6 +10,8 @@ function storeHost(req, sendResponse) {
     const host = new Host(req.host);
     host.store();  // empty changes
     sendResponse({data: 'ok'});
+    // getInitial(req, sendResponse);
+    // sendResponse({activeHost: background.activeHost});
 }
 
 function saveHost(req, sendResponse) {
@@ -55,13 +57,42 @@ function deleteHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
+function initHost(req) {
+    chrome.tabs.query({active: true}, tabs => {
+        if (tabs.length > 0) {
+            const tab = tabs[0];
+            const _activeHost = getJcReaderHost(tab.url);
+            const host = new Host(_activeHost);
+            host.get().then(response => {
+                retrieveDefaultDark().then(data => {
+                    const res = {
+                        message: 'onInitHost',
+                        host: _activeHost,
+                        custom: response[_activeHost],
+                        defaultText: data['_default'],
+                        darkText: data['_dark']
+                    };
+                    if (req.client === 'content') {
+                        chrome.tabs.sendMessage(tab.id, res);
+                    } else {
+                        chrome.runtime.sendMessage(res);
+                    }
+                });
+            }).catch(err => {
+                console.error(err);
+            });
+        }
+    });
+}
+
 function fetchHost(req, sendResponse) {
     const host = new Host(req.host);
     host.get().then(response => {
         retrieveDefaultDark().then(data => {
             chrome.runtime.sendMessage({
+                message: 'onFetchHost',
                 host: req.host,
-                result: response,
+                custom: response[req.host],
                 defaultText: data['_default'],
                 darkText: data['_dark']
             });
@@ -163,33 +194,8 @@ function bodyStyle(req, sendResponse) {
     })
 }
 
-function initHost(req, sendResponse) {
-    chrome.tabs.query({active: true}, tabs => {
-        if (tabs.length > 0) {
-            const tab = tabs[0];
-            const _activeHost = getJcReaderHost(tab.url);
-            // console.log('host name', _activeHost);
-            const host = new Host(_activeHost);
-            host.get().then(response => {
-                retrieveDefaultDark().then(data => {
-                    chrome.tabs.sendMessage(tab.id, {
-                        message: 'onInitHost',
-                        host: _activeHost,
-                        result: response,
-                        defaultText: data['_default'],
-                        darkText: data['_dark']
-                    });
-                });
-            }).catch(err => {
-                console.error(err);
-                // sendResponse(err);
-            });
-
-        }
-    });
-}
-
 const actionBindings = {
+    // popup
     fetchHost,
     getInitial,
     saveHost,
@@ -201,11 +207,13 @@ const actionBindings = {
     toggleDark,
     storeHost,
     bodyStyle,
+    // content
     initHost,
 };
 
 function initActions(req, sendResponse) {
     if (req.request) {
+        console.log('req', req);
         const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse);

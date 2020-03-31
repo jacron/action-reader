@@ -142,13 +142,11 @@ function deleteReader() {
     }
 }
 
-function select(selector, host) {
-    // console.log(selector, host);
+function select(selector) {
     deleteReader();
     if (selector && selector.length) {
         const selectors = parse(selector);
-        // const timeout = delayedSites[host] || 0;
-        const timeout = 100;
+        const timeout = 10;
         setTimeout(() => {
             new Nodes([])
                 .get(selectors)
@@ -165,14 +163,12 @@ function addDark() {
 }
 
 function onInitHost(req) {
-    const {host, result, darkText, defaultText} = req;
-    const custom = result[host];
-    // console.log('custom', custom);
+    const {custom, darkText, defaultText} = req;
     if (custom.active === 'on')
     {
         injectStyle(defaultText, 'splash-default-style');
         injectStyle(darkText, 'splash-dark-style');
-        select(custom.selector, host);
+        select(custom.selector);
         injectStyle(custom.css, 'splash-custom-style');
         addDark();
     }
@@ -199,8 +195,7 @@ chrome.runtime.onMessage.addListener(
         initActions(req, sendResponse);
     });
 
-const sendMessage = chrome.runtime.sendMessage;
-
-sendMessage({request: 'initHost'}, response => {
-    // console.log('response', response);
+chrome.runtime.sendMessage({request: 'initHost', client: 'content'},
+        response => {
+    console.log('response', response);
 });

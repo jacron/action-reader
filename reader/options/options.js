@@ -17,7 +17,7 @@ function updateStatus(msg) {
     setTimeout(function() {
         status.textContent = '';
         // window.close();
-    }, 4000);
+    }, 8000);
 }
 
 function saveToStorage() {
@@ -98,7 +98,7 @@ function save() {
     getStorage(data => {
         store(data, msg => {
             console.log(msg);
-            updateStatus(`options exported to ${jsonStorage.jsonfile}`);
+            updateStatus(`options exported to ${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`);
         });
     })
 }
