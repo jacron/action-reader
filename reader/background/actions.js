@@ -51,34 +51,6 @@ function deleteHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function initHost(req) {
-    chrome.tabs.query({active: true}, tabs => {
-        if (tabs.length > 0) {
-            const tab = tabs[0];
-            const _activeHost = getJcReaderHost(tab.url);
-            const host = new Host(_activeHost);
-            host.get().then(response => {
-                retrieveDefaultDark().then(data => {
-                    const res = {
-                        message: 'onInitHost',
-                        host: _activeHost,
-                        custom: response[_activeHost],
-                        defaultText: data['_default'],
-                        darkText: data['_dark']
-                    };
-                    if (req.client === 'content') {
-                        chrome.tabs.sendMessage(tab.id, res);
-                    } else {
-                        chrome.runtime.sendMessage(res);
-                    }
-                });
-            }).catch(err => {
-                console.error(err);
-            });
-        }
-    });
-}
-
 function injectDefaultDark(_tabId) {
     retrieveDefaultDark().then(data => {
         monacoDocuments.default.text = data['_default'];
@@ -158,21 +130,49 @@ function closePopup() {
     }
 }
 
-/**
- * experimental
- * @param req
- * @param sendResponse
- */
-function bodyStyle(req, sendResponse) {
-    // console.log(req);
-    sendResponse({
-        bodyStyle: {
-            color: '#eeeeee'
+function initHost(req, sendResponse) {
+    // new Promise(resolve => {
+    chrome.tabs.query({active: true}, tabs => {
+        if (tabs.length > 0) {
+            const tab = tabs[0];
+            const _activeHost = getJcReaderHost(tab.url);
+            const host = new Host(_activeHost);
+            // sendResponse(host.get());
+            host.get().then(response => {
+                retrieveDefaultDark().then(data => {
+                    const res = {
+                        message: 'onInitHost',
+                        host: _activeHost,
+                        custom: response[_activeHost],
+                        defaultText: data['_default'],
+                        darkText: data['_dark']
+                    };
+                    // console.log(sendResponse);
+                    if (req.client === 'content') {
+                        chrome.tabs.sendMessage(tab.id, res);
+                    } else {
+                        chrome.runtime.sendMessage(res);
+                    }
+                    // experiment
+                    // resolve(res);
+                    // console.log(res);
+                    sendResponse(false);
+                });
+            }).catch(err => {
+                console.error(err);
+                sendResponse(false);
+            });
         }
-    })
+    });
+    // })).then(res => sendResponse({res}));
+    // sendResponse(true);  // keep channel open
+    return true;
+    // sendResponse({data: 'okay'});  // prevent closed port error (?)
 }
 
 const actionBindings = {
+    // content, popup
+    initHost,
     // popup
     saveHost,
     applyHost,
@@ -182,9 +182,6 @@ const actionBindings = {
     toggleActive,
     toggleDark,
     storeHost,
-    bodyStyle,
-    // content, popup
-    initHost,
 };
 
 function initActions(req, sendResponse) {

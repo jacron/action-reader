@@ -18,7 +18,7 @@ let lastActiveTabId;
 //     }
 //     /** do not use the globals tabId and activeHost here */
 //     if (info.status === 'loading') {
-//         const _activeHost = getJcReaderHost(info.url);
+//         const _activeHost = getJcReaderHost(info.systemLibraryUrl);
 //         if (_activeHost) {
 //             // initExistingHost(_activeHost, _tabId);
 //         }

@@ -66,10 +66,10 @@ const dynClass = {
 const sendMessage = chrome.runtime.sendMessage;
 
 /**
- * url for server handling read/write json file
+ * systemLibraryUrl for server handling read/write json file
  */
 const jsonStorage = {
-    url: 'http://localhost:3006',
+    systemLibraryUrl: 'http://localhost:3006',
     jsonmap: '/Volumes/Media/Download',
     jsonfile: 'readerdata.json',
 };

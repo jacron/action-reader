@@ -1,5 +1,5 @@
 function injectStyle(style, id) {
-    console.log(id);
+    // console.log(id);
     if (!document.getElementById(id)) {
         const styleElement = document.createElement('style');
         styleElement.id = id;
@@ -9,6 +9,11 @@ function injectStyle(style, id) {
         document.getElementById(id).innerHTML = style;
     }
 }
+
+// function removeStyle(id) {
+//     const style = document.getElementById(id);
+//     style.parentNode.removeChild(style);
+// }
 
 function parse(s) {
     let selector = [];
@@ -120,7 +125,7 @@ let Nodes = function (nodes) {
 
     this.injectArticle = () => {
         if (nodes.length > 0) {
-            console.log('nodes', nodes);
+            // console.log('nodes', nodes);
             const container = createContainer(nodes);
             // const div = document.createElement('div');
             // div.appendChild(container);
@@ -162,6 +167,9 @@ function addDark() {
         document.getElementById('readerarticle').classList.add('dark')
     }
     document.body.classList.add('dark');
+    setTimeout(() => {
+        special();
+    });
 }
 
 function removeDark() {
@@ -169,16 +177,80 @@ function removeDark() {
         document.getElementById('readerarticle').classList.remove('dark');
     }
     document.body.classList.remove('dark');
+    setTimeout(() => {
+        special();
+    });
+}
+
+function replaceStyleValue(pos, style, newValue) {
+    const endPos = style.indexOf(';', pos);
+    if (endPos !== -1) {
+        return style.substr(0, pos) + newValue + style.substr(endPos);
+    }
+    return style;
+}
+
+function forHtmlElements(elements, cb) {
+    for (let i = 0; i < elements.length; i++) {
+        cb(elements[i]);
+    }
+}
+
+function replaceTableBackgroundStyle(newBgColor) {
+    const tables = document.querySelectorAll('table');
+    forHtmlElements(tables, table => {
+        const style = table.getAttribute('style');
+        if (style) {
+            const pos = style.indexOf('background:');
+            if (pos !== -1) {
+                const newStyle = replaceStyleValue(pos + 'background:'.length,
+                    style, newBgColor);
+                table.setAttribute('style', newStyle);
+            }
+        }
+    });
+}
+
+function replaceTdBgcolor(newBgColor) {
+    const tds = document.querySelectorAll('td');
+    forHtmlElements(tds, td => {
+        if (td.getAttribute('bgcolor')) {
+            td.setAttribute('bgcolor', newBgColor);
+        }
+    });
+}
+
+function wikipediaorg() {
+    if (document.body.classList.value.indexOf('dark') !== -1) {
+        replaceTableBackgroundStyle('#667');
+        replaceTdBgcolor('#334');
+    } else {
+        replaceTableBackgroundStyle('#FBF5DF');
+        replaceTdBgcolor('#F6E6AE');
+    }
+}
+
+function special() {
+    const bindings = [
+        ['wikipedia.org', wikipediaorg],
+    ];
+    for (const [site, fun] of bindings) {
+        if (window.location.href.indexOf(site) !== -1) {
+            fun();
+        }
+    }
 }
 
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
-    if (custom.active === 'on')
+    console.log('custom', custom);
+    // console.log('req', req);
+    if (custom && custom.active === 'on')
     {
         injectStyle(defaultText, 'splash-default-style');
         injectStyle(darkText, 'splash-dark-style');
         select(custom.selector);
-        injectStyle(custom.css, 'splash-custom-style');
+        injectStyle(custom.dark, 'splash-custom-style');
         addDark();
     }
 }
@@ -233,5 +305,6 @@ chrome.runtime.sendMessage({
         client: 'content'
     },
         response => {
+    // reponse.then(res => console.log('res', res));
     console.log('response', response);
 });

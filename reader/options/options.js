@@ -7,7 +7,7 @@ function getStorage(cb) {
 
 function listStorage() {
     getStorage(data => {
-        listSites(data, 'storagelist', 'item');
+        listSites(data, 'storagelist');
     })
 }
 
@@ -31,9 +31,11 @@ function saveToStorage() {
                     options.active = inputEls[i].checked ? 'on' : 'off';
                 }
             }
+            options.default = '';
+            options.dark = options.css;
         }
         console.log(data);
-        chrome.storage.local.set(data, () => updateStatus('Options saved.'));
+        // chrome.storage.local.set(data, () => updateStatus('Options saved.'));
     });
 }
 
@@ -53,16 +55,49 @@ function createCheckbox(site, checked) {
     return inputEl;
 }
 
-function listSites(data, rlist, item) {
+function migrateFromImport() {
+    readJson(data => {
+        const sites = JSON.parse(data);
+        // console.log('original sites', sites);
+        const entries = Object.entries(sites);
+        for (const entry of entries) {
+            const [site, options] = entry;
+            const newOptions = {};
+            if (site.length === 0) {
+                continue;
+            }
+            if (site[0] === '_') {
+            } else {
+                newOptions.active = options.active;
+                newOptions.default = '';
+                newOptions.dark = options.css;
+                newOptions.selector = options.selector;
+                sites[site] = newOptions;
+            }
+        }
+        // console.log('adjusted sites', sites);
+        chrome.storage.local.set(sites, () => updateStatus('Migrated options saved.'));
+    });
+}
+
+function restoreFromImport() {
+    readJson(data => {
+        const sites = JSON.parse(data);
+        // console.log('to be restored', sites);
+        chrome.storage.local.set(sites, () => updateStatus('Imported options restored.'));
+    });
+}
+
+function listSites(data, rlist) {
     const list = document.getElementById(rlist);
-    const itemTemplate = document.getElementById(item);
-    // console.log('data', data);
+    list.innerHTML = '';
     const entries = Object.entries(data);
-    console.log('entries', entries);
+    // console.log('entries', entries);
+    // console.log('data from storage', data);
     for (const entry of entries) {
-        const site = entry[0];
-        const {active} = entry[1];
-        const item = itemTemplate.cloneNode(false);
+        const [site, options] = entry;
+        const {active} = options;
+        const item = document.createElement('li');
         if (site[0] === '_') {
             item.innerText = site;
         } else {
@@ -75,7 +110,7 @@ function listSites(data, rlist, item) {
     }
 }
 
-function store(data, sendResponse) {
+function store(data, cb) {
     const json = JSON.stringify(data);
     const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
     const opts = {
@@ -83,7 +118,7 @@ function store(data, sendResponse) {
         data: json
     };
     // console.log(opts);
-    fetch(`${jsonStorage.url}/save`, {
+    fetch(`${jsonStorage.systemLibraryUrl}/save`, {
         method: 'post',
         body: JSON.stringify(opts),
         headers: {
@@ -91,10 +126,10 @@ function store(data, sendResponse) {
             'Content-Type': 'application/json; charset=utf-8'
         },
     }).then(response => response.json())
-        .then(data => sendResponse(data));
+        .then(data => cb(data));
 }
 
-function save() {
+function exportOptions() {
     getStorage(data => {
         store(data, msg => {
             console.log(msg);
@@ -103,25 +138,18 @@ function save() {
     })
 }
 
-function read(cb) {
+function readJson(cb) {
     const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
-    fetch(`${jsonStorage.url}/text?path=${path}`)
+    fetch(`${jsonStorage.systemLibraryUrl}/text?path=${path}`)
         .then(response => response.json())
         .then(cb);
 }
 
-function restore() {
-    read(data => {
+function importOptions() {
+    readJson(data => {
         const sites = JSON.parse(data);
-        console.log('to be restored', sites);
-    });
-}
-
-function load() {
-    read(data => {
-        const sites = JSON.parse(data);
-        console.log(sites);
-        listSites(sites, 'retrievedlist', 'r-item');
+        // console.log(sites);
+        listSites(sites, 'retrievedlist');
         showRestoreButton(true);
     })
 }
@@ -143,11 +171,12 @@ function selectNone() {
 function bindControls() {
     const bindings = [
         ['save', saveToStorage],
-        ['export', save],
-        ['import', load],
-        ['restore', restore],
+        ['export', exportOptions],
+        ['import', importOptions],
         ['select-all', selectAll],
         ['select-none', selectNone],
+        ['restore', restoreFromImport],
+        ['migrate', migrateFromImport]
     ];
     for (const [id, fun] of bindings) {
         const element = document.getElementById(id);
@@ -160,8 +189,10 @@ function bindControls() {
 }
 
 function showRestoreButton(mode) {
-    const button = document.getElementById('restore');
-    button.style.visibility = mode ? 'visible' : 'hidden';
+    const rbutton = document.getElementById('restore');
+    rbutton.style.visibility = mode ? 'visible' : 'hidden';
+    // const mbutton = document.getElementById('migrate');
+    // mbutton.style.visibility = mode ? 'visible' : 'hidden';
 }
 
 listStorage();

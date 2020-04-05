@@ -6,13 +6,6 @@ import {popup} from "./popupState.js";
 
 function initJcReader() {
     sendMessage({request: 'initHost', client: 'popup'}, () => {});
-    // sendMessage({request: 'getInitial'},
-    //     response => {
-    //         popup.activeHost = response.activeHost;
-    //         sendMessage({
-    //             request: 'fetchHost',
-    //             host: popup.activeHost}, () => { });
-    //     });
 }
 
 chrome.runtime.onMessage.addListener(
@@ -25,6 +18,7 @@ chrome.runtime.onMessage.addListener(
             if (req.custom) {
                 show(req);
             }
+            sendResponse('handled');
         } else {
             sendResponse('no request handled');
         }
