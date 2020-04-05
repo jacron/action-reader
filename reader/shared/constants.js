@@ -4,15 +4,26 @@
  * @type {{css: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, default: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, dark: {editor: null, styleId: string, name: string, language: string, className: string, selector: string, text: string, id: string}, selector: {editor: null, name: string, language: string, className: string, selector: string, text: string, id: string}}}
  */
 const monacoDocuments = {
-    css: {
-        name: 'css',
+    default: {
+        name: 'default',
         text: '',
         language: 'css',
-        className: 'css',
-        selector: '.css',
+        className: 'default',
+        selector: '.default',
         editor: null,
-        id: 'editor-css',
-        styleId: 'splash-custom-style',
+        id: 'editor-default',
+        styleId: 'splash-custom-default-style',
+        lastSavedVersion: null,
+    },
+    dark: {
+        name: 'dark',
+        text: '',
+        language: 'css',
+        className: 'dark',
+        selector: '.dark',
+        editor: null,
+        id: 'editor-dark',
+        styleId: 'splash-custom-dark-style',
         lastSavedVersion: null,
     },
     selector: {
@@ -25,25 +36,25 @@ const monacoDocuments = {
         id: 'editor-selector',
         lastSavedVersion: null,
     },
-    default: {
-        name: 'default',
+    _default: {
+        name: '_default',
         text: '',
         language: 'css',
-        className: 'default',
-        selector: '.default',
+        className: '_default',
+        selector: '._default',
         editor: null,
-        id: 'editor-default',
+        id: 'editor-_default',
         styleId: 'splash-default-style',
         lastSavedVersion: null,
     },
-    dark: {
-        name: 'dark',
+    _dark: {
+        name: '_dark',
         text: '',
         language: 'css',
-        className: 'dark',
-        selector: '.dark',
+        className: '_dark',
+        selector: '._dark',
         editor: null,
-        id: 'editor-dark',
+        id: 'editor-_dark',
         styleId: 'splash-dark-style',
         lastSavedVersion: null,
     },

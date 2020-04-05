@@ -16,11 +16,13 @@ class Host {
             if (changes) {
                 oldHost = oldHost[this.name];
                 if (!oldHost) {
-                    newHost.css = changes.css || '';
+                    newHost.default = changes.default || '';
+                    newHost.dark = changes.dark || '';
                     newHost.selector = changes.selector || '';
                     newHost.active = changes.active || 'on';
                 } else {
-                    newHost.css = changes.css || oldHost.css || '';
+                    newHost.default = changes.default || oldHost.default || '';
+                    newHost.dark = changes.dark || oldHost.dark || '';
                     newHost.selector = changes.selector || oldHost.selector || '';
                     newHost.active = changes.active || oldHost.active || 'on';
                 }

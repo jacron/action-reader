@@ -91,17 +91,14 @@ function setEditor(doc) {
 
 function removeSelected(tabs) {
     const selectedTabs = tabs.querySelectorAll(dynClass.SELECTED.selector);
-
     for (let i = 0; i < selectedTabs.length; i++) {
         selectedTabs[i].classList.remove(dynClass.SELECTED.className);
     }
-
 }
 
 function selectTab(tab) {
     const tabs = document.getElementById('tabs');
     const doc = monacoDocuments[tab];
-
     removeSelected(tabs);
     tabs.querySelector(doc.selector).classList.add(dynClass.SELECTED.className);
     setEditor(doc);
@@ -111,7 +108,8 @@ function setTabActions() {
     const tabs = document.getElementById('tabs');
     tabs.addEventListener('click', e => {
         const target = e.target;
-        const tabs = ['css', 'selector', 'default', 'dark'];
+        console.log(target.classList.value);
+        const tabs = ['default', 'dark', 'selector', '_default', '_dark'];
         for (const tab of tabs) {
             if (~target.classList.value.indexOf(tab)) {
                 selectTab(tab);

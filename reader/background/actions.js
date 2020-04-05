@@ -17,17 +17,21 @@ function saveHost(req, sendResponse) {
 
     applyHost(req, sendResponse);
     switch (req.name) {
-        case 'css':
+        case 'default':
             // host.setCss(req.doc.text);
-            host.store({css: req.text});
+            host.store({default: req.text});
+            break;
+        case 'dark':
+            // host.setCss(req.doc.text);
+            host.store({dark: req.text});
             break;
         case 'selector':
             host.store({selector: req.text});
             break;
-        case 'default':
+        case '_default':
             storeDefault(req.text);
             break;
-        case 'dark':
+        case '_dark':
             storeDark(req.text);
             break;
     }
@@ -36,7 +40,7 @@ function saveHost(req, sendResponse) {
 
 function applyHost(req, sendResponse) {
     // console.log('req (apply)', req);
-    if (~['css', 'default', 'dark'].indexOf(req.name )) {
+    if (~['default', 'dark', '_default', '_dark'].indexOf(req.name )) {
         injectCss(req, background.tabId);
     }
     if (req.name === 'selector') {
@@ -53,10 +57,10 @@ function deleteHost(req, sendResponse) {
 
 function injectDefaultDark(_tabId) {
     retrieveDefaultDark().then(data => {
-        monacoDocuments.default.text = data['_default'];
-        monacoDocuments.dark.text = data['_dark'];
-        injectCss(monacoDocuments.default, _tabId);
-        injectCss(monacoDocuments.dark, _tabId);
+        monacoDocuments._default.text = data['_default'];
+        monacoDocuments._dark.text = data['_dark'];
+        injectCss(monacoDocuments._default, _tabId);
+        injectCss(monacoDocuments._dark, _tabId);
     });
 }
 
@@ -64,14 +68,18 @@ function reInit(name) {
     const host = new Host(name);
     host.get().then(data => {
         data = data[name];
+        // console.log('data', data);
         injectDefaultDark(background.tabId);
-        monacoDocuments.css.text = data.css;
+        monacoDocuments.default.text = data.default;
+        monacoDocuments.dark.text = data.dark;
         monacoDocuments.selector.text = data.selector;
-        injectCss(monacoDocuments.css, background.tabId);
+        injectCss(monacoDocuments.default, background.tabId);
+        injectCss(monacoDocuments.dark, background.tabId);
         articleAddDark(background.tabId);
         reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
     })
 }
+
 function toggleGeneral(req, sendResponse) {
     const {mode, host} = req;
     if (mode === 'off') {
@@ -139,6 +147,7 @@ function initHost(req, sendResponse) {
             const host = new Host(_activeHost);
             // sendResponse(host.get());
             host.get().then(response => {
+                // console.log('response', response);
                 retrieveDefaultDark().then(data => {
                     const res = {
                         message: 'onInitHost',

@@ -30,9 +30,10 @@ function removeStyle(doc, tabId) {
 }
 
 function removeStyles() {
-    removeStyle(monacoDocuments.css, background.tabId);
     removeStyle(monacoDocuments.default, background.tabId);
     removeStyle(monacoDocuments.dark, background.tabId);
+    removeStyle(monacoDocuments._default, background.tabId);
+    removeStyle(monacoDocuments._dark, background.tabId);
 }
 
 export {articleAddDark, injectCss, removeStyles, removeStyle, articleRemoveDark}
