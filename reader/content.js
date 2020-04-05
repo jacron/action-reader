@@ -66,17 +66,14 @@ let Nodes = function (nodes) {
     }
 
     function getNode(sel) {
-        // console.log(sel);
         if (sel[0] === '*') {
             return document.querySelectorAll(sel.substr(1));
         } else {
-            // console.log('sel', sel);
             return document.querySelector(sel);
         }
     }
 
     function getNodes(sel) {
-        // console.log('sel', sel);
         let nodes = null;
         if (Array.isArray(sel)) {
             for (let j = 0; j < sel.length; j++) {
@@ -98,7 +95,6 @@ let Nodes = function (nodes) {
                 optional = true;
             }
             const node = getNodes(sel);
-            // console.log(sel, node);
             let found = false;
             if (Array.isArray(node)) {
                 if (node && node.length > 0) {
@@ -126,7 +122,6 @@ let Nodes = function (nodes) {
 
     this.injectArticle = () => {
         if (nodes.length > 0) {
-            // console.log('nodes', nodes);
             const container = createContainer(nodes);
             // const div = document.createElement('div');
             // div.appendChild(container);
@@ -135,7 +130,6 @@ let Nodes = function (nodes) {
                 document.body.appendChild(container);
                 document.getElementById('readerarticle').className = 'dark';
             }, 100);
-            // console.log('container', container);
         } else {
             console.log('No content for reader found');
         }
@@ -168,17 +162,13 @@ function addDark() {
         document.getElementById('readerarticle').classList.add('dark')
     }
     document.body.classList.add('dark');
-    // articleAddDark(background.tabId);
-    // injectCss(monacoDocuments._dark, background.tabId);
     injectStyle(initedHost.custom.dark, 'splash-custom-dark-style');
     injectStyle(initedHost.darkText, 'splash-dark-style');
     setTimeout(() => {
-        // special();
     });
 }
 
 function removeDark() {
-    console.log('to remove dark...');
     if (document.getElementById('readerarticle')) {
         document.getElementById('readerarticle').classList.remove('dark');
     }
@@ -186,86 +176,14 @@ function removeDark() {
     removeStyle('splash-custom-dark-style');
     removeStyle('splash-dark-style');
     setTimeout(() => {
-        // special();
     });
 }
-
-// function replaceStyleValue(pos, style, newValue) {
-//     const endPos = style.indexOf(';', pos);
-//     if (endPos !== -1) {
-//         return style.substr(0, pos) + newValue + style.substr(endPos);
-//     }
-//     return style;
-// }
-//
-// function forHtmlElements(elements, cb) {
-//     for (let i = 0; i < elements.length; i++) {
-//         cb(elements[i]);
-//     }
-// }
-//
-// function replaceElementsStyleProperty(elements, styleProperty, newValue) {
-//     styleProperty += ':';
-//     forHtmlElements(elements, table => {
-//         const style = table.getAttribute('style');
-//         if (style) {
-//             const pos = style.indexOf(styleProperty);
-//             if (pos !== -1) {
-//                 const newStyle = replaceStyleValue(pos + styleProperty.length,
-//                     style, newValue);
-//                 table.setAttribute('style', newStyle);
-//             }
-//         }
-//     });
-// }
-//
-// function replaceTdBgcolor(newBgColor) {
-//     const tds = document.querySelectorAll('td');
-//     forHtmlElements(tds, td => {
-//         if (td.getAttribute('bgcolor')) {
-//             td.setAttribute('bgcolor', newBgColor);
-//         }
-//     });
-// }
-//
-// function wikipediaorg() {
-//     const tables = document.querySelectorAll('table');
-//     const tds = document.querySelectorAll('td');
-//     if (document.body.classList.value.indexOf('dark') !== -1) {
-//         replaceElementsStyleProperty(tables, 'background', '#667');
-//         replaceElementsStyleProperty(tables, 'background-color', '#678');
-//         replaceElementsStyleProperty(tds, 'background-color', '#444');
-//         replaceElementsStyleProperty(tds, 'background', '#557');
-//         // replaceTableBackgroundStyle('#667');
-//         replaceTdBgcolor('#445');
-//     } else {
-//         replaceElementsStyleProperty(tables, 'background', '#FBF5DF');
-//         replaceElementsStyleProperty(tables, 'background-color', '#f9f9f9');
-//         replaceElementsStyleProperty(tds, 'background-color', 'gainsboro');
-//         replaceElementsStyleProperty(tds, 'background', '#ccf');
-//         // replaceTableBackgroundStyle('#FBF5DF');
-//         replaceTdBgcolor('#F6E6AE');
-//     }
-// }
-//
-// function special() {
-//     const bindings = [
-//         ['wikipedia.org', wikipediaorg],
-//     ];
-//     for (const [site, fun] of bindings) {
-//         if (window.location.href.indexOf(site) !== -1) {
-//             fun();
-//         }
-//     }
-// }
 
 let initedHost = null; // {custom, darkText, defaultText}
 
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
     initedHost = req;
-    // console.log('custom', custom);
-    // console.log('req', req);
     if (custom && custom.active === 'on')
     {
         injectStyle(defaultText, 'splash-default-style');
@@ -304,7 +222,6 @@ const actionBindings = {
 };
 
 function initActions(req, sendResponse) {
-    console.log('req', req);
     if (req.message) {
         const fun = actionBindings[req.message];
         if (fun) {
@@ -327,6 +244,5 @@ chrome.runtime.sendMessage({
         client: 'content'
     },
         response => {
-    // reponse.then(res => console.log('res', res));
     console.log('response', response);
 });

@@ -12,20 +12,22 @@ chrome.windows.onRemoved.addListener(windowId => {
 
 let lastActiveTabId;
 
-// chrome.tabs.onUpdated.addListener((_tabId, info) => {
-//     lastActiveTabId = _tabId;
-//     if (_tabId === background.tTabId) {
-//         return;
-//     }
-//     /** do not use the globals tabId and activeHost here */
-//     if (info.status === 'loading') {
-//         const _activeHost = getJcReaderHost(info.systemLibraryUrl);
-//         if (_activeHost) {
-//             // initExistingHost(_activeHost, _tabId);
-//         }
-//     }
-// });
-//
+chrome.tabs.onUpdated.addListener((_tabId, info) => {
+    lastActiveTabId = _tabId;
+    if (_tabId === background.tTabId) {
+        return;
+    }
+    /** do not use the globals tabId and activeHost here */
+    if (info.status === 'loading') {
+        const _activeHost = getJcReaderHost(info.url);
+        if (_activeHost) {
+            // initExistingHost(_activeHost, _tabId);
+            showBadge(_activeHost);
+        }
+    }
+});
+
+
 chrome.tabs.onActivated.addListener(activeInfo => {
     if (activeInfo.tabId !== lastActiveTabId) {
         closeView();
@@ -35,8 +37,8 @@ chrome.tabs.onActivated.addListener(activeInfo => {
         lastFocusedWindow: true
     }, function (tabs) {
         if (tabs[0]) {
-            const {url, id} = tabs[0];
-            showBadge(url);
+            const {url} = tabs[0];
+            showBadge(getJcReaderHost(url));
         }
     });
 });
@@ -52,12 +54,11 @@ function isActiveHost(response) {
     return false;
 }
 
-function showBadge(url) {
-    const activeHost = getJcReaderHost(url);
+function showBadge(activeHost) {
     const host = new Host(activeHost);
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
-            text: isActiveHost(response) ? '1' : ''
+            text: isActiveHost(response) ? 'x' : ''
         });
     });
 }
