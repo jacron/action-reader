@@ -10,7 +10,7 @@ function initJcReader() {
 
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-        console.log(req);
+        // console.log(req);
         if (req.message === 'onInitHost') {
             popup.activeHost = req.host;
             document.getElementById('host-name').innerText = req.host;

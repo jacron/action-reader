@@ -18,7 +18,7 @@ function setActive(mode) {
 function show(req) {
     const {custom, darkText, defaultText} = req;
     initTab('default');
-    console.log('custom', custom);
+    // console.log('custom', custom);
     monacoDocuments.default.text = custom.default;
     monacoDocuments.dark.text = custom.dark;
     monacoDocuments.selector.text = custom.selector;

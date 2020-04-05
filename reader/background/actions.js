@@ -117,15 +117,15 @@ function toggleDark(req, sendResponse) {
     const {mode} = req;
     if (mode === 'off') {
         // console.log('remove dark...');
-        removeStyle(monacoDocuments.dark, background.tabId);
+        // removeStyle(monacoDocuments._dark, background.tabId);
         articleRemoveDark(background.tabId);
         sendResponse({data: 'dark styles removed'});
     } else {
-        articleAddDark(background.tabId);
         retrieveDefaultDark().then(data => {
             monacoDocuments.dark.text = data['_dark'];
-            injectCss(monacoDocuments.dark, background.tabId);
+            // injectCss(monacoDocuments._dark, background.tabId);
             sendResponse({data: 'dark styles added'});
+            articleAddDark(background.tabId);
         });
     }
 }

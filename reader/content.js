@@ -1,5 +1,6 @@
+/** no imports here!!! */
+
 function injectStyle(style, id) {
-    // console.log(id);
     if (!document.getElementById(id)) {
         const styleElement = document.createElement('style');
         styleElement.id = id;
@@ -10,10 +11,10 @@ function injectStyle(style, id) {
     }
 }
 
-// function removeStyle(id) {
-//     const style = document.getElementById(id);
-//     style.parentNode.removeChild(style);
-// }
+function removeStyle(id) {
+    const style = document.getElementById(id);
+    style.parentNode.removeChild(style);
+}
 
 function parse(s) {
     let selector = [];
@@ -167,8 +168,12 @@ function addDark() {
         document.getElementById('readerarticle').classList.add('dark')
     }
     document.body.classList.add('dark');
+    // articleAddDark(background.tabId);
+    // injectCss(monacoDocuments._dark, background.tabId);
+    injectStyle(initedHost.custom.dark, 'splash-custom-dark-style');
+    injectStyle(initedHost.darkText, 'splash-dark-style');
     setTimeout(() => {
-        special();
+        // special();
     });
 }
 
@@ -177,72 +182,87 @@ function removeDark() {
         document.getElementById('readerarticle').classList.remove('dark');
     }
     document.body.classList.remove('dark');
+    removeStyle('splash-custom-dark-style');
+    removeStyle('splash-dark-style');
     setTimeout(() => {
-        special();
+        // special();
     });
 }
 
-function replaceStyleValue(pos, style, newValue) {
-    const endPos = style.indexOf(';', pos);
-    if (endPos !== -1) {
-        return style.substr(0, pos) + newValue + style.substr(endPos);
-    }
-    return style;
-}
+// function replaceStyleValue(pos, style, newValue) {
+//     const endPos = style.indexOf(';', pos);
+//     if (endPos !== -1) {
+//         return style.substr(0, pos) + newValue + style.substr(endPos);
+//     }
+//     return style;
+// }
+//
+// function forHtmlElements(elements, cb) {
+//     for (let i = 0; i < elements.length; i++) {
+//         cb(elements[i]);
+//     }
+// }
+//
+// function replaceElementsStyleProperty(elements, styleProperty, newValue) {
+//     styleProperty += ':';
+//     forHtmlElements(elements, table => {
+//         const style = table.getAttribute('style');
+//         if (style) {
+//             const pos = style.indexOf(styleProperty);
+//             if (pos !== -1) {
+//                 const newStyle = replaceStyleValue(pos + styleProperty.length,
+//                     style, newValue);
+//                 table.setAttribute('style', newStyle);
+//             }
+//         }
+//     });
+// }
+//
+// function replaceTdBgcolor(newBgColor) {
+//     const tds = document.querySelectorAll('td');
+//     forHtmlElements(tds, td => {
+//         if (td.getAttribute('bgcolor')) {
+//             td.setAttribute('bgcolor', newBgColor);
+//         }
+//     });
+// }
+//
+// function wikipediaorg() {
+//     const tables = document.querySelectorAll('table');
+//     const tds = document.querySelectorAll('td');
+//     if (document.body.classList.value.indexOf('dark') !== -1) {
+//         replaceElementsStyleProperty(tables, 'background', '#667');
+//         replaceElementsStyleProperty(tables, 'background-color', '#678');
+//         replaceElementsStyleProperty(tds, 'background-color', '#444');
+//         replaceElementsStyleProperty(tds, 'background', '#557');
+//         // replaceTableBackgroundStyle('#667');
+//         replaceTdBgcolor('#445');
+//     } else {
+//         replaceElementsStyleProperty(tables, 'background', '#FBF5DF');
+//         replaceElementsStyleProperty(tables, 'background-color', '#f9f9f9');
+//         replaceElementsStyleProperty(tds, 'background-color', 'gainsboro');
+//         replaceElementsStyleProperty(tds, 'background', '#ccf');
+//         // replaceTableBackgroundStyle('#FBF5DF');
+//         replaceTdBgcolor('#F6E6AE');
+//     }
+// }
+//
+// function special() {
+//     const bindings = [
+//         ['wikipedia.org', wikipediaorg],
+//     ];
+//     for (const [site, fun] of bindings) {
+//         if (window.location.href.indexOf(site) !== -1) {
+//             fun();
+//         }
+//     }
+// }
 
-function forHtmlElements(elements, cb) {
-    for (let i = 0; i < elements.length; i++) {
-        cb(elements[i]);
-    }
-}
-
-function replaceTableBackgroundStyle(newBgColor) {
-    const tables = document.querySelectorAll('table');
-    forHtmlElements(tables, table => {
-        const style = table.getAttribute('style');
-        if (style) {
-            const pos = style.indexOf('background:');
-            if (pos !== -1) {
-                const newStyle = replaceStyleValue(pos + 'background:'.length,
-                    style, newBgColor);
-                table.setAttribute('style', newStyle);
-            }
-        }
-    });
-}
-
-function replaceTdBgcolor(newBgColor) {
-    const tds = document.querySelectorAll('td');
-    forHtmlElements(tds, td => {
-        if (td.getAttribute('bgcolor')) {
-            td.setAttribute('bgcolor', newBgColor);
-        }
-    });
-}
-
-function wikipediaorg() {
-    if (document.body.classList.value.indexOf('dark') !== -1) {
-        replaceTableBackgroundStyle('#667');
-        replaceTdBgcolor('#334');
-    } else {
-        replaceTableBackgroundStyle('#FBF5DF');
-        replaceTdBgcolor('#F6E6AE');
-    }
-}
-
-function special() {
-    const bindings = [
-        ['wikipedia.org', wikipediaorg],
-    ];
-    for (const [site, fun] of bindings) {
-        if (window.location.href.indexOf(site) !== -1) {
-            fun();
-        }
-    }
-}
+let initedHost = null; // {custom, darkText, defaultText}
 
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
+    initedHost = req;
     console.log('custom', custom);
     // console.log('req', req);
     if (custom && custom.active === 'on')
@@ -250,7 +270,8 @@ function onInitHost(req) {
         injectStyle(defaultText, 'splash-default-style');
         injectStyle(darkText, 'splash-dark-style');
         select(custom.selector);
-        injectStyle(custom.dark, 'splash-custom-style');
+        injectStyle(custom.default, 'splash-custom-default-style');
+        injectStyle(custom.dark, 'splash-custom-dark-style');
         addDark();
     }
 }
