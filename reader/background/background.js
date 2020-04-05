@@ -1,7 +1,8 @@
 import {background} from './backgroundState.js';
 import {initActions} from "./actions.js";
 import {initView, closeView} from "./view.js";
-// import {getJcReaderHost} from "./util.js";
+import {Host} from "./host.js";
+import {getJcReaderHost} from "./util.js";
 
 chrome.windows.onRemoved.addListener(windowId => {
     if (windowId === background.winId) {
@@ -29,7 +30,44 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     if (activeInfo.tabId !== lastActiveTabId) {
         closeView();
     }
+    chrome.tabs.query({
+        active: true,
+        lastFocusedWindow: true
+    }, function (tabs) {
+        if (tabs[0]) {
+            const {url, id} = tabs[0];
+            // console.log('active id', id);
+            background.activeUrl = url;
+            background.tabId = id;
+            background.activeHost = getJcReaderHost(url);
+            showBadge();
+        }
+    });
+
 });
+
+function isActiveHost(response) {
+    console.log('response', response);
+    const entries = Object.entries(response);
+    if (entries.length > 0) {
+        const [site, options] = entries[0];
+        console.log(site, options);
+        if (site.length > 0 && options.active === 'on') {
+            return true;
+        }
+    }
+    return false;
+}
+
+function showBadge() {
+    const host = new Host(background.activeHost);
+    // sendResponse(host.get());
+    host.get().then(response => {
+        chrome.browserAction.setBadgeText({
+            text: isActiveHost(response) ? '1' : ''
+        });
+    });
+}
 
 chrome.browserAction.onClicked.addListener(function() {
     if (background.winId === null) {  /** prevent multiple popups */

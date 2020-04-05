@@ -34,6 +34,7 @@ function initView() {
             background.tabId = id;
             background.activeHost = getJcReaderHost(url);
             openView();
+            // showBadge();
         }
     });
 }
