@@ -36,22 +36,18 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     }, function (tabs) {
         if (tabs[0]) {
             const {url, id} = tabs[0];
-            // console.log('active id', id);
             background.activeUrl = url;
             background.tabId = id;
             background.activeHost = getJcReaderHost(url);
             showBadge();
         }
     });
-
 });
 
 function isActiveHost(response) {
-    console.log('response', response);
     const entries = Object.entries(response);
     if (entries.length > 0) {
         const [site, options] = entries[0];
-        console.log(site, options);
         if (site.length > 0 && options.active === 'on') {
             return true;
         }
@@ -61,7 +57,6 @@ function isActiveHost(response) {
 
 function showBadge() {
     const host = new Host(background.activeHost);
-    // sendResponse(host.get());
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
             text: isActiveHost(response) ? '1' : ''

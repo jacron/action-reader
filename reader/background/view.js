@@ -23,20 +23,21 @@ function closeView() {
 }
 
 function initView() {
-    chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true
-    }, function (tabs) {
-        if (tabs[0]) {
-            const {url, id} = tabs[0];
-            // console.log('active id', id);
-            background.activeUrl = url;
-            background.tabId = id;
-            background.activeHost = getJcReaderHost(url);
-            openView();
-            // showBadge();
-        }
-    });
+    openView();
+    // chrome.tabs.query({
+    //     active: true,
+    //     lastFocusedWindow: true
+    // }, function (tabs) {
+    //     if (tabs[0]) {
+    //         const {url, id} = tabs[0];
+    //         // console.log('active id', id);
+    //         background.activeUrl = url;
+    //         background.tabId = id;
+    //         background.activeHost = getJcReaderHost(url);
+    //         openView();
+    //         // showBadge();
+    //     }
+    // });
 }
 
 export { initView, closeView }
