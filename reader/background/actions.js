@@ -1,5 +1,5 @@
 import {Host, storeDefault, storeDark, retrieveDefaultDark} from "./host.js";
-import {injectCss, removeStyles, removeStyle, articleRemoveDark,
+import {injectCss, removeStyles, articleRemoveDark,
     articleAddDark} from "./styling.js";
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
@@ -116,14 +116,11 @@ function toggleActive(req, sendResponse) {
 function toggleDark(req, sendResponse) {
     const {mode} = req;
     if (mode === 'off') {
-        // console.log('remove dark...');
-        // removeStyle(monacoDocuments._dark, background.tabId);
         articleRemoveDark(background.tabId);
         sendResponse({data: 'dark styles removed'});
     } else {
         retrieveDefaultDark().then(data => {
             monacoDocuments.dark.text = data['_dark'];
-            // injectCss(monacoDocuments._dark, background.tabId);
             sendResponse({data: 'dark styles added'});
             articleAddDark(background.tabId);
         });
@@ -139,7 +136,6 @@ function closePopup() {
 }
 
 function initHost(req, sendResponse) {
-    // new Promise(resolve => {
     chrome.tabs.query({active: true}, tabs => {
         if (tabs.length > 0) {
             const tab = tabs[0];

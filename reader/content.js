@@ -178,6 +178,7 @@ function addDark() {
 }
 
 function removeDark() {
+    console.log('to remove dark...');
     if (document.getElementById('readerarticle')) {
         document.getElementById('readerarticle').classList.remove('dark');
     }
@@ -263,7 +264,7 @@ let initedHost = null; // {custom, darkText, defaultText}
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
     initedHost = req;
-    console.log('custom', custom);
+    // console.log('custom', custom);
     // console.log('req', req);
     if (custom && custom.active === 'on')
     {
@@ -303,7 +304,7 @@ const actionBindings = {
 };
 
 function initActions(req, sendResponse) {
-    // console.log('req', req);
+    console.log('req', req);
     if (req.message) {
         const fun = actionBindings[req.message];
         if (fun) {

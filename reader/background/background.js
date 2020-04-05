@@ -36,10 +36,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     }, function (tabs) {
         if (tabs[0]) {
             const {url, id} = tabs[0];
-            background.activeUrl = url;
-            background.tabId = id;
-            background.activeHost = getJcReaderHost(url);
-            showBadge();
+            showBadge(url);
         }
     });
 });
@@ -55,8 +52,9 @@ function isActiveHost(response) {
     return false;
 }
 
-function showBadge() {
-    const host = new Host(background.activeHost);
+function showBadge(url) {
+    const activeHost = getJcReaderHost(url);
+    const host = new Host(activeHost);
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
             text: isActiveHost(response) ? '1' : ''
