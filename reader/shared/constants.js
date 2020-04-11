@@ -7,7 +7,7 @@ const monacoDocuments = {
     default: {
         name: 'default',
         text: '',
-        language: 'css',
+        language: 'scss',
         className: 'default',
         selector: '.default',
         editor: null,
@@ -18,7 +18,7 @@ const monacoDocuments = {
     dark: {
         name: 'dark',
         text: '',
-        language: 'css',
+        language: 'scss',
         className: 'dark',
         selector: '.dark',
         editor: null,
@@ -29,7 +29,7 @@ const monacoDocuments = {
     selector: {
         name: 'selector',
         text: '',
-        language: 'css',
+        language: 'scss',
         className: 'selector',
         selector: '.selector',
         editor: null,
@@ -39,7 +39,7 @@ const monacoDocuments = {
     _default: {
         name: '_default',
         text: '',
-        language: 'css',
+        language: 'scss',
         className: '_default',
         selector: '._default',
         editor: null,
@@ -50,7 +50,7 @@ const monacoDocuments = {
     _dark: {
         name: '_dark',
         text: '',
-        language: 'css',
+        language: 'scss',
         className: '_dark',
         selector: '._dark',
         editor: null,

@@ -1,6 +1,8 @@
 import {sendMessage} from '../shared/constants.js';
 import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
+// import {monacoDocuments} from "../shared/constants.js";
+import {compile} from "./compile.mjs";
 
 function closeMe() {
     sendMessage({request: 'closePopup'});
@@ -122,6 +124,13 @@ function toggleForms(hostExists) {
     }
 }
 
+function validate() {
+    // console.log(monacoDocuments);
+    // console.log(popup.activeDoc);
+    const css = compile(popup.activeDoc.text);
+    console.log('css', css);
+}
+
 function setFormActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -129,6 +138,7 @@ function setFormActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
+        ['cmd-validate', validate],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
         ['active-toggle-switch', toggleActive]

@@ -23,9 +23,9 @@
   },
   "content_scripts": [{
     "matches": ["https://*/*", "http://*/*"],
-    "js": ["content.js"],
+    "js": ["content/content.mjs"],
     "all_frames": false
   }],
-  "web_accessible_resources": ["background/scan.js"],
+  "web_accessible_resources": ["popup/compile.mjs"],
   "manifest_version": 2
 }

@@ -27,7 +27,6 @@ chrome.tabs.onUpdated.addListener((_tabId, info) => {
     }
 });
 
-
 chrome.tabs.onActivated.addListener(activeInfo => {
     if (activeInfo.tabId !== lastActiveTabId) {
         closeView();
@@ -58,7 +57,7 @@ function showBadge(activeHost) {
     const host = new Host(activeHost);
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
-            text: isActiveHost(response) ? 'x' : ''
+            text: isActiveHost(response) ? '1' : ''
         });
     });
 }
