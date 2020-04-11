@@ -17,9 +17,9 @@ function skipNested(s) {
     return lines.join(';');
 }
 
-function lastChar(s) {
-    return s.substr(s.length - 1, 1);
-}
+// function lastChar(s) {
+//     return s.substr(s.length - 1, 1);
+// }
 
 function normLine(line) {
     return line.trim();
@@ -59,8 +59,7 @@ function stripComment(s) {
 
 function normalize(scss) {
     const lines1 = scss.split('\n');
-    // console.log(lines1[0]);
-    if (lines1[0] !== '// compile') {
+    if (lines1[0] !== '// scss') {
         return null;
     }
     scss = stripComment(scss);
@@ -70,7 +69,49 @@ function normalize(scss) {
         const line = lines[i];
         n.push(normLine(line));
     }
-    return n.join('\n').replace(/\n/g, '');
+    return n.join('\n')
+        .replace(/\n/g, '');
+}
+
+function getIdfs(identifier0, idf) {
+    let idfs = '';
+    for (let i of idf.split(',')) {
+        if (idfs.length > 0) {idfs += ',';}
+        idfs += identifier0.trim() + ' ' + i.trim();
+    }
+    return idfs;
+}
+
+function getBody(nested, identifier0, body0, elements) {
+    if (nested.length > 0) {
+        for (let n of nested) {
+            const [idf, body] = n;
+            const idfs = getIdfs(identifier0, idf);
+            elements[idfs] = body;
+        }
+        const normalLines = skipNested(body0);
+        if (normalLines.length > 0) {
+            elements[identifier0] = normalLines;
+        }
+    } else {
+        elements[identifier0] = body0;
+    }
+}
+
+function getMediaBlock(css, start) {
+    let blocknesting = 0;
+    let block = '';
+    let i = start;
+    for (; i < css.length; i++) {
+        const ch = css[i];
+        block += ch;
+        if (ch === '{') { blocknesting++; }
+        if (ch === '}') {
+            blocknesting--;
+            if (blocknesting === 0) { break; }
+        }
+    }
+    return [i, block];
 }
 
 function getElements(css) {
@@ -78,6 +119,7 @@ function getElements(css) {
     let identifier = new Array(2);
     let body = new Array(2);
     let start = new Array(2);
+    let mediablocks = [];
     start[0] = 0;
     body[0] = '';
     body[1] = '';
@@ -86,59 +128,51 @@ function getElements(css) {
     function openBlock(i) {
         blocknesting++;
         if (blocknesting === 1) {
-            identifier[0] = css.substr(start[0], i - start[0]);
+            identifier[0] = css.substr(start[0], i - start[0]).trim();
         }
         if (blocknesting === 2) {
             const p = prev(css, i - 1);
-            identifier[1] = css.substr(p, i - p);
+            identifier[1] = css.substr(p, i - p).trim();
         }
     }
     function closeBlock(i) {
         blocknesting--;
         if (blocknesting === 0) {
-            if (nested.length > 0) {
-                for (let n of nested) {
-                    const entries = Object.entries(n);
-                    const id = identifier[0].trim() + ' ' + entries[0][0];
-                    elements[id] = entries[0][1];
-                }
-                nested = [];
-                const normalLines = skipNested(body[0]);
-                if (normalLines.length > 0) {
-                    elements[identifier[0]] = normalLines;
-                }
-            } else {
-                elements[identifier[0]] = body[0];
-            }
+            getBody(nested, identifier[0], body[0], elements);
+            nested = [];
             body[0] = '';
             start[0] = i + 1;
         }
         if (blocknesting === 1) {
-            const n = {};
-            n[identifier[1]] = body[1];
-            nested.push(n);
+            nested.push([identifier[1], body[1]]);
             body[1] = '';
         }
     }
     for (let i = 0; i < css.length; i++) {
-        const ch = css[i];
+        let ch = css[i];
         if (ch === '{') {
             openBlock(i);
         } else if (ch === '}') {
             closeBlock(i);
-        }
-        if (blocknesting > 0 && ch !== '{') {
+        } else if (ch === '@') {
+            const [j, block]  = getMediaBlock(css, i);
+            i = j;
+            mediablocks.push(block);
+            body[0] = '';
+            start[0] = i + 1;
+        } else if (blocknesting > 0 && ch !== '{') {
             body[blocknesting - 1] += ch;
         }
     }
-    return elements;
+    // console.log('mediablocks', mediablocks);
+    return [elements, mediablocks];
 }
 
 function getText(elements) {
     let text = '';
     for (let prop in elements) {
         if (elements.hasOwnProperty(prop)) {
-            text += prop.replace(',', ',\n') + '{\n';
+            text += prop.replace(',', ',\n') + ' {\n';
             const lines = elements[prop].split(';');
             for (let line of lines) {
                 if (line.length > 0) {
@@ -156,8 +190,9 @@ export function compile(scss) {
     if (css === null) {
         return scss;  // do not compile
     } else {
-        const elements = getElements(css);
-        return getText(elements);
+        const [elements, mediablocks] = getElements(css);
+        // console.log(elements);
+        return getText(elements) + mediablocks.join('\n');
     }
 }
 

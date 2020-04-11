@@ -1,5 +1,6 @@
 import {compile} from './compile.mjs';
 /*
+// probleem 1
 @media (min-width: 1024px) {
     .css-1ygdjhk {
         margin-left: -15px;
@@ -8,11 +9,38 @@ import {compile} from './compile.mjs';
         max-width: initial;
     }
 }
-
- */
-const scss = `
+@media (min-width: 102px) {
+    .css-adam {
+        width: 500px;
+        max-width: initial;
+    }
+}
+// probleem 2
+#readerarticle {
+    a, b {
+        color: yellow;
+    }
+}
+*/
+const scss = `// scss
+#id1, 
+#id2 {
+    color: green;
+}
+@media (min-width: 102px) {
+    .css-adam {
+        width: 500px;
+        max-width: initial;
+    }
+}
 #readerarticle {
     background-color: #666;
+    a:after {
+        background-color: purple;
+    }
+    a, .bag {
+        color: yellow;
+    }
     box-shadow: 0 6px 12px 3px rgba(0, 0, 0, 0.24);
     a {
         color: rgb(90, 200, 250) !important;

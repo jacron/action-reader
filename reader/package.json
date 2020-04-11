@@ -5,7 +5,8 @@
   "main": "reader/background/actions.js",
   "dependencies": {
     "@types/chrome": "0.0.91",
-    "monaco-editor": "^0.19.3"
+    "monaco-editor": "^0.19.3",
+    "sass": "^1.26.3"
   },
   "devDependencies": {},
   "scripts": {

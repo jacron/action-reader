@@ -1,11 +1,17 @@
-/** no imports here!!! */
-
 const msrc = '../popup/compile.mjs';
-// import {compile} from '../popup/compile.mjs';
+// const sasssrc = 'node_modules/sass/sass.dart.js';
 
 (async () => {
     const src = chrome.runtime.getURL(msrc);
+    // console.log(src);
     const lib = await import(src);
+
+    // const ssrc = chrome.runtime.getURL(sasssrc);
+    // console.log('ssrc', ssrc);
+    // const slib = await import(ssrc);
+    //
+    // console.log('slib', slib);
+
     function injectStyle(style, id) {
         const css = lib.compile(style);
         if (!document.getElementById(id)) {

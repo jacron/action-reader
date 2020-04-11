@@ -129,6 +129,12 @@ function validate() {
     // console.log(popup.activeDoc);
     const css = compile(popup.activeDoc.text);
     console.log('css', css);
+    // const sassPath = '../node_modules/sass';
+    // require.config({ paths: { sass: sassPath}});
+    // require(['sass/sass'], (s) => {
+    //     console.log(s);
+    //     console.log(sass);
+    // });
 }
 
 function setFormActions() {
