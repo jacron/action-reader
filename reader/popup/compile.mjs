@@ -1,3 +1,14 @@
+/*
+partial, light-weight implementation of a scss compiler
+limitations:
+- nesting not deeper than once
+- no compiling of @media rules, these are passed through
+- no variables
+it permits:
+- nesting (once)
+- comma separated identifiers
+
+ */
 function prev(s, i) {
     // terug naar wat volgt op '}' of ';'
     while (i > 0 && s[i] !== '}' && s[i] !== ';') i--;
@@ -57,12 +68,12 @@ function stripComment(s) {
     return t;
 }
 
-function normalize(scss) {
+function checkScssLine(scss) {
     const lines1 = scss.split('\n');
-    if (lines1[0] !== '// scss') {
-        return null;
-    }
-    scss = stripComment(scss);
+    return lines1[0] === '// scss';
+}
+
+function stripWhiteSpace(scss) {
     const lines = scss.split('\n');
     const n = [];
     for (let i = 0; i < lines.length; i++) {
@@ -160,7 +171,8 @@ function getElements(css) {
             mediablocks.push(block);
             body[0] = '';
             start[0] = i + 1;
-        } else if (blocknesting > 0 && ch !== '{') {
+        }
+        if (blocknesting > 0 && ch !== '{') {
             body[blocknesting - 1] += ch;
         }
     }
@@ -186,14 +198,12 @@ function getText(elements) {
 }
 
 export function compile(scss) {
-    let css = normalize(scss);
-    if (css === null) {
-        return scss;  // do not compile
-    } else {
+    if (checkScssLine(scss)) {
+        scss = stripComment(scss);
+        let css = stripWhiteSpace(scss);
         const [elements, mediablocks] = getElements(css);
-        // console.log(elements);
         return getText(elements) + mediablocks.join('\n');
+    } else {
+        return scss;
     }
 }
-
-// export {compile}
