@@ -11,3 +11,18 @@ a:visited {
 a:hover {
     text-decoration: underline;
 }
+.control-select {
+    float: right;
+}
+html {
+    background-color: #00485b;
+}
+#body {
+    width: 500px;
+    margin: auto;
+    background-color: #eeffff;
+    padding: 8px;
+}
+#body h2 {
+    text-align: center;
+}

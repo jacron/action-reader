@@ -6,24 +6,27 @@
     <link href="options.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<h4>Sites</h4>
-<ul id="storagelist"></ul>
-<div id="controls">
-    <button class="btn" id="save">Save</button>
-    <button class="btn" id="export">Export</button>
-    <button class="btn" id="import">Import</button>
-    <span class="control-select">
-    <button class="btn" id="select-all">Select all</button>
-    <button class="btn" id="select-none">Select none</button>
-</span>
+<div id="body">
+    <h2>Action Reader Options</h2>
+    <ul id="storagelist"></ul>
+    <div id="controls">
+        <button id="save">Save</button>
+        <button id="export">Export</button>
+        <button id="import">Show exported</button>
+        <span class="control-select">
+            <button id="select-all">Select all</button>
+            <button id="select-none">Select none</button>
+        </span>
+    </div>
+    <button id="reveal">Reveal exported json in Finder</button>
+    <button id="edit">Open exported json</button>
+    <ul id="retrievedlist"></ul>
+    <div id="r-controls">
+        <button class="btn" id="restore">Restore</button>
+    </div>
+    <div id="status"></div>
+    <div id="error"></div>
 </div>
-<ul id="retrievedlist"></ul>
-<div id="r-controls">
-    <button class="btn" id="restore">Restore</button>
-    <button class="btn" id="migrate">Migrate</button>
-</div>
-<div id="status"></div>
-<div id="error"></div>
 <script type="module" src="options.js"></script>
 </body>
 </html>

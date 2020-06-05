@@ -35,7 +35,6 @@ function saveToStorage() {
             options.dark = options.css;
         }
         console.log(data);
-        // chrome.storage.local.set(data, () => updateStatus('Options saved.'));
     });
 }
 
@@ -55,59 +54,45 @@ function createCheckbox(site, checked) {
     return inputEl;
 }
 
-function migrateFromImport() {
-    readJson(data => {
-        const sites = JSON.parse(data);
-        // console.log('original sites', sites);
-        const entries = Object.entries(sites);
-        for (const entry of entries) {
-            const [site, options] = entry;
-            const newOptions = {};
-            if (site.length === 0) {
-                continue;
-            }
-            if (site[0] === '_') {
-            } else {
-                newOptions.active = options.active;
-                newOptions.default = '';
-                newOptions.dark = options.css;
-                newOptions.selector = options.selector;
-                sites[site] = newOptions;
-            }
-        }
-        // console.log('adjusted sites', sites);
-        chrome.storage.local.set(sites, () => updateStatus('Migrated options saved.'));
-    });
-}
-
 function restoreFromImport() {
-    readJson(data => {
-        const sites = JSON.parse(data);
-        // console.log('to be restored', sites);
-        chrome.storage.local.set(sites, () => updateStatus('Imported options restored.'));
-    });
+    if (confirm('Restore all site settings?')) {
+        readJson(data => {
+            const sites = JSON.parse(data);
+            chrome.storage.local.set(sites, () => updateStatus('Imported options restored.'));
+        });
+    }
 }
 
 function listSites(data, rlist) {
     const list = document.getElementById(rlist);
     list.innerHTML = '';
     const entries = Object.entries(data);
-    // console.log('entries', entries);
-    // console.log('data from storage', data);
     for (const entry of entries) {
         const [site, options] = entry;
         const {active} = options;
         const item = document.createElement('li');
-        if (site[0] === '_') {
-            item.innerText = site;
-        } else {
+        if (site[0] !== '_' && site.length !== 0) {
             const checkbox = createCheckbox(site, active === 'on');
             item.appendChild(checkbox);
             const anchor = createAnchor(site);
             item.appendChild(anchor);
+            list.appendChild(item);
         }
-        list.appendChild(item);
     }
+}
+
+function reveal() {
+    const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
+    fetch(`${jsonStorage.systemLibraryUrl}/finder?path=${path}`)
+        .then(response => response.statusText)
+        .then(response => console.log(response));
+}
+
+function edit() {
+    const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
+    fetch(`${jsonStorage.systemLibraryUrl}/open?path=${path}`)
+        .then(response => response.statusText)
+        .then(response => console.log(response));
 }
 
 function store(data, cb) {
@@ -117,7 +102,6 @@ function store(data, cb) {
         path,
         data: json
     };
-    // console.log(opts);
     fetch(`${jsonStorage.systemLibraryUrl}/save`, {
         method: 'post',
         body: JSON.stringify(opts),
@@ -133,7 +117,8 @@ function exportOptions() {
     getStorage(data => {
         store(data, msg => {
             console.log(msg);
-            updateStatus(`options exported to ${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`);
+            const file = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
+            updateStatus(`options exported to ${file}`);
         });
     })
 }
@@ -148,7 +133,6 @@ function readJson(cb) {
 function importOptions() {
     readJson(data => {
         const sites = JSON.parse(data);
-        // console.log(sites);
         listSites(sites, 'retrievedlist');
         showRestoreButton(true);
     })
@@ -176,7 +160,8 @@ function bindControls() {
         ['select-all', selectAll],
         ['select-none', selectNone],
         ['restore', restoreFromImport],
-        ['migrate', migrateFromImport]
+        ['reveal', reveal],
+        ['edit', edit]
     ];
     for (const [id, fun] of bindings) {
         const element = document.getElementById(id);
@@ -191,8 +176,6 @@ function bindControls() {
 function showRestoreButton(mode) {
     const rbutton = document.getElementById('restore');
     rbutton.style.visibility = mode ? 'visible' : 'hidden';
-    // const mbutton = document.getElementById('migrate');
-    // mbutton.style.visibility = mode ? 'visible' : 'hidden';
 }
 
 listStorage();
