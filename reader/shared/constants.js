@@ -81,7 +81,7 @@ const sendMessage = chrome.runtime.sendMessage;
  */
 const jsonStorage = {
     systemLibraryUrl: 'http://localhost:3006',
-    jsonmap: '/Volumes/Media/Download',
+    jsonmap: '/Users/orion/WebstormProjects/chrome/action reader/reader/store',
     jsonfile: 'readerdata.json',
 };
 

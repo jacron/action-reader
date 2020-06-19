@@ -1,0 +1,978 @@
+{
+  "": {
+    "active": "off",
+    "css": "",
+    "selector": ""
+  },
+  "_dark": "// scss\n#readerarticle
+{
+  "": {
+    "{\n    background-color: rgb(74, 74, 77);\n    box-shadow: 0 6px 12px
+{
+  "": {
+    "3px rgba(0, 0, 0, 0.24);\n    a {\n        color: rgb(90, 200, 250)
+{
+  "": {
+    "!important;\n        text-decoration: none;\n        border-bottom: none
+{
+  "": {
+    "!important;\n    } \n    p, h4, h3, h2, h1, strong, time,\n
+{
+  "": {
+    "figcaption, figcaption cite  {\n        color: rgba(255, 255, 255,
+{
+  "": {
+    "0.780392) !important;\n    }\n    aside * {\n        color: inherit;\n
+{
+  "": {
+    " }\n} \n.content-container,\n[class^='split-screen'] {\n
+{
+  "": {
+    "background-color: #333;\n}\nhtml.article-page {\n    background-color:
+{
+  "": {
+    "#333333;\n}\n",
+    "_default": "body {\n    margin: 0;\n    padding: 0;\n
+{
+  "": {
+    "overflow-x: hidden;\n    background-color: transparent;\n    height:
+{
+  "": {
+    "calc(100% - 44px);\n    font-family: Verdana, Arial, Helvetica,
+{
+  "": {
+    "sans-serif;\n    --body-font-color: rgba(255, 255, 255, 0.78);\n
+{
+  "": {
+    "--horizontal-line-color: rgb(111, 111, 111);\n}\nbody:after {\n
+{
+  "": {
+    "content: \"\";\n    height: 22px;\n    display: block;\n}\nblockquote
+{
+  "": {
+    "{\n    font-style: italic;\n}\n.standalone {\n    position: fixed;\n
+{
+  "": {
+    "right: 60px;\n    top: 60px;\n    z-index:
+{
+  "": {
+    "11;\n}\n.cmd-toggle-container{\n    position: fixed;\n    text-align:
+{
+  "": {
+    "center;\n}\n#readerarticle {\n    box-shadow: rgba(0, 0, 0, 0.24) 0px
+{
+  "": {
+    "6px 12px 3px;\n    padding: 30px 60px;\n    min-height: 100%;\n
+{
+  "": {
+    "margin: 22px auto 0 auto;\n    max-width: 660px;\n
+{
+  "": {
+    "background-color:rgba(250,250,240,0.99);\n}\n#readerarticle, p {\n
+{
+  "": {
+    "font-size: 18px !important;\n    line-height: 1.6
+{
+  "": {
+    "!important;\n}\n#readerarticle, p, h1 {\n    font-family:
+{
+  "": {
+    "-apple-system-font, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+{
+  "": {
+    "Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+{
+  "": {
+    "!important;\n}\n.content-container {\n    position: fixed;\n
+{
+  "": {
+    "overflow-y: auto;\n    top: 0;\n    bottom: 0;\n    left: 0;\n    right:
+{
+  "": {
+    "0;\n    z-index: 9999;\n    background-color:
+{
+  "": {
+    "#eee;\n}\n",
+    "archive.nytimes.com": {
+      "active": "off",
+      "dark": "",
+      "default": "",
+      "selector": "blockquote
+{
+  "": {
+    "h2\nblockquote h5\n*blockquote
+{
+  "": {
+    "p\n"
+  },
+  "blogs.scientificamerican.com": {
+    "active": "on",
+    "dark": "",
+    "default": "",
+    "selector": "main"
+  },
+  "cinemagazine.nl": {
+    "active": "on",
+    "dark": "",
+    "default": "#readerarticle
+{
+  "": {
+    "p {\n    width:
+{
+  "": {
+    "660px;\n}\n",
+    "selector": "article\n"
+  },
+  "cinepassion.org": {
+    "active": "on",
+    "dark": "table
+{
+  "": {
+    "{\n    background-color: #666;\n    line-height:
+{
+  "": {
+    "1.7;\n}",
+    "default": "",
+    "selector": "font\n"
+  },
+  "criterion.com": {
+    "active": "off",
+    "dark": "",
+    "default": "",
+    "selector": "main\n"
+  },
+  "critic.de": {
+    "active": "on",
+    "dark": "",
+    "default": ".movie
+{
+  "": {
+    "p {\n    text-align:
+{
+  "": {
+    "left;\n}",
+    "selector": "article\n"
+  },
+  "de.wikipedia.org": {
+    "active": "on",
+    "dark": "",
+    "default": "",
+    "selector": "#firstHeading\n#bodyContent"
+  },
+  "demorgen.be": {
+    "active": "off",
+    "dark": "",
+    "default": "",
+    "selector": "article.artstyle\n"
+  },
+  "faz.net": {
+    "active": "on",
+    "dark": ".o-ModuleWrapper,\n.atc-Intro
+{
+  "": {
+    "{\n    background-color: inherit;\n}\n.js-atc-ContainerPaywall {\n
+{
+  "": {
+    "display:
+{
+  "": {
+    "none;\n}",
+    "default": "",
+    "selector": "article.atc"
+  },
+  "fd.nl": {
+    "active": "on",
+    "dark": ".fd-read-more,\n.teaser-most-read,\n.author-links
+{
+  "": {
+    "{\n    background-color: rgb(74, 74, 77)
+{
+  "": {
+    "!important;\n\n}",
+    "default": ".main
+{
+  "": {
+    "aside,\n.fd-banner-message,\n.socialFree {\n    display:
+{
+  "": {
+    "none;\n}\n",
+    "selector": "body:not(.category-home)
+{
+  "": {
+    "article\nsection.main\n"
+  },
+  "film.avclub.com": {
+    "active": "on",
+    "dark": "",
+    "default": "aside,\n.js_share-tools
+{
+  "": {
+    "{\n    display: none;\n}\nmain {\n    width:
+{
+  "": {
+    "100%;\n}",
+    "selector": "header\nmain\n"
+  },
+  "filosofie.nl": {
+    "active": "on",
+    "dark": "body.dark
+{
+  "": {
+    "{\n    background-color: #666;\n    color: #eee;\n}\n.reader-actions {\n
+{
+  "": {
+    "   display: none;\n}\n.col:after {\n    display: block;\n}\n.col-08 {\n
+{
+  "": {
+    "  width: 100%;\n}",
+    "default": "",
+    "selector": "#mainContent
+{
+  "": {
+    ".article-content"
+  },
+  "ft.com": {
+    "active": "on",
+    "dark": "figure.topper__visual
+{
+  "": {
+    "{\n    left: inherit;\n    margin-left: inherit;\n    width:
+{
+  "": {
+    "auto;\n}\n.n-content-body,\n.n-content-body>p {\n    font-family:
+{
+  "": {
+    "Verdana, Arial, Helvetica, sans-serif;\n    /*font-size:
+{
+  "": {
+    "16px;*/\n}\n[data-textbox-background~=paper],\n.n-content-layout-set,\n.n-content-layout,\n.live-post
+{
+  "": {
+    "{\n    background-color: #5a5a5a;\n}\n.n-content-body>ul li {\n
+{
+  "": {
+    "color: #cfcfcf;\n}\n.o-share-wrapper,\n.concept-list {\n    display:
+{
+  "": {
+    "none;\n}\n@media (min-width: 61.25em) {\n    .article-grid {\n
+{
+  "": {
+    "display: block;\n
+{
+  "": {
+    "}\n}\n.o-message.o-message--alert-inner.o-message--neutral.o-message__instant-alerts-promo
+{
+  "": {
+    "{\n    display: none;\n}\n.dark .topper__content {\n
+{
+  "": {
+    "background-color: inherit;\n}\n.dark .topper__standfirst {\n    color:
+{
+  "": {
+    "#eee;\n}\n.embeddedtweet .n-content-tweet,\n.stats-module {\n
+{
+  "": {
+    "background-color: #5a5a5a;\n}\nexperimental p, \nexperimental
+{
+  "": {
+    "h2,\n.package--basic.package__nav--end
+{
+  "": {
+    "p,\n.content--type-guardianview:not(.content--type-splash)
+{
+  "": {
+    ".content__header *,\n.content--type-comment .content__header
+{
+  "": {
+    "*,\n.content--type-guardianview .content__article-body *\n {\n    color:
+{
+  "": {
+    "#333
+{
+  "": {
+    "!important;\n}",
+    "default": "",
+    "selector": "@.topper__visual\n.topper__content\narticle"
+  },
+  "groene.nl": {
+    "active": "on",
+    "dark": "",
+    "default": "",
+    "selector": "article.article.groene-default"
+  },
+  "handelsblatt.com": {
+    "active": "off",
+    "dark": ".dark
+{
+  "": {
+    ".container_onecolumn_read {\n    background-color: inherit;\n}\n.dark p
+{
+  "": {
+    "a[href^=\"/themen/\"] {\n    background-color:
+{
+  "": {
+    "inherit;\n}\n#shadowlayer--wrapper {\n    display:
+{
+  "": {
+    "none;\n}\n#readerarticle {\n    max-width: none
+{
+  "": {
+    "!important;\n}\n.is-sorensen-active .vhb-article-area--read {\n
+{
+  "": {
+    "filter: none;\n}",
+    "default": "",
+    "selector": ".isArticleLastPage
+{
+  "": {
+    ".vhb-content"
+  },
+  "harpers.org": {
+    "active": "on",
+    "dark": ".tabDownloadPDF,\n.tabMicrofiche,\n.fRight
+{
+  "": {
+    "{\n    display: none;\n}\n#readerarticle p {\n    font-size:
+{
+  "": {
+    "20px;;\n}\npre {\n    white-space: pre-wrap;\n}\n.wp-caption-text {\n
+{
+  "": {
+    "line-height: 1.6
+{
+  "": {
+    "!important;\n}",
+    "default": "",
+    "selector": ".column1"
+  },
+  "lemonde.fr": {
+    "active": "on",
+    "dark": "",
+    "default": "",
+    "selector": "article"
+  },
+  "lrb.co.uk": {
+    "active": "on",
+    "dark": "",
+    "default": ".article-sidebar-pane
+{
+  "": {
+    "{\n    display:
+{
+  "": {
+    "none;\n}",
+    "selector": "article"
+  },
+  "magazine.bazarow.com": {
+    "active": "on",
+    "dark": "body.dark,\nbody.dark
+{
+  "": {
+    ".elementor-widget-container {\n    background-color: #778;\n    color:
+{
+  "": {
+    "#eee;\n}\n.elementor-column-wrap {\n    background-color: #778;\n
+{
+  "": {
+    "font-size: 20px;\n}\n.elementor-text-editor {\n    font-size:
+{
+  "": {
+    "18px;\n}\n.elementor-column-wrap.elementor-element-populated {\n
+{
+  "": {
+    "background-color: #778 !important;\n}\nsection {\n    background-color:
+{
+  "": {
+    "#444;\n}",
+    "default": "",
+    "selector": ".elementor-column-wrap*\n"
+  },
+  "newyorker.com": {
+    "active": "on",
+    "dark": ".grid
+{
+  "": {
+    "{\n    display: block;\n}",
+    "default": ".lead-asset {\n    display:
+{
+  "": {
+    "none;\n}",
+    "selector": "article"
+  },
+  "nl.wikipedia.org": {
+    "active": "on",
+    "dark": ".ns-subject:not(.page-Hoofdpagina)
+{
+  "": {
+    ".infobox {\n    background-color:
+{
+  "": {
+    "#667;\n}\n.toccolours,\n.toc,\n.mw-warning {\n    background-color:
+{
+  "": {
+    "#667;\n}\n.ns-subject:not(.page-Hoofdpagina)
+{
+  "": {
+    "table,\n.ns-subject:not(.page-Hoofdpagina) li.gallerybox
+{
+  "": {
+    "div.thumb,\n.ns-subject:not(.page-Hoofdpagina)
+{
+  "": {
+    "th,\n.ns-subject:not(.page-Hoofdpagina)
+{
+  "": {
+    "td,\n.ns-subject:not(.page-Hoofdpagina) .catlinks {\n    background:
+{
+  "": {
+    "#667 !important;\n    background-color: #667 !important;\n}\n.toccolours
+{
+  "": {
+    "td[colspan=\"3\"] {\n    background-color: #445 !important;\n}\n.infobox
+{
+  "": {
+    "td {\n    background-color: #667
+{
+  "": {
+    "!important;\n}",
+    "default": "",
+    "selector": ".ns-subject:not(.page-Hoofdpagina)
+{
+  "": {
+    "#bodyContent"
+  },
+  "nrc.nl": {
+    "active": "on",
+    "dark": ".metabox__group
+{
+  "": {
+    ".metabox__text,\n.metabox__list__link,\n.metabox__icon,\n.article__intro
+{
+  "": {
+    "{\n    color: rgba(255, 255, 255, 0.780392)
+{
+  "": {
+    "!important;\n}",
+    "default": ".newslettersignup {\n    display:
+{
+  "": {
+    "none;\n}\nfigure.article__featured-image {\n    width: 780px;\n
+{
+  "": {
+    "margin-left:
+{
+  "": {
+    "-60px;\n}",
+    "selector": "article\n"
+  },
+  "nybooks.com": {
+    "active": "on",
+    "dark": "",
+    "default": "article.article
+{
+  "": {
+    ".article_body p {\n    line-height: 1.5;\n}",
+    "selector": ".page_article
+{
+  "": {
+    "article"
+  },
+  "nymag.com": {
+    "active": "on",
+    "dark": ".article
+{
+  "": {
+    ".primary-area:before,\n.article .lede-wrapper {\n    background-color:
+{
+  "": {
+    "#666 !important;\n}\n",
+    "default": "div.fc-consent-root {\n    display:
+{
+  "": {
+    "none !important;\n}\np.clay-paragraph {\n    font-size: 22px;\n
+{
+  "": {
+    "line-height:
+{
+  "": {
+    "1.6;\n}",
+    "selector": "article\n"
+  },
+  "nytimes.com": {
+    "active": "on",
+    "dark": "#readerarticle
+{
+  "": {
+    "{\n    max-width: 600px;\n    padding: 30px;\n}\n#readerarticle p {\n
+{
+  "": {
+    "font-family: 'times new roman';\n    font-size: 1.5rem;\n
+{
+  "": {
+    "line-height: 1.4;\n}\n#readerarticle ul {\n    width:
+{
+  "": {
+    "500px;\n}\n#NYT_TOP_BANNER_REGION nav,\n#g-inlineguide-id {\n
+{
+  "": {
+    "background-color: #777;\n}\n.ad {\n    display:
+{
+  "": {
+    "none;\n}\nsection[name=articleBody] div {\n    margin-left:
+{
+  "": {
+    "0;\n}\nsection[name=articleBody] > div {\n    margin-left:
+{
+  "": {
+    "0;\n}\nsection[name=articleBody] aside {\n    display: none;\n}\n@media
+{
+  "": {
+    "(min-width: 1024px) {\n    .css-1ygdjhk {\n        margin-left: -15px;\n
+{
+  "": {
+    "       margin-right: 0;\n        width: 500px;\n        max-width:
+{
+  "": {
+    "initial;\n    }\n}\nbody.dark {\n    background-color:
+{
+  "": {
+    "#666;\n}\n.dark,\n.dark a,\n.dark h2,\n.dark h3,\n.dark p,\n.dark
+{
+  "": {
+    ".summ,\n.dark ul li {\n    color: #eee
+{
+  "": {
+    "!important;\n}\n#NYT_MID_MAIN_CONTENT_REGION {\n    display:
+{
+  "": {
+    "none;\n}",
+    "default": "",
+    "selector": "article[id=story]\n"
+  },
+  "parool.nl": {
+    "active": "on",
+    "dark": ".dark
+{
+  "": {
+    ".artstyle--background-color-demorgen-zalm,
+{
+  "": {
+    "\n.artstyle--background-color-parool-pink {\n    background-color:
+{
+  "": {
+    "#666;\n}\n.dark .artstyle {\n    color:
+{
+  "": {
+    "#eee;\n}\n.artstyle__header,\n.artstyle__main--container {\n
+{
+  "": {
+    "margin-right: inherit
+{
+  "": {
+    "!important;\n}",
+    "default": "",
+    "selector": "article.artstyle\n"
+  },
+  "scientificamerican.com": {
+    "active": "off",
+    "dark": "",
+    "default": "",
+    "selector": "article"
+  },
+  "standaard.be": {
+    "active": "on",
+    "dark": "",
+    "default": "",
+    "selector": "article"
+  },
+  "the-tls.co.uk": {
+    "active": "on",
+    "dark": ".column.is-7-desktop
+{
+  "": {
+    "{\n    width: 100%;\n}\n.tls-newsletter-iframe {\n    display:
+{
+  "": {
+    "none;\n}",
+    "default": "",
+    "selector": "article.tls-single-article\n"
+  },
+  "theatlantic.com": {
+    "active": "on",
+    "dark": ".qc-cmp-showing,\n#site
+{
+  "": {
+    "{\n    display: none !important;\n}\n.blah {\n    display: inherit
+{
+  "": {
+    "!important;\n}\n.u-hidden {\n    display: inherit
+{
+  "": {
+    "!important;\n}\n",
+    "default": ".qc-cmp-showing,\n.t-article
+{
+  "": {
+    "nav.c-nav,\n.c-expanded-nav-crossword,\n.c-expanded-nav-print,\n.c-expanded-nav,\n.c-expanded-nav.u-hidden
+{
+  "": {
+    "{\n    display: none !important;\n}\n.blah {\n    display: inherit
+{
+  "": {
+    "!important;\n}\n.u-hidden {\n    display: inherit
+{
+  "": {
+    "!important;\n}\npicture img {\n    width: 100%;\n}\np {\n
+{
+  "": {
+    "line-height: 1.6;\n}\n",
+    "selector": ".t-article
+{
+  "": {
+    "main\n"
+  },
+  "theguardian.com": {
+    "active": "on",
+    "dark": "/* the guardian
+{
+  "": {
+    "*/\n#readerarticle {\n    /*max-width: 440px;*/\n}\n#readerarticle
+{
+  "": {
+    ".rich-link__byline,\n#readerarticle .rich-link__read-more-text {\n
+{
+  "": {
+    "color: #e05e00;\n}\ndiv.content__article-body {\n    font-size: 14px
+{
+  "": {
+    "!important;\n    line-height: 24px !important;\n    padding-right: 0
+{
+  "": {
+    "!important;\n}\n.content__headline-showcase-wrapper {\n    display:
+{
+  "": {
+    "none;\n}\n.content__standfirst {\n    line-height: 1.6rem
+{
+  "": {
+    "!important;\n}\n#readerarticle.dark .rich-link__link {\n    color:
+{
+  "": {
+    "inherit;\n}\n#readerarticle aside {\n    display:
+{
+  "": {
+    "none;\n}\n#readerarticle.dark aside * {\n    color:
+{
+  "": {
+    "#333;\n}\n.content__main-column {\n    margin-right:
+{
+  "": {
+    "0;\n}\n#contributions-moment,\n.contributions__epic,\n.content__secondary-column
+{
+  "": {
+    "{\n    display: none;\n}\n\n/* dark mode */\n.dark .content--liveblog
+{
+  "": {
+    ".content__main {\n    background-color: inherit;\n}\n.dark
+{
+  "": {
+    ".content,\n.dark .dropdown__content,\n.dark .block--content,\n.dark
+{
+  "": {
+    "figcaption.caption {\n    background-color: #555555
+{
+  "": {
+    "!important;\n}\n.dark .timeline__title {\n    color: #e05e00
+{
+  "": {
+    "!important;\n}\n.dark .atom--snippet {\n    background-color: #888888
+{
+  "": {
+    "!important;\n}\n.dark .content--type-comment,\n.dark
+{
+  "": {
+    ".content__main,\n.dark
+{
+  "": {
+    ".content--liveblog.tonal--tone-dead.content--pillar-news
+{
+  "": {
+    ".content__header,\n.dark
+{
+  "": {
+    ".content--liveblog.tonal--tone-dead.content--pillar-news
+{
+  "": {
+    ".tonal__standfirst {\n    background:
+{
+  "": {
+    "inherit;\n}\n.email-sub__form-wrapper {\n    display:
+{
+  "": {
+    "none;\n}\nbody.dark {\n    background-color: #666;\n}\n.dark,\n.dark
+{
+  "": {
+    "a,\n.dark h2,\n.dark p,\n.dark .summ,\n.dark ul li {\n    color: #eee
+{
+  "": {
+    "!important;\n}\n\n",
+    "default": ".immersive-main-media__media {\n
+{
+  "": {
+    "position: relative;\n}\nh1 {\n    font-weight: bold
+{
+  "": {
+    "!important;\n}\n.content__standfirst p {\n    font-size: 26px
+{
+  "": {
+    "!important;\n    font-weight: normal;\n    line-height:
+{
+  "": {
+    "1.3;\n}\n.content .gs-container {\n    padding-left: 0;\n
+{
+  "": {
+    "padding-right: 0;\n    line-height:
+{
+  "": {
+    "1.7;\n}",
+    "selector": "@.immersive-main-media__media\narticle"
+  },
+  "thetimes.co.uk": {
+    "active": "on",
+    "dark": "div[class^=responsiveweb__HeaderContainer-],\np[class^=responsiveweb__Paragraph-]
+{
+  "": {
+    "{\n    width:
+{
+  "": {
+    "100%;\n}",
+    "default": "",
+    "selector": "article\n"
+  },
+  "trouw.nl": {
+    "active": "on",
+    "dark": ".artstyle__byline
+{
+  "": {
+    "{\n    color: rgba(255, 255, 255, 0.780392) !important;\n}\n/*
+{
+  "": {
+    "\nh1,\nh2,\nh3,\nstrong,\na,\np,\n.app-header-home__menu
+{
+  "": {
+    "a,\n.artstyle__byline,\n.teaser__text {\n    color: #eee
+{
+  "": {
+    "!important;\n}\nbody, header {\n    background-color: #555 !important;\n
+{
+  "": {
+    "   color: #eee !important;\n\n}\n.teaser--dossier__list__teaser {\n
+{
+  "": {
+    "background-color:
+{
+  "": {
+    "#555;\n}\n.teaser__sublabel,\n.teaser__sublabel--small,\nh4 {\n
+{
+  "": {
+    "color: #aaf;\n}\n.app-header-article,\n.ad--section {\n
+{
+  "": {
+    "background-color: #666;\n}\n*/",
+    "default": ".article__flex__right {\n
+{
+  "": {
+    "margin: 0;\n}\n#readerarticle p {\n    // font-size: 24px;\n
+{
+  "": {
+    "/*font-family: Georgia, serif;*/\n    line-height: 1.7
+{
+  "": {
+    "!important;\n}\n@media (min-width: 640px){\n
+{
+  "": {
+    ".artstyle__main--container > p {\n        line-height: 1.7 !important;\n
+{
+  "": {
+    "   }\n}\n.artstyle__main--container {\n    margin: 0;\n    max-width:
+{
+  "": {
+    "initial;\n}\n.article__free-html-container {\n    display:
+{
+  "": {
+    "none;\n}\n.article__header__title {\n    font-size: 26px;\n
+{
+  "": {
+    "line-height: 36px;\n}\n.artstyle__header-overlay-text {\n    position:
+{
+  "": {
+    "initial;\n    /* display: none; */\n}\n.artstyle__intro {\n
+{
+  "": {
+    "font-weight: bold;\n}\n.app-header-article {\n    position:
+{
+  "": {
+    "absolute;\n}\nfigure.artstyle__figure {\n    margin: 0 0 30px -60px;\n
+{
+  "": {
+    " width: 780px;\n}\n.fu--hero-bleed picture {\n    position: relative;\n
+{
+  "": {
+    "  left:
+{
+  "": {
+    "-30px;\n}\n",
+    "selector": ".artstyle__header-title\n@.artstyle__byline\n@.artstyle__figure\n@.artstyle__intro\n.artstyle__main\n"
+  },
+  "volkskrant.nl": {
+    "active": "on",
+    "dark": ".artstyle__header--type-column
+{
+  "": {
+    ".artstyle__labels .artstyle__labels__label,\n.artstyle__byline,
+{
+  "": {
+    ".artstyle__byline__datetime, \n.artstyle__labels__sublabel {\n    color:
+{
+  "": {
+    "rgba(255, 255, 255, 0.780392) !important;\n}\n/*\n.artstyle__byline,
+{
+  "": {
+    ".artstyle__byline__datetime, \n.teaser__title {\n    color: rgba(255,
+{
+  "": {
+    "255, 255, 0.780392) !important;\n}\n.center-content-wrapper {\n
+{
+  "": {
+    "background-color:
+{
+  "": {
+    "#555;\n}\n.teaser__label,\n.teaser__sublabel,\n.teaser__link\n{\n
+{
+  "": {
+    "color: #aef
+{
+  "": {
+    "!important;\n}\nheader.app-header-home,\n[class^='regular-teaser'] {\n
+{
+  "": {
+    " background-color: #555 !important;\n}\n.wl-teaser--basic {\n
+{
+  "": {
+    "background-color: #888
+{
+  "": {
+    "!important;\n}\n*/\n",
+    "default": "figure.artstyle__figure {\n    margin:
+{
+  "": {
+    "0 0 30px -65px;\n    width:
+{
+  "": {
+    "720px;\n}\nfigure.artstyle__figure.fu--hero-bleed {\n    margin: 0 0
+{
+  "": {
+    "30px 170px;\n    width: 720px;\n}\n.fu--hero-bleed picture {\n
+{
+  "": {
+    "position: relative;\n    left: -30px;\n}\np.artstyle__text {\n
+{
+  "": {
+    "line-height: 30px !important;\n}\n#readerarticle {\n    padding:
+{
+  "": {
+    "30px;\n}\n.artstyle__header-title {\n    line-height: 45px
+{
+  "": {
+    "!important;\n}\n.artstyle__main--container,\n.artstyle__header {\n
+{
+  "": {
+    "margin-right: auto
+{
+  "": {
+    "!important;\n}\n.artstyle__header-title,\n.artstyle__intro {\n
+{
+  "": {
+    "line-height: inherit !important;\n}\narticle.artstyle {\n\tpadding: 0
+{
+  "": {
+    "!important;\n}\niframe {\n\tdisplay:
+{
+  "": {
+    "none;\n}\n.artstyle__element--freehtml > div {\n\theight: inherit
+{
+  "": {
+    "!important;\n}\n.tm-subscribe {\n    display: none
+{
+  "": {
+    "!important;\n}\n.dossier__title__container,\n.teaser__header {\n
+{
+  "": {
+    "opacity: .85;\n}\n.artstyle__container__icon {\n    display:
+{
+  "": {
+    "none;\n}\n",
+    "selector": ".artstyle__header\n.artstyle__main\n"
+  },
+  "washingtonpost.com": {
+    "active": "on",
+    "dark": "#readerarticle
+{
+  "": {
+    "p,\n#readerarticle>p {\n    font-size: 18px !important;\n
+{
+  "": {
+    "font-family: Verdana, Arial, Helvetica, sans-serif;\n}\n#article-body
+{
+  "": {
+    "article>p {\n    font-family: Verdana, Arial, Helvetica,
+{
+  "": {
+    "sans-serif;\n}\nbody {\n    background-color: #e7e7e7;\n}\n#pb-root {\n
+{
+  "": {
+    "  background-color: inherit;\n}\n\nbody.dark {\n    color: #E8E8E8;\n
+{
+  "": {
+    "background-color: #666666;\n}\n.dark #pb-root {\n    background-color:
+{
+  "": {
+    "#666666;\n}\n.dark .pb-f-homepage-card .panel,\n.dark
+{
+  "": {
+    ".pb-f-gallery-gallery-ans .wp-volt-gal.wp-volt-gal-embed-promo
+{
+  "": {
+    ".wp-volt-gal-embed-promo-container,\n.dark .pb-f-gallery-gallery-ans
+{
+  "": {
+    ".wp-volt-gal.wp-volt-gal-embed-promo .wp-volt-gal-embed-promo-container
+{
+  "": {
+    ".wp-volt-gal-embed-promo-bottom,\n.dark .skin.skin-card {\n
+{
+  "": {
+    "background-color: #888888;\n}\n.dark h1,\n.dark .blurb,\n.dark a,\n.dark
+{
+  "": {
+    ".main,\n.dark .label,\n.dark .headline,\n.dark .pb-f-gallery-gallery-ans
+{
+  "": {
+    ".wp-volt-gal.wp-volt-gal-embed-promo .wp-volt-gal-embed-promo-container
+{
+  "": {
+    ".wp-volt-gal-embed-promo-bottom,\n.dark .pb-f-section-story-list
+{
+  "": {
+    "p,\n.dark .pb-caption {\n    color: #E8E8E8;\n}\n.dark .flex-item
+{
+  "": {
+    "a:hover {\n    color: #c8c8ff;\n}\n.dark .bg-offwhite {\n
+{
+  "": {
+    "background-color: #777;\n}\n",
+    "default": "[data-qa=article-body-ad] {\n
+{
+  "": {
+    " display: none;\n}",
+    "selector": "header\narticle"
+  }
+}

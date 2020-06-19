@@ -81,7 +81,16 @@ function listSites(data, rlist) {
     }
 }
 
+// function getDynPathStore() {
+//     //chrome-extension://oejelhiehinpiiljmjabfmkkaladcppd/options/options.html
+//     const storeUrl = chrome.runtime.getURL('/store');
+//     return `${storeUrl}/${jsonStorage.jsonfile}`;
+// }
+
 function reveal() {
+    // const path = getDynPathStore();
+    // console.log('dyn path', path);
+    // return;
     const path = `${jsonStorage.jsonmap}/${jsonStorage.jsonfile}`;
     fetch(`${jsonStorage.systemLibraryUrl}/finder?path=${path}`)
         .then(response => response.statusText)
