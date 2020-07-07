@@ -1,5 +1,5 @@
 import {dynClass, monacoDocuments} from "../shared/constants.js";
-import {setEditor} from "./tab.js";
+import {selectTab} from "./tab.js";
 
 function initTab(tab) {
     const tabs = document.getElementById('tabs');
@@ -24,8 +24,9 @@ function show(req) {
     monacoDocuments.selector.text = custom.selector;
     monacoDocuments._default.text = defaultText;
     monacoDocuments._dark.text = darkText;
-    setEditor(monacoDocuments.default);
-    setActive(custom.active);
+    // setEditor(monacoDocuments.selector);
+    // setActive(custom.active);
+    selectTab('selector');
 }
 
 export {show}

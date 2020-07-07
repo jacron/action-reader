@@ -6,6 +6,7 @@
 const monacoDocuments = {
     default: {
         name: 'default',
+        description: 'General styling for @site',
         text: '',
         language: 'scss',
         className: 'default',
@@ -17,6 +18,7 @@ const monacoDocuments = {
     },
     dark: {
         name: 'dark',
+        description: 'Dark mode styling for @site',
         text: '',
         language: 'scss',
         className: 'dark',
@@ -28,6 +30,8 @@ const monacoDocuments = {
     },
     selector: {
         name: 'selector',
+        description: 'Elements in @site to display in reader',
+        tooltip: 'tag, .class or #id\nYou may use these prefixes:\n@ = optional elements\n* = use all of these',
         text: '',
         language: 'scss',
         className: 'selector',
@@ -38,6 +42,7 @@ const monacoDocuments = {
     },
     _default: {
         name: '_default',
+        description: 'General styling for all sites',
         text: '',
         language: 'scss',
         className: '_default',
@@ -49,6 +54,7 @@ const monacoDocuments = {
     },
     _dark: {
         name: '_dark',
+        description: 'Dark mode styling for all sites',
         text: '',
         language: 'scss',
         className: '_dark',

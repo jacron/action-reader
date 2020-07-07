@@ -124,18 +124,14 @@ function toggleForms(hostExists) {
     }
 }
 
-function validate() {
-    // console.log(monacoDocuments);
-    // console.log(popup.activeDoc);
-    const css = compile(popup.activeDoc.text);
-    console.log('css', css);
-    // const sassPath = '../node_modules/sass';
-    // require.config({ paths: { sass: sassPath}});
-    // require(['sass/sass'], (s) => {
-    //     console.log(s);
-    //     console.log(sass);
-    // });
-}
+// function validate() {
+//     const css = compile(popup.activeDoc.text);
+//     console.log('css', css);
+// }
+//
+// function options() {
+//     document.location.href = "../options/options.html";
+// }
 
 function setFormActions() {
     const clickBindings = [
@@ -144,7 +140,8 @@ function setFormActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        ['cmd-validate', validate],
+        // ['cmd-validate', validate],
+        // ['cmd-options', options],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
         ['active-toggle-switch', toggleActive]

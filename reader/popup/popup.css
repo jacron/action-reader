@@ -56,6 +56,14 @@ button:hover {
   width: 100%;
   visibility: hidden;
 }
+.the-editor {
+  height: calc(100% - 22px);
+}
+.description {
+  height: 20px;
+  padding: 2px 0 0 12px;
+  background: blue;
+}
 #tabs > div {
   display: inline-block;
   padding: 7px;

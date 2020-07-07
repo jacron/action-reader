@@ -40,13 +40,19 @@ function initEditor(doc) {
         console.error('no element with id:', doc.id);
         return;
     }
+    const editor = editorElement.querySelector('.the-editor');
+    const description = editorElement.querySelector('.description');
+    description.innerText = doc.description.replace('@site', popup.activeHost);
+    if (doc.tooltip) {
+        description.setAttribute('title', doc.tooltip);
+    }
     const vsPath = '../node_modules/monaco-editor/min/vs';
 
     require.config({ paths: {
             'vs': vsPath,
         }});
     require(['vs/editor/editor.main'], () => {
-        doc.editor = monaco.editor.create(editorElement, {
+        doc.editor = monaco.editor.create(editor, {
             lineNumbers: false,
             value: doc.text,
             language: doc.language,
@@ -114,4 +120,4 @@ function setTabActions() {
     });
 }
 
-export {setTabActions, setEditor, setDirty}
+export {setTabActions, selectTab, setDirty}
