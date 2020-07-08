@@ -63,6 +63,22 @@ html.article-page {
 }
     `;
 
-const css = compile(scss);
+const problem = `// scss
+#readerarticle {
+    .split-screen-content-header-theme-standard .split-screen-content-header__main,
+    h1, p {
+        background-color: rgb(74, 74, 77) !important;
+    }
+    .split-screen-content-header-theme-standard .caption__text, .split-screen-content-header-theme-standard .split-screen-content-header__publish-date,
+    .grid, figcaption.caption__text  {
+        color: rgba(255, 255, 255, 0.780392) !important;
+    }
+    .grid .body__container>p.has-dropcap.has-dropcap__lead-standard-heading:first-letter {
+        color: yellow;
+    }
+}
+`;
+
+const css = compile(problem);
 console.log(css);
 

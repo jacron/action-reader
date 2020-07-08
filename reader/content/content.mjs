@@ -14,6 +14,7 @@ const msrc = '../popup/compile.mjs';
 
     function injectStyle(style, id) {
         const css = lib.compile(style);
+        console.log(css);
         if (!document.getElementById(id)) {
             const styleElement = document.createElement('style');
             styleElement.id = id;
@@ -203,7 +204,7 @@ const msrc = '../popup/compile.mjs';
             injectStyle(darkText, 'splash-dark-style');
             injectStyle(custom.default, 'splash-custom-default-style');
             injectStyle(custom.dark, 'splash-custom-dark-style');
-            addDark();
+            // addDark();
             setTimeout(() => {
                 select(custom.selector);
             }, 200);

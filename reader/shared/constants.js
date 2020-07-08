@@ -1,3 +1,5 @@
+const styleTooltip = `first line '// scss'\nfor scss style`;
+
 /**
  * tabs that hold instances of the monaco editor
  *
@@ -8,6 +10,7 @@ const monacoDocuments = {
         name: 'default',
         description: 'General styling for @site',
         text: '',
+        tooltip: styleTooltip,
         language: 'scss',
         className: 'default',
         selector: '.default',
@@ -20,6 +23,7 @@ const monacoDocuments = {
         name: 'dark',
         description: 'Dark mode styling for @site',
         text: '',
+        tooltip: styleTooltip,
         language: 'scss',
         className: 'dark',
         selector: '.dark',
@@ -44,6 +48,7 @@ const monacoDocuments = {
         name: '_default',
         description: 'General styling for all sites',
         text: '',
+        tooltip: styleTooltip,
         language: 'scss',
         className: '_default',
         selector: '._default',
@@ -56,6 +61,7 @@ const monacoDocuments = {
         name: '_dark',
         description: 'Dark mode styling for all sites',
         text: '',
+        tooltip: styleTooltip,
         language: 'scss',
         className: '_dark',
         selector: '._dark',

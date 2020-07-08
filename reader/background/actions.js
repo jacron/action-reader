@@ -75,7 +75,7 @@ function reInit(name) {
         monacoDocuments.selector.text = data.selector;
         injectCss(monacoDocuments.default, background.tabId);
         injectCss(monacoDocuments.dark, background.tabId);
-        articleAddDark(background.tabId);
+        // articleAddDark(background.tabId);
         reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
     })
 }
@@ -122,7 +122,7 @@ function toggleDark(req, sendResponse) {
         retrieveDefaultDark().then(data => {
             monacoDocuments.dark.text = data['_dark'];
             sendResponse({data: 'dark styles added'});
-            articleAddDark(background.tabId);
+            // articleAddDark(background.tabId);
         });
     }
 }

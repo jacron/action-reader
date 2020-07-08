@@ -55,6 +55,10 @@ function isActiveHost(response) {
 
 function showBadge(activeHost) {
     const host = new Host(activeHost);
+    // console.log('host', host);
+    if (host.name.length === 0) {  // may be the popup
+        return;
+    }
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
             text: isActiveHost(response) ? '1' : ''
