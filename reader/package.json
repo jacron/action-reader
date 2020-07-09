@@ -1,6 +1,6 @@
 {
   "name": "action-reader",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "popup window shows status and some controls",
   "main": "reader/background/actions.js",
   "dependencies": {
@@ -12,6 +12,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "jan h croonen",
   "license": "ISC"
 }

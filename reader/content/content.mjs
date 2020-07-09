@@ -14,7 +14,7 @@ const msrc = '../popup/compile.mjs';
 
     function injectStyle(style, id) {
         const css = lib.compile(style);
-        console.log(css);
+        // console.log(css);
         if (!document.getElementById(id)) {
             const styleElement = document.createElement('style');
             styleElement.id = id;

@@ -81,8 +81,17 @@ function toggle(classList, cb) {
     }
 }
 
+function turnOnDarkModeSwitch() {
+    const classList = document.getElementById('dark-toggle-switch').classList;
+    classList.remove('off');
+    classList.add('on');
+}
+
 function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
+        if (mode) {
+            turnOnDarkModeSwitch();
+        }
         sendMessage({
             request: 'toggleGeneral',
             host: popup.activeHost,

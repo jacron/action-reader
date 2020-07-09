@@ -122,7 +122,7 @@ function toggleDark(req, sendResponse) {
         retrieveDefaultDark().then(data => {
             monacoDocuments.dark.text = data['_dark'];
             sendResponse({data: 'dark styles added'});
-            // articleAddDark(background.tabId);
+            articleAddDark(background.tabId);
         });
     }
 }
