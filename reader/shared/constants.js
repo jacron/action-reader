@@ -37,7 +37,7 @@ const monacoDocuments = {
         description: 'Elements in @site to display in reader',
         tooltip: 'tag, .class or #id\nYou may use these prefixes:\n@ = optional elements\n* = use all of these',
         text: '',
-        language: 'scss',
+        // language: 'scss',
         className: 'selector',
         selector: '.selector',
         editor: null,
@@ -93,7 +93,7 @@ const sendMessage = chrome.runtime.sendMessage;
  */
 const jsonStorage = {
     systemLibraryUrl: 'http://localhost:3006',
-    jsonmap: '/Users/orion/WebstormProjects/chrome/action reader/reader/store',
+    jsonmap: '/Users/orion/Dev/chrome/action reader/reader/store',
     jsonfile: 'readerdata.json',
 };
 

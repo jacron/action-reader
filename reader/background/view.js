@@ -1,17 +1,24 @@
 import {background} from "./backgroundState.js";
 import {getJcReaderHost} from "./util.js";
 
-function openView() {
+function createWin(curWin) {
     chrome.windows.create({
         url: 'popup/popup.html',
         type: 'popup',
         width: 500,
-        height: 500,
-        top: 20,
+        height: curWin.height,
+        top: curWin.top,
+        left: curWin.left - 500
     }, win => {
         background.winId = win.id;
         background.tTabId = win.tabs[0].id;
     })
+}
+
+function openView() {
+    chrome.windows.getCurrent(curwin => {
+        createWin(curwin)
+    });
 }
 
 function closeView() {
