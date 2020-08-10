@@ -1,5 +1,20 @@
-li {
+ul {
     list-style: none;
+    font-size: 17px;
+}
+ul#storagelist {
+    line-height: 1.7;
+}
+ul.cmd-options {
+    width: 190px;
+}
+#select-toggle {
+    margin-left: 44px;
+}
+ul.cmd-options li {
+    border-bottom: #777777 solid 1px;
+    width: 100%;
+    padding: 12px;
 }
 a {
     text-decoration: none;
@@ -25,4 +40,14 @@ html {
 }
 #body h2 {
     text-align: center;
+}
+#content {
+    padding: 8px 16px;
+    border: #9999cc dashed 2px;
+    border-radius: 12px;
+}
+#content,
+button,
+input {
+    font-size: 18px;
 }

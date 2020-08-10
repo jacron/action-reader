@@ -1,7 +1,7 @@
 {
-  "name": "Action Reader",
-  "description": "Complete Reader",
-  "version": "1.1",
+  "name": "JReader",
+  "description": "Create your own view for a website",
+  "version": "1.1.1",
   "author": "Jan H Croonen",
   "options_page": "options/options.html",
   "permissions": [
@@ -9,7 +9,8 @@
     "storage",
     "activeTab",
     "<all_urls>",
-    "cookies"
+    "cookies",
+    "downloads"
   ],
   "icons": {
     "128": "images/reader white.png"

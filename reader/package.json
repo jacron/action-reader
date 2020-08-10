@@ -1,10 +1,9 @@
 {
-  "name": "action-reader",
-  "version": "1.1.0",
-  "description": "popup window shows status and some controls",
+  "name": "JReader",
+  "version": "1.1.1",
+  "description": "Create your own view for a website",
   "main": "reader/background/actions.js",
   "dependencies": {
-    "@types/chrome": "0.0.91",
     "monaco-editor": "^0.19.3",
     "sass": "^1.26.3"
   },
@@ -12,6 +11,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "jan h croonen",
+  "author": "Jan H Croonen",
   "license": "ISC"
 }
