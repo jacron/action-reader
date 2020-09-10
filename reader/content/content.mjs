@@ -238,6 +238,7 @@ const msrc = '../popup/compile.mjs';
     };
 
     function initActions(req, sendResponse) {
+        console.log('req', req);
         if (req.message) {
             const fun = actionBindings[req.message];
             if (fun) {
@@ -252,10 +253,18 @@ const msrc = '../popup/compile.mjs';
 
     chrome.runtime.onMessage.addListener(
         (req, sender, sendResponse) => {
+            console.log({req});
             initActions(req, sendResponse);
         });
 
-    chrome.runtime.sendMessage({
+    // chrome.tabs.query({
+    //     active: true,
+    //     // lastFocusedWindow: true
+    // }, function (tabs) {
+    //     console.log({tabs});
+    // });
+
+        chrome.runtime.sendMessage({
             request: 'initHost',
             client: 'content'
         },

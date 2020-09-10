@@ -136,10 +136,22 @@ function closePopup() {
 }
 
 function initHost(req, sendResponse) {
-    chrome.tabs.query({active: true}, tabs => {
+    chrome.tabs.query({
+        active: true,
+        // lastFocusedWindow: true
+    }, tabs => {
+        // console.log({tabs});
         if (tabs.length > 0) {
-            const tab = tabs[0];
+            let tab;
+            for (const t of tabs) {
+                if (t.url.startsWith('http')) {
+                    tab = t;
+                    // break;
+                }
+            }
+            // const tab = tabs[0];
             const _activeHost = getJcReaderHost(tab.url);
+            // console.log({_activeHost});
             const host = new Host(_activeHost);
             // sendResponse(host.get());
             host.get().then(response => {

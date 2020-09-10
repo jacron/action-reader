@@ -29,22 +29,52 @@ function closeView() {
     }
 }
 
-function initView() {
-    // openView();
+function queryTab() {
     chrome.tabs.query({
         active: true,
-        lastFocusedWindow: true
+        // lastFocusedWindow: true
     }, function (tabs) {
-        if (tabs[0]) {
-            const {url, id} = tabs[0];
+        if (tabs.length > 0) {
+        // if (tabs[0]) {
+        //     console.log({tabs});
+            let tab;
+            for (const  t of tabs) {
+                if (t.url.startsWith('http')) {
+                    tab = t;
+                    break;
+                }
+            }
+            const {url, id} = tab;
             // console.log('active id', id);
             background.activeUrl = url;
             background.tabId = id;
             background.activeHost = getJcReaderHost(url);
+            // console.log('activeHost', background.activeHost);
             openView();
             // showBadge();
         }
     });
+}
+
+function initView() {
+    queryTab();
+    // openView();
+    // chrome.windows.getCurrent(e => {
+    //     chrome.tabs.query({
+    //         active: true
+    //     }, tabs => {
+    //         console.log({tabs});
+    //         if (tabs[0]) {
+    //             const {url, id} = tabs[0];
+    //             // console.log('active id', id);
+    //             background.activeUrl = url;
+    //             background.tabId = id;
+    //             background.activeHost = getJcReaderHost(url);
+    //             openView();
+    //             // showBadge();
+    //         }
+    //     })
+    // });
 }
 
 export { initView, closeView }
