@@ -37,7 +37,7 @@ function queryTab() {
         if (tabs.length > 0) {
         // if (tabs[0]) {
         //     console.log({tabs});
-            let tab;
+            let tab = tabs[0];
             for (const  t of tabs) {
                 if (t.url.startsWith('http')) {
                     tab = t;
