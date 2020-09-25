@@ -11,3 +11,6 @@ prefix selector with * to use mutliple elements
 prefix selector with @ to make it optional
 
 ![voorbeeld](reader/images/icon.png) 
+
+this extension needs npm i
+for installing monaco editor
