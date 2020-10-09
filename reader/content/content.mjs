@@ -1,16 +1,9 @@
 const msrc = '../popup/compile.mjs';
-// const sasssrc = 'node_modules/sass/sass.dart.js';
 
 (async () => {
     const src = chrome.runtime.getURL(msrc);
-    // console.log(src);
+    // console.log({src});
     const lib = await import(src);
-
-    // const ssrc = chrome.runtime.getURL(sasssrc);
-    // console.log('ssrc', ssrc);
-    // const slib = await import(ssrc);
-    //
-    // console.log('slib', slib);
 
     function injectStyle(style, id) {
         const css = lib.compile(style);
@@ -227,6 +220,10 @@ const msrc = '../popup/compile.mjs';
         document.getElementById(req.id).innerHTML = '';
     }
 
+    // function contextmenuclicked(req) {
+    //     console.log({req});
+    // }
+
     const actionBindings = {
         onInitHost,
         replaceStyle,
@@ -235,6 +232,7 @@ const msrc = '../popup/compile.mjs';
         removeDark,
         addDark,
         voidStyle,
+        // contextmenuclicked
     };
 
     function initActions(req, sendResponse) {
@@ -257,19 +255,20 @@ const msrc = '../popup/compile.mjs';
             initActions(req, sendResponse);
         });
 
-    // chrome.tabs.query({
-    //     active: true,
-    //     // lastFocusedWindow: true
-    // }, function (tabs) {
-    //     console.log({tabs});
-    // });
-
         chrome.runtime.sendMessage({
             request: 'initHost',
             client: 'content'
         },
         response => {
-            console.log('response', response);
+            // console.log('response', response);
         });
+
+
+
 })();
+// document.addEventListener('selectionchange', e => {
+//     console.log({e});
+//     // alert('selection changed');
+//     console.log(document.getSelection());
+// })
 

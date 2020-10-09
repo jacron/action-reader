@@ -85,3 +85,39 @@ chrome.browserAction.onClicked.addListener(function() {
 chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
     initActions(req, sendResponse);
 });
+
+
+
+// function createIconBookmark(info) {
+//     console.log({info});
+//     chrome.runtime.sendMessage({
+//         message: 'contextmenuclicked'
+//     })
+// }
+//
+// chrome.contextMenus.onClicked.addListener(createIconBookmark);
+//
+//
+// // testing outside of async
+// chrome.runtime.sendMessage({
+//     message: 'contextmenuclicked'
+// })
+//
+// function createContextMenu(id) {
+//     chrome.contextMenus.create(
+//         {
+//             id,
+//             title: 'JCReader will investigate your selection',
+//             contexts:["all"],
+//         }
+//     );
+// }
+//
+// chrome.management.getAll(infos => {
+//     infos.forEach(info => {
+//         if (info.name === 'Splash' && info.version === '1.4.4') {
+//             // _myId = info.id;
+//             createContextMenu(info.id)
+//         }
+//     })
+// })
