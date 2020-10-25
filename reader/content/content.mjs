@@ -64,6 +64,7 @@ const msrc = '../popup/compile.mjs';
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].cloneNode) {
                     const clone = nodes[i].cloneNode(true);
+                    // console.log(clone);
                     article.appendChild(clone);
                 }
             }
