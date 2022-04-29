@@ -138,24 +138,32 @@ function closePopup() {
 function initHost(req, sendResponse) {
     chrome.tabs.query({
         active: true,
-        // lastFocusedWindow: true
     }, tabs => {
-        // console.log({tabs});
         if (tabs.length > 0) {
             let tab;
+            let readmode = false;
             for (const t of tabs) {
                 if (t.url.startsWith('http')) {
                     tab = t;
                     // break;
                 }
+                if (t.url.startsWith('read')) {
+                    readmode = true;
+                    tab = t;
+                }
             }
-            // const tab = tabs[0];
+            if (!tab) {
+                if (readmode) {
+                    console.error('This page seems to be opened in read mode!');
+                } else {
+                    console.log('Cannot find http page');
+                }
+                sendResponse(false);
+                return true;
+            }
             const _activeHost = getJcReaderHost(tab.url);
-            // console.log({_activeHost});
             const host = new Host(_activeHost);
-            // sendResponse(host.get());
             host.get().then(response => {
-                // console.log('response', response);
                 retrieveDefaultDark().then(data => {
                     const res = {
                         message: 'onInitHost',
@@ -164,15 +172,11 @@ function initHost(req, sendResponse) {
                         defaultText: data['_default'],
                         darkText: data['_dark']
                     };
-                    // console.log(sendResponse);
                     if (req.client === 'content') {
                         chrome.tabs.sendMessage(tab.id, res);
                     } else {
                         chrome.runtime.sendMessage(res);
                     }
-                    // experiment
-                    // resolve(res);
-                    // console.log(res);
                     sendResponse(false);
                 });
             }).catch(err => {
@@ -181,10 +185,7 @@ function initHost(req, sendResponse) {
             });
         }
     });
-    // })).then(res => sendResponse({res}));
-    // sendResponse(true);  // keep channel open
     return true;
-    // sendResponse({data: 'okay'});  // prevent closed port error (?)
 }
 
 const actionBindings = {
