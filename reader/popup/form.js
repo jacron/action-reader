@@ -133,15 +133,6 @@ function toggleForms(hostExists) {
     }
 }
 
-// function validate() {
-//     const css = compile(popup.activeDoc.text);
-//     console.log('css', css);
-// }
-//
-// function options() {
-//     document.location.href = "../options/options.html";
-// }
-
 function setFormActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -149,8 +140,6 @@ function setFormActions() {
         ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        // ['cmd-validate', validate],
-        // ['cmd-options', options],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
         ['active-toggle-switch', toggleActive]

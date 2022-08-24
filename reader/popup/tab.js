@@ -110,7 +110,6 @@ function setTabActions() {
     const tabs = document.getElementById('tabs');
     tabs.addEventListener('click', e => {
         const target = e.target;
-        // console.log(target.classList.value);
         const tabs = ['default', 'dark', 'selector', '_default', '_dark'];
         for (const tab of tabs) {
             if (~target.classList.value.indexOf(tab)) {

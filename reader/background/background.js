@@ -4,43 +4,7 @@ import {initView, closeView} from "./view.js";
 import {Host} from "./host.js";
 import {getJcReaderHost} from "./util.js";
 
-chrome.windows.onRemoved.addListener(windowId => {
-    if (windowId === background.winId) {
-        background.winId = null;
-    }
-});
-
 let lastActiveTabId;
-
-chrome.tabs.onUpdated.addListener((_tabId, info) => {
-    lastActiveTabId = _tabId;
-    if (_tabId === background.tTabId) {
-        return;
-    }
-    /** do not use the globals tabId and activeHost here */
-    if (info.status === 'loading') {
-        const _activeHost = getJcReaderHost(info.url);
-        if (_activeHost) {
-            // initExistingHost(_activeHost, _tabId);
-            showBadge(_activeHost);
-        }
-    }
-});
-
-chrome.tabs.onActivated.addListener(activeInfo => {
-    if (activeInfo.tabId !== lastActiveTabId) {
-        closeView();
-    }
-    chrome.tabs.query({
-        active: true,
-        lastFocusedWindow: true
-    }, function (tabs) {
-        if (tabs[0]) {
-            const {url} = tabs[0];
-            showBadge(getJcReaderHost(url));
-        }
-    });
-});
 
 function isActiveHost(response) {
     const entries = Object.entries(response);
@@ -55,7 +19,6 @@ function isActiveHost(response) {
 
 function showBadge(activeHost) {
     const host = new Host(activeHost);
-    // console.log('host', host);
     if (host.name.length === 0) {  // may be the popup
         return;
     }
@@ -66,58 +29,55 @@ function showBadge(activeHost) {
     });
 }
 
-chrome.browserAction.onClicked.addListener(function() {
+function messageListener(req, sender, sendResponse) {
+    initActions(req, sendResponse);
+}
+
+function actionListener() {
     if (background.winId === null) {  /** prevent multiple popups */
-        initView();
+    initView();
     } else {
         closeView();
     }
-});
+}
 
-// chrome.cookies.onChanged.addListener(info => {
-    // if (info.cause === 'explicit') {
-    //     const {name, domain, value} = info.cookie;
-    //     console.log(name, domain);
-    //     console.log(value);
-    // }
-// });
+function activationListener(activeInfo) {
+    if (activeInfo.tabId !== lastActiveTabId) {
+        closeView();
+    }
+    chrome.tabs.query({
+        active: true,
+        lastFocusedWindow: true
+    }, function (tabs) {
+        if (tabs[0]) {
+            const {url} = tabs[0];
+            showBadge(getJcReaderHost(url));
+        }
+    });
+}
 
-chrome.runtime.onMessage.addListener((req, sender, sendResponse) => {
-    initActions(req, sendResponse);
-});
+function removalListener(windowId) {
+    if (windowId === background.winId) {
+        background.winId = null;
+    }
+}
 
+function updateListener(_tabId, info) {
+    lastActiveTabId = _tabId;
+    if (_tabId === background.tTabId) {
+        return;
+    }
+    /** do not use the globals tabId and activeHost here */
+    if (info.status === 'loading') {
+        const _activeHost = getJcReaderHost(info.url);
+        if (_activeHost) {
+            showBadge(_activeHost);
+        }
+    }
+}
 
-
-// function createIconBookmark(info) {
-//     console.log({info});
-//     chrome.runtime.sendMessage({
-//         message: 'contextmenuclicked'
-//     })
-// }
-//
-// chrome.contextMenus.onClicked.addListener(createIconBookmark);
-//
-//
-// // testing outside of async
-// chrome.runtime.sendMessage({
-//     message: 'contextmenuclicked'
-// })
-//
-// function createContextMenu(id) {
-//     chrome.contextMenus.create(
-//         {
-//             id,
-//             title: 'JCReader will investigate your selection',
-//             contexts:["all"],
-//         }
-//     );
-// }
-//
-// chrome.management.getAll(infos => {
-//     infos.forEach(info => {
-//         if (info.name === 'Splash' && info.version === '1.4.4') {
-//             // _myId = info.id;
-//             createContextMenu(info.id)
-//         }
-//     })
-// })
+chrome.windows.onRemoved.addListener(removalListener);
+chrome.tabs.onUpdated.addListener(updateListener);
+chrome.tabs.onActivated.addListener(activationListener);
+chrome.browserAction.onClicked.addListener(actionListener);
+chrome.runtime.onMessage.addListener(messageListener);

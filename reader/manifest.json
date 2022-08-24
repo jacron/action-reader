@@ -3,6 +3,7 @@
   "description": "Create your own view for a website",
   "version": "1.1.1",
   "author": "Jan H Croonen",
+  "manifest_version": 2,
   "options_page": "options/options.html",
   "permissions": [
     "tabs",
@@ -29,6 +30,5 @@
   }],
   "web_accessible_resources": [
     "popup/compile.mjs"
-  ],
-  "manifest_version": 2
+  ]
 }
