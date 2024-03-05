@@ -1,0 +1,16 @@
+ul {
+    list-style: none;
+    line-height: 1.7;
+}
+html {
+    background-color: #00485b;
+}
+body {
+    width: 500px;
+    margin: auto;
+    background-color: #eeffff;
+    padding: 8px;
+}
+body h2, h3 {
+    text-align: center;
+}
