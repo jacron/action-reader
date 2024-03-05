@@ -136,30 +136,17 @@ function closePopup() {
 }
 
 function initHost(req, sendResponse) {
+    console.log('initHost...')
     chrome.tabs.query({
         active: true,
     }, tabs => {
+        console.log(tabs)
         if (tabs.length > 0) {
             let tab;
-            let readmode = false;
             for (const t of tabs) {
                 if (t.url.startsWith('http')) {
                     tab = t;
-                    // break;
                 }
-                if (t.url.startsWith('read')) {
-                    readmode = true;
-                    tab = t;
-                }
-            }
-            if (!tab) {
-                if (readmode) {
-                    console.error('This page seems to be opened in read mode!');
-                } else {
-                    console.log('Cannot find http page');
-                }
-                sendResponse(false);
-                return true;
             }
             const _activeHost = getJcReaderHost(tab.url);
             const host = new Host(_activeHost);
@@ -175,7 +162,7 @@ function initHost(req, sendResponse) {
                     if (req.client === 'content') {
                         chrome.tabs.sendMessage(tab.id, res);
                     } else {
-                        chrome.runtime.sendMessage(res);
+                        chrome.runtime.sendMessage(res).then();
                     }
                     sendResponse(false);
                 });

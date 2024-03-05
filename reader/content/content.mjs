@@ -58,12 +58,12 @@ console.log("contentscript loaded for jreader!");
             for (let i = 0; i < nodes.length; i++) {
                 if (nodes[i].cloneNode) {
                     const clone = nodes[i].cloneNode(true);
-                    // console.log(clone);
                     article.appendChild(clone);
                 }
             }
             container.appendChild(article);
             container.id = 'readercontainer';
+            article.setAttribute('tabIndex', '-1');
             return container;
         }
 
@@ -130,7 +130,8 @@ console.log("contentscript loaded for jreader!");
                 // document.body.innerHTML = div.innerHTML;
                 setTimeout(() => {
                     document.body.appendChild(container);
-                    document.getElementById('readerarticle').className = 'dark';
+                    const readerArticle = document.getElementById('readerarticle');
+                    readerArticle.className = 'dark';
                 }, 100);
             } else {
                 console.log('No content for reader found');
@@ -156,6 +157,10 @@ console.log("contentscript loaded for jreader!");
                     .get(selectors)
                     .injectArticle()
             }, timeout);
+            setTimeout(() => {
+                const readerArticle = document.getElementById('readerarticle');
+                readerArticle.focus();
+            }, 1000)
         }
     }
 
