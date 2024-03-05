@@ -1,8 +1,7 @@
 console.log("contentscript loaded for jreader!");
 
 (async () => {
-    function injectStyle(style, id) {
-        const css = compile(style);
+    function injectStyle(css, id) {
         if (!document.getElementById(id)) {
             const styleElement = document.createElement('style');
             styleElement.id = id;
@@ -70,7 +69,7 @@ console.log("contentscript loaded for jreader!");
 
         function getNode(sel) {
             if (sel[0] === '*') {
-                return document.querySelectorAll(sel.substr(1));
+                return document.querySelectorAll(sel.substring(1));
             } else {
                 return document.querySelector(sel);
             }
@@ -94,7 +93,7 @@ console.log("contentscript loaded for jreader!");
                 let sel = selector[i];
                 let optional = false;
                 if (sel[0] === '@') {
-                    sel = sel.substr(1);
+                    sel = sel.substring(1);
                     optional = true;
                 }
                 const node = getNodes(sel);
@@ -216,10 +215,6 @@ console.log("contentscript loaded for jreader!");
         document.getElementById(req.id).innerHTML = '';
     }
 
-    // function contextmenuclicked(req) {
-    //     console.log({req});
-    // }
-
     const actionBindings = {
         onInitHost,
         replaceStyle,
@@ -228,11 +223,9 @@ console.log("contentscript loaded for jreader!");
         removeDark,
         addDark,
         voidStyle,
-        // contextmenuclicked
     };
 
     function initActions(req, sendResponse) {
-        // console.log('req', req);
         if (req.message) {
             const fun = actionBindings[req.message];
             if (fun) {
@@ -251,20 +244,8 @@ console.log("contentscript loaded for jreader!");
             initActions(req, sendResponse);
         });
 
-        chrome.runtime.sendMessage({
+        await chrome.runtime.sendMessage({
             request: 'initHost',
             client: 'content'
-        },
-        response => {
-            // console.log('response', response);
         });
-
-
-
 })();
-// document.addEventListener('selectionchange', e => {
-//     console.log({e});
-//     // alert('selection changed');
-//     console.log(document.getSelection());
-// })
-

@@ -27,7 +27,6 @@
   "content_scripts": [{
     "matches": ["https://*/*"],
     "js": [
-      "popup/compile.mjs",
       "content/content.mjs"
     ],
     "all_frames": false
