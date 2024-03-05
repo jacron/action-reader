@@ -197,7 +197,7 @@ function getText(elements) {
     return text;
 }
 
-export function compile(scss) {
+function compile(scss) {
     if (checkScssLine(scss)) {
         scss = stripComment(scss);
         let css = stripWhiteSpace(scss);

@@ -1,8 +1,6 @@
 import {sendMessage} from '../shared/constants.js';
 import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
-// import {monacoDocuments} from "../shared/constants.js";
-import {compile} from "./compile.mjs";
 
 function closeMe() {
     sendMessage({request: 'closePopup'});

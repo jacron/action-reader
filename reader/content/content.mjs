@@ -1,13 +1,8 @@
-const msrc = '../popup/compile.mjs';
+console.log("contentscript loaded for jreader!");
 
 (async () => {
-    const src = chrome.runtime.getURL(msrc);
-    // console.log({src});
-    const lib = await import(src);
-
     function injectStyle(style, id) {
-        const css = lib.compile(style);
-        // console.log(css);
+        const css = compile(style);
         if (!document.getElementById(id)) {
             const styleElement = document.createElement('style');
             styleElement.id = id;
