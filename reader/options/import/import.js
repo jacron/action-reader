@@ -21,7 +21,6 @@ function createAnchor(value) {
 }
 
 function restoreFromImport() {
-    // console.log(sitesData);
     if (confirm('Restore all site settings?')) {
         chrome.storage.local.set(sitesData, () => updateStatus('Imported options restored.'));
     }
