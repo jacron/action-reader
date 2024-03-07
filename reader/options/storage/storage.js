@@ -26,16 +26,17 @@ function makeCheckbox(value) {
     return input;
 }
 
-function makeCaption(name) {
-    const span = document.createElement('span');
-    span.innerText = ' ' + name;
-    return span;
+function makeAnchor(name) {
+    const anchor = document.createElement('a');
+    anchor.innerText = ' ' + name;
+    anchor.setAttribute('href', 'https://' + name)
+    return anchor;
 }
 
 function siteLi(name, value) {
     const li = document.createElement('li');
     li.appendChild(makeCheckbox(value));
-    li.appendChild(makeCaption(name));
+    li.appendChild(makeAnchor(name));
     return li;
 }
 

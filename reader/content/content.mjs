@@ -112,8 +112,8 @@ console.log("contentscript loaded for jreader!");
                     }
                 }
                 if (!found) {
-                    console.log(sel, ' is not a node');
                     if (!optional) {
+                        console.log(sel, ' is not a node');
                         nodes = [];
                         break;
                     }

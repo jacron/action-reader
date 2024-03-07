@@ -30,7 +30,8 @@ function showBadge(activeHost) {
 }
 
 function messageListener(req, sender, sendResponse) {
-    initActions(req, sendResponse);
+    // console.log(sender)
+    initActions(req, sendResponse, sender);
 }
 
 function actionListener() {

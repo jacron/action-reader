@@ -135,19 +135,25 @@ function closePopup() {
     }
 }
 
-function initHost(req, sendResponse) {
-    console.log('initHost...')
+function initHost(req, sendResponse, sender) {
+    console.log('*** initHost...')
+    // console.log(sender.origin)
+    // if (!sender.origin.startsWith('http')) {
+    //     return;
+    // }
     chrome.tabs.query({
         active: true,
     }, tabs => {
-        console.log(tabs)
+        // console.log(tabs)
         if (tabs.length > 0) {
             let tab;
             for (const t of tabs) {
                 if (t.url.startsWith('http')) {
                     tab = t;
+                    break;
                 }
             }
+            // console.log(tab)
             const _activeHost = getJcReaderHost(tab.url);
             const host = new Host(_activeHost);
             host.get().then(response => {
@@ -162,7 +168,7 @@ function initHost(req, sendResponse) {
                     if (req.client === 'content') {
                         chrome.tabs.sendMessage(tab.id, res);
                     } else {
-                        chrome.runtime.sendMessage(res).then();
+                        chrome.runtime.sendMessage(res);
                     }
                     sendResponse(false);
                 });
@@ -189,12 +195,12 @@ const actionBindings = {
     storeHost,
 };
 
-function initActions(req, sendResponse) {
+function initActions(req, sendResponse, sender) {
     if (req.request) {
         // console.log('req', req);
         const fun = actionBindings[req.request];
         if (fun) {
-            fun(req, sendResponse);
+            fun(req, sendResponse, sender);
         } else {
             console.error('invalid request', req.request);
             sendResponse('invalid request:' + req.request);
