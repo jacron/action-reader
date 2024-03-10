@@ -16,22 +16,24 @@ function removeStyle(id) {
     style.parentNode.removeChild(style);
 }
 
-function createContainer(nodes) {
-    const container = document.createElement('div');
+function createArticle(nodes) {
     const article = document.createElement('div');
-
-    container.className = 'content-container';
-
-    article.id = 'readerarticle';
-    for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i].cloneNode) {
-            const clone = nodes[i].cloneNode(true);
+    for (let node of nodes) {
+        if (node.cloneNode) {
+            const clone = node.cloneNode(true);
             article.appendChild(clone);
         }
     }
-    container.appendChild(article);
-    container.id = 'readercontainer';
+    article.id = 'readerarticle';
     article.setAttribute('tabIndex', '-1');
+    // article.className = 'dark';
+    return article;
+}
+
+function createContainer() {
+    const container = document.createElement('div');
+    container.className = 'content-container';
+    container.id = 'readercontainer';
     return container;
 }
 
@@ -59,12 +61,13 @@ function getNodes(selector) {
 
 function injectArticle(nodes) {
     if (nodes.length > 0) {
-        const container = createContainer(nodes);
+        const readerArticle = createArticle(nodes);
+        const container = createContainer();
+        container.appendChild(readerArticle);
         setTimeout(() => {
             document.body.appendChild(container);
-            const readerArticle = document.getElementById('readerarticle');
-            console.log(readerArticle)
-            readerArticle.className = 'dark';
+            // const readerArticle = document.getElementById('readerarticle');
+            console.log('readerArticle appended');
             readerArticle.focus();
         }, 100);
     } else {
