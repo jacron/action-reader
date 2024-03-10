@@ -19,13 +19,13 @@ function isActiveHost(response) {
 
 function showBadge(activeHost) {
     const host = new Host(activeHost);
-    if (host.name.length === 0) {  // may be the popup
+    if (host.name.length === 0) {  // maybe the popup
         return;
     }
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
             text: isActiveHost(response) ? '1' : ''
-        });
+        }).then(() => {});
     });
 }
 

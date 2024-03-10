@@ -10,7 +10,6 @@ class Host {
     css = '';
 
     store(changes) {
-        // console.log('changes', changes);
         this.get().then(oldHost => {
             const newHost = {};
             if (changes) {
@@ -27,8 +26,6 @@ class Host {
                     newHost.active = changes.active || oldHost.active || 'on';
                 }
             }
-            // console.log('newHost', newHost);
-            // console.log(this.name);
             StorageArea.set({[this.name]: newHost}, () => {});
         });
     }
@@ -43,29 +40,9 @@ class Host {
     }
 
     delete() {
-        StorageArea.remove([this.name]);
+        StorageArea.remove([this.name]).then(() => {});
     }
-
-    // setSelector(selector) { this.selector = selector}
-
-    // setCss(css) {this.css = css}
 }
-
-// function initExistingHost(_activeHost, _tabId) {
-//     const host = new Host(_activeHost);
-//     host.get().then(_data => {
-//         const hostdata = _data[_activeHost];
-//         if (hostdata && hostdata.active === 'on') { // we have and use data for this host
-//             retrieveDefaultDark().then(dd_data => {
-//                 initInject(_tabId, hostdata, dd_data);
-//             });
-//             monacoDocuments.selector.text = hostdata.selector;
-//             injectMakeReader(monacoDocuments.selector.text,
-//                 _tabId, _activeHost);
-//             articleAddDark(_tabId);
-//         }
-//     })
-// }
 
 function retrieveDefaultDark() {
     const keys = [KEY_DEFAULT, KEY_DARK];
@@ -77,11 +54,11 @@ function retrieveDefaultDark() {
 }
 
 function storeDefault(css) {
-    StorageArea.set({[KEY_DEFAULT]: css})
+    StorageArea.set({[KEY_DEFAULT]: css}).then(() => {})
 }
 
 function storeDark(css) {
-    StorageArea.set({[KEY_DARK]: css})
+    StorageArea.set({[KEY_DARK]: css}).then(() => {})
 }
 
 export { Host, storeDark, storeDefault, retrieveDefaultDark}

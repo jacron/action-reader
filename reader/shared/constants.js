@@ -34,7 +34,7 @@ const monacoDocuments = {
     },
     selector: {
         name: 'selector',
-        description: 'Elements in @site to display in reader (@ optional)',
+        description: 'Elements in @site to display (@ optional)',
         tooltip: 'tag, .class or #id\nYou may use these prefixes:\n@ = optional elements\n* = use all of these',
         text: '',
         // language: 'scss',

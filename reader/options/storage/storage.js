@@ -53,6 +53,12 @@ function init() {
     chrome.storage.local.get(null, sites1 => {
         listSites(sites1, 'storagelist');
         // console.log(sites1);
+        // for (const [key, value] of Object.entries(sites1)) {
+        //     if (key.length > 0) {
+        //         console.log('*** ' + key)
+        //         console.log(value.selector)
+        //     }
+        // }
         sites = sites1;
     })
 }
