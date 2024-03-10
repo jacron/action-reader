@@ -6,8 +6,31 @@
     <link href="./storage.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <h3>Storage View</h3>
-    <ul id="sites-list"></ul>
-    <script src="./storage.js"></script>
+    <div class="container">
+        <div>
+            <h3>Storage View</h3>
+            <ul id="sites-list"></ul>
+        </div>
+        <div class="details">
+            <h3 id="site-name">Details</h3>
+            <h4>selector</h4>
+            <div class="editor selector" id="editor-selector">
+                <div class="description"></div>
+                <div class="the-editor"></div>
+            </div>
+            <h4>default</h4>
+            <div class="editor default" id="editor-default">
+                <div class="description"></div>
+                <div class="the-editor"></div>
+            </div>
+            <h4>dark</h4>
+            <div class="editor dark" id="editor-dark">
+                <div class="description"></div>
+                <div class="the-editor"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./storage.js" type="module"></script>
+    <script src="../../node_modules/monaco-editor/min/vs/loader.js"></script>
 </body>
 </html>

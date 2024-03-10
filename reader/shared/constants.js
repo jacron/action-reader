@@ -1,4 +1,6 @@
-const styleTooltip = `first line '// scss'\nfor scss style`;
+// const styleTooltip = `first line '// scss'\nfor scss style`;
+// const vsPath = '/Users/ares/Dev/chrome/action-reader/reader/node_modules/monaco-editor/min/vs';
+const vsPath = '../node_modules/monaco-editor/min/vs';
 
 /**
  * tabs that hold instances of the monaco editor
@@ -10,7 +12,7 @@ const monacoDocuments = {
         name: 'default',
         description: 'General styling for @site',
         text: '',
-        tooltip: styleTooltip,
+        // tooltip: styleTooltip,
         language: 'scss',
         className: 'default',
         selector: '.default',
@@ -23,7 +25,7 @@ const monacoDocuments = {
         name: 'dark',
         description: 'Dark mode styling for @site',
         text: '',
-        tooltip: styleTooltip,
+        // tooltip: styleTooltip,
         language: 'scss',
         className: 'dark',
         selector: '.dark',
@@ -35,7 +37,7 @@ const monacoDocuments = {
     selector: {
         name: 'selector',
         description: 'Elements in @site to display (@ optional)',
-        tooltip: 'tag, .class or #id\nYou may use these prefixes:\n@ = optional elements\n* = use all of these',
+        // tooltip: 'tag, .class or #id\nYou may use these prefixes:\n@ = optional elements\n* = use all of these',
         text: '',
         // language: 'scss',
         className: 'selector',
@@ -48,7 +50,7 @@ const monacoDocuments = {
         name: '_default',
         description: 'General styling for all sites',
         text: '',
-        tooltip: styleTooltip,
+        // tooltip: styleTooltip,
         language: 'scss',
         className: '_default',
         selector: '._default',
@@ -61,7 +63,7 @@ const monacoDocuments = {
         name: '_dark',
         description: 'Dark mode styling for all sites',
         text: '',
-        tooltip: styleTooltip,
+        // tooltip: styleTooltip,
         language: 'scss',
         className: '_dark',
         selector: '._dark',
@@ -97,4 +99,4 @@ const jsonStorage = {
     jsonfile: 'readerdata.json',
 };
 
-export {monacoDocuments, dynClass, sendMessage, jsonStorage}
+export {monacoDocuments, dynClass, sendMessage, vsPath}

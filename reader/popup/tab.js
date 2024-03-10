@@ -1,4 +1,4 @@
-import {monacoDocuments, dynClass} from '../shared/constants.js';
+import {monacoDocuments, dynClass, vsPath} from '../shared/constants.js';
 import {popup} from "./popupState.js";
 
 function hideEditors() {
@@ -46,7 +46,6 @@ function initEditor(doc) {
     if (doc.tooltip) {
         description.setAttribute('title', doc.tooltip);
     }
-    const vsPath = '../node_modules/monaco-editor/min/vs';
 
     require.config({ paths: {
             'vs': vsPath,

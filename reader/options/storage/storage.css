@@ -1,16 +1,39 @@
 ul {
     list-style: none;
     line-height: 1.7;
+    width: max-content;
 }
 html {
     background-color: #00485b;
 }
 body {
-    width: 500px;
+    width: 800px;
     margin: auto;
     background-color: #eeffff;
     padding: 8px;
 }
-body h2, h3 {
+body h3 {
     text-align: center;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+.container {
+    display: flex;
+    gap: 12px;
+}
+.monaco-editor {
+    width: 300px !important;
+}
+.editor.selector .monaco-editor {
+    height: 100px !important;
+}
+.editor.default .monaco-editor {
+    height: 400px !important;
+}
+.editor.dark .monaco-editor {
+    height: 400px !important;
 }

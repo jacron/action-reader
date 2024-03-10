@@ -66,7 +66,6 @@ function injectArticle(nodes) {
         container.appendChild(readerArticle);
         setTimeout(() => {
             document.body.appendChild(container);
-            // const readerArticle = document.getElementById('readerarticle');
             console.log('readerArticle appended');
             readerArticle.focus();
         }, 100);
