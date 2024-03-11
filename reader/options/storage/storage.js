@@ -62,6 +62,8 @@ function createEditor(value, language, editorId) {
 }
 
 function showEditors(value) {
+    const toggle = document.getElementById('toggle-container');
+    toggle.style.display = 'block';
     if (editors.selector) {
         editors.selector.setValue(value.selector);
     } else {
@@ -93,7 +95,6 @@ function showSitesList() {
     container.style.width = 'max-content';
     container.style.display = 'block';
     const toggle = document.getElementById('toggle-container');
-    // toggle.style.display = 'block';
     toggle.innerText  = '<';
 }
 

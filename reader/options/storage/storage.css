@@ -41,7 +41,7 @@ a:hover {
     transition: width .35s ease-in-out;
 }
 #toggle-container {
-    /*display: none;*/
+    display: none;
     position: absolute;
     left: 10px;
     top: 10px;
