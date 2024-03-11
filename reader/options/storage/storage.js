@@ -36,8 +36,11 @@ function makeAnchor(name) {
     return anchor;
 }
 
-function createEditor(name, value, language, editorId) {
+function setName(name) {
     document.getElementById('site-name').innerText = name;
+}
+
+function createEditor(value, language, editorId) {
     const monacoOptions = {
         lineNumbers: false,
         value: value,
@@ -58,21 +61,21 @@ function createEditor(name, value, language, editorId) {
     return monaco.editor.create(document.getElementById(editorId), monacoOptions);
 }
 
-function showEditors(name, value) {
+function showEditors(value) {
     if (editors.selector) {
         editors.selector.setValue(value.selector);
     } else {
-        editors.selector = createEditor(name, value.selector, '', 'editor-selector');
+        editors.selector = createEditor(value.selector, '', 'editor-selector');
     }
     if (editors.default) {
         editors.default.setValue(value.default);
     } else {
-        editors.default = createEditor(name, value.default, 'scss', 'editor-default');
+        editors.default = createEditor(value.default, 'scss', 'editor-default');
     }
     if (editors.dark) {
         editors.dark.setValue(value.dark);
     } else {
-        editors.dark = createEditor(name, value.dark, 'scss', 'editor-dark');
+        editors.dark = createEditor(value.dark, 'scss', 'editor-dark');
     }
 }
 
@@ -109,7 +112,8 @@ function makeEditButton(name, value) {
     const button = document.createElement('button');
     button.innerText = 'show';
     button.addEventListener('click', () => {
-        showEditors(name, value);
+        setName(name);
+        showEditors(value);
     })
     return button;
 }
