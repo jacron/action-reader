@@ -1,5 +1,4 @@
 import {vsPath} from "../../shared/constants.js";
-// import {setDirty} from "../../popup/tab";
 
 let sites = null;
 let editors = {};
@@ -37,15 +36,9 @@ function makeAnchor(name) {
     return anchor;
 }
 
-function checkDirty(model, doc) {
-    // setDirty(doc.lastSavedVersion !== model.getAlternativeVersionId(),
-    //     doc);
-}
-
 function createEditor(name, value, language, editorId) {
     document.getElementById('site-name').innerText = name;
-    const editor = document.getElementById(editorId);
-    return monaco.editor.create(editor, {
+    const monacoOptions = {
         lineNumbers: false,
         value: value,
         language: language,
@@ -61,32 +54,55 @@ function createEditor(name, value, language, editorId) {
         hover: {
             enabled: false
         },
-    });
-}
-
-function adaptEditor(editor, value) {
-    editor.setValue(value);
-    const model = editor.getModel();
-    monaco.editor.setModelLanguage(model, '');
+    };
+    return monaco.editor.create(document.getElementById(editorId), monacoOptions);
 }
 
 function showEditors(name, value) {
-    // console.log(value);
     if (editors.selector) {
-        adaptEditor(editors.selector, value.selector);
+        editors.selector.setValue(value.selector);
     } else {
         editors.selector = createEditor(name, value.selector, '', 'editor-selector');
     }
     if (editors.default) {
-        adaptEditor(editors.default, value.default);
+        editors.default.setValue(value.default);
     } else {
         editors.default = createEditor(name, value.default, 'scss', 'editor-default');
     }
     if (editors.dark) {
-        adaptEditor(editors.dark, value.dark);
+        editors.dark.setValue(value.dark);
     } else {
         editors.dark = createEditor(name, value.dark, 'scss', 'editor-dark');
     }
+}
+
+function hideSitesList() {
+    const container = document.getElementById('sites-list-container');
+    container.style.width = '0px';
+    container.style.display = 'none';
+    const toggle = document.getElementById('toggle-container');
+    toggle.style.display = 'block';
+    toggle.innerText  = '>';
+}
+
+function showSitesList() {
+    const container = document.getElementById('sites-list-container');
+    container.style.width = 'max-content';
+    container.style.display = 'block';
+    const toggle = document.getElementById('toggle-container');
+    // toggle.style.display = 'block';
+    toggle.innerText  = '<';
+}
+
+function initToggle() {
+    const toggle = document.getElementById('toggle-container');
+    toggle.addEventListener('click', (e) => {
+        if (e.target.innerText === '>') {
+            showSitesList();
+        } else {
+            hideSitesList();
+        }
+    })
 }
 
 function makeEditButton(name, value) {
@@ -116,14 +132,14 @@ function listSites(sites) {
 }
 
 function init() {
-    require.config({ paths: {
-            'vs': '../' + vsPath,
-        }});
-    require(['vs/editor/editor.main'], () => {});
     chrome.storage.local.get(null, sites1 => {
         listSites(sites1, 'storagelist');
-        // console.log(sites1);
         sites = sites1;
+        require.config({ paths: {
+                'vs': '../' + vsPath,
+            }});
+        require(['vs/editor/editor.main'], () => {});
+        initToggle();
     })
 }
 

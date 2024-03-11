@@ -7,7 +7,7 @@ html {
     background-color: #00485b;
 }
 body {
-    width: 800px;
+    /*width: 800px;*/
     margin: auto;
     background-color: #eeffff;
     padding: 8px;
@@ -26,14 +26,23 @@ a:hover {
     gap: 12px;
 }
 .monaco-editor {
-    width: 300px !important;
+    width: 440px !important;
 }
 .editor.selector .monaco-editor {
-    height: 100px !important;
+    height: 60px !important;
 }
 .editor.default .monaco-editor {
-    height: 400px !important;
+    height: 800px !important;
 }
 .editor.dark .monaco-editor {
-    height: 400px !important;
+    height: 800px !important;
+}
+#sites-list-container {
+    transition: width .35s ease-in-out;
+}
+#toggle-container {
+    /*display: none;*/
+    position: absolute;
+    left: 10px;
+    top: 10px;
 }
