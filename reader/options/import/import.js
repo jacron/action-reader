@@ -1,5 +1,6 @@
 import {bind} from "../../lib/util.js";
 import {initDrop} from "../../lib/drop.js";
+import {listSites} from "../shared/sites.js";
 
 const inputFile = document.getElementById('input-file');
 let sitesData = null;
@@ -12,35 +13,9 @@ function updateStatus(msg) {
     }, 8000);
 }
 
-function createAnchor(value) {
-    const anchor = document.createElement('a');
-    anchor.href = 'https://' + value;
-    anchor.innerText = value;
-    anchor.setAttribute('target', '_blank');
-    return anchor;
-}
-
 function restoreFromImport() {
     if (confirm('Restore all site settings?')) {
         chrome.storage.local.set(sitesData, () => updateStatus('Imported options restored.'));
-    }
-}
-
-function listSites(data, rlist) {
-    const list = document.getElementById(rlist);
-    list.innerHTML = '';
-    const entries = Object.entries(data);
-    for (const entry of entries) {
-        const [site, options] = entry;
-        // const {active} = options;
-        const item = document.createElement('li');
-        if (site[0] !== '_' && site.length !== 0) {
-            // const checkbox = createCheckbox(site, active === 'on');
-            // item.appendChild(checkbox);
-            const anchor = createAnchor(site);
-            item.appendChild(anchor);
-            list.appendChild(item);
-        }
     }
 }
 

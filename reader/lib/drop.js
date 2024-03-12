@@ -19,8 +19,8 @@ function drop(e, input, cb) {
 }
 
 /**
- * When a file-object is dragged into the boxElement, it is inserted  as files into
- * the inputElement.
+ * When a user dragges a file object into the boxElement,
+ * it is inserted as 'files' into the inputElement.
  * @param boxElementId {string} DOM id
  * @param inputElementId {string} DOM id
  * @param cbDrop {function}

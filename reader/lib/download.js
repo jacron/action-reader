@@ -6,7 +6,7 @@ function download(records, filename) {
         url,
         filename,
         saveAs: true
-    })
+    }).then(() => {})
 }
 
 export {download}

@@ -188,9 +188,9 @@ function initActions(req, sendResponse) {
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
         initActions(req, sendResponse);
-    });
+});
 
-    chrome.runtime.sendMessage({
-        request: 'initHost',
-        client: 'content'
-    }).then(r => {});
+chrome.runtime.sendMessage({
+    request: 'initHost',
+    client: 'content'
+});
