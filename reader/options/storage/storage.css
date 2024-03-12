@@ -37,6 +37,9 @@ a:hover {
 .editor.dark .monaco-editor {
     height: 800px !important;
 }
+.editor.general .monaco-editor {
+    height: 800px !important;
+}
 #sites-list-container {
     transition: width .35s ease-in-out;
 }

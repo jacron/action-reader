@@ -61,23 +61,49 @@ function createEditor(value, language, editorId) {
     return monaco.editor.create(document.getElementById(editorId), monacoOptions);
 }
 
-function showEditors(value) {
+function showToggle() {
     const toggle = document.getElementById('toggle-container');
     toggle.style.display = 'block';
-    if (editors.selector) {
-        editors.selector.setValue(value.selector);
+}
+
+function showOneEditor(editor) {
+    if (editors[editor.name]) {
+        editors[editor.name].setValue(editor.value);
     } else {
-        editors.selector = createEditor(value.selector, '', 'editor-selector');
+        editors[editor.name] = createEditor(editor.value, editor.language, editor.id);
     }
-    if (editors.default) {
-        editors.default.setValue(value.default);
+}
+
+function toggleGeneral(showGeneral) {
+    const siteEditors = document.getElementById('site-editors');
+    const generalEditor = document.getElementById('general-editor');
+    if (showGeneral) {
+        siteEditors.style.display = 'none';
+        generalEditor.style.display = 'block';
     } else {
-        editors.default = createEditor(value.default, 'scss', 'editor-default');
+        siteEditors.style.display = 'block';
+        generalEditor.style.display = 'none';
     }
-    if (editors.dark) {
-        editors.dark.setValue(value.dark);
-    } else {
-        editors.dark = createEditor(value.dark, 'scss', 'editor-dark');
+}
+
+function showEditorsSite(value) {
+    toggleGeneral(false);
+    showOneEditor({ name: "selector", value: value.selector, language: "", id: "editor-selector"},);
+    showOneEditor({ name: "default", value: value.default, language: "scss", id: "editor-default" });
+    showOneEditor({ name: "dark", value: value.dark, language: "scss", id: "editor-dark" });
+}
+
+function showEditorGeneral(value) {
+    toggleGeneral(true);
+    showOneEditor({name: "general", value, language: "scss", id: "editor-general"});
+}
+
+function showEditors(value) {
+    showToggle();
+    if (value.active) { // value is an object
+        showEditorsSite(value);
+    } else {  // value is a string
+        showEditorGeneral(value);
     }
 }
 
