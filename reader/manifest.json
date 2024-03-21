@@ -21,7 +21,8 @@
   },
   "browser_action": {
     "default_icon": "images/reader white.png",
-    "default_title": "Reader ^R"
+    "default_title": "Reader ^R",
+    "default_popup": "popup.html"
   },
   "content_scripts": [{
     "matches": ["https://*/*", "http://*/*"],

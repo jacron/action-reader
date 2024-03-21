@@ -183,23 +183,32 @@ function replaceStyle(req) {
     injectStyle(req.css, req.id);
 }
 
-function voidStyle(req) {
-    const style = document.getElementById(req.id);
+function _voidStyle(id) {
+    const style = document.getElementById(id);
     if (style) style.innerHTML = '';
     // else console.log(req.id + ' is een onbekende style')
+}
+
+function voidStyle(req) {
+    _voidStyle(req.id);
+}
+
+function removeStyles() {
+    for (const theme in styleIds) {
+        for (const styleId of Object.values(styleIds[theme])) {
+            removeStyle(styleId);
+        }
+    }
 }
 
 function toggleGeneralContent(req, sendResponse) {
     const {mode} = req;
     console.log(mode)
     if (mode === 'off') {
-        // removeStyles();
-        // removeReader(background.tabId);
-        // articleRemoveDark(background.tabId);
-        sendResponse({data: 'general and custom styles and selector removed'});
+        removeStyles();
+        deleteReaderArticle();
     } else {
-        // reInit(host);
-        sendResponse({data: 'general and custom styles and selector added'});
+        initHost().then();
     }
 }
 
@@ -249,11 +258,9 @@ async function injectCustomStyles(websiteProps) {
     injectStyle(websiteProps.dark, styleIds.custom.dark);
 }
 
-async function injectGeneralStyles() {
-    const defaultStyle = await fromStorage(keysGeneral.default);
-    const darkStyle = await fromStorage(keysGeneral.dark);
-    injectStyle(defaultStyle[keysGeneral.default], styleIds.general.default);
-    injectStyle(darkStyle[keysGeneral.dark], styleIds.general.dark);
+function injectGeneralStyles(defaultStyle, darkStyle) {
+    injectStyle(defaultStyle, styleIds.general.default);
+    injectStyle(darkStyle, styleIds.general.dark);
 }
 
 /*
@@ -263,12 +270,22 @@ async function initHost() {
     const hostName = getJcReaderHost(document.location.href);
     const websitePropsObject = await fromStorage(hostName);
     const websiteProps = websitePropsObject[hostName];
+    const defaultStyleObject = await fromStorage(keysGeneral.default);
+    const darkStyleObject = await fromStorage(keysGeneral.dark);
+    const defaultStyle = defaultStyleObject[keysGeneral.default];
+    const darkStyle = darkStyleObject[keysGeneral.dark];
     if (websiteProps.active === 'on') {
-        injectGeneralStyles().then();
+        injectGeneralStyles(defaultStyle, darkStyle);
         injectCustomStyles(websiteProps).then();
         setTimeout(() => {
             select(websiteProps.selector);
         }, 200);
+    }
+    // {custom, darkText, defaultText}
+    initedHost = {
+        custom: websiteProps,
+        darkText: darkStyle,
+        defaultText: defaultStyle
     }
 }
 

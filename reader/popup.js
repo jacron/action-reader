@@ -45,14 +45,14 @@ function turnOnDarkModeSwitch() {
 function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
         console.log(mode)
+        const message = {
+            message: 'toggleGeneralContent',
+            mode};
         chrome.tabs.query({
             active: true
         }, tabs => {
             console.log(tabs)
-            chrome.runtime.sendMessage({
-                message: 'toggleGeneralContent',
-                // host: popup.activeHost,
-                mode});
+            chrome.tabs.sendMessage(tabs[0].id, message);
         })
     })
 }
