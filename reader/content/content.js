@@ -73,7 +73,6 @@ function getNodes(selector) {
         if (optional) {
             sel = sel.substring(1);
         }
-        console.log(sel)
         const node = document.querySelector(sel);
         if (node) {
             nodes.push(node);
@@ -83,7 +82,6 @@ function getNodes(selector) {
             break;
         }
     }
-    // console.log(nodes)
     return nodes;
 }
 
@@ -119,7 +117,7 @@ function setFocus() {
 }
 
 function select(selector) {
-    console.log(selector)
+    // console.log(selector)
     deleteReader();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
@@ -203,7 +201,6 @@ function removeStyles() {
 
 function toggleGeneralContent(req) {
     const {mode} = req;
-    console.log(mode)
     if (mode === 'off') {
         removeStyles();
         deleteReaderArticle();
@@ -214,7 +211,6 @@ function toggleGeneralContent(req) {
 
 function toggleDarkContent(req) {
     const {mode} = req;
-    console.log(mode)
     if (mode === 'off') {
         removeDark();
     } else {
@@ -253,7 +249,6 @@ function initActions(req, sendResponse) {
  */
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
-        console.log(req)
         initActions(req, sendResponse);
 });
 
@@ -293,7 +288,6 @@ async function initHost() {
             select(websiteProps.selector);
         }, 200);
     }
-    // {custom, darkText, defaultText}
     initedHost = {
         custom: websiteProps,
         darkText: darkStyle,
