@@ -1,5 +1,31 @@
 console.log("*** contentscript loaded for jreader!");
 
+const StorageArea = chrome.storage.local;
+const keysGeneral = {
+    default: '_default',
+    dark: '_dark'
+}
+
+const styleIds = {
+    custom: {
+        default: 'custom-default-style-id',
+        dark: 'custom-dark-style-id'
+    },
+    general: {
+        default: 'general-default-style-id',
+        dark: 'general-dark-style-id'
+    }
+}
+
+function getJcReaderHost(url) {
+    if (!url) {
+        return url;
+    }
+    url = url.replace(/http[s]?:\/\//, '');
+    const host = url.split('/')[0];
+    return host.replace('www.', '');
+}
+
 function injectStyle(css, id) {
     if (!document.getElementById(id)) {
         const styleElement = document.createElement('style');
@@ -47,6 +73,7 @@ function getNodes(selector) {
         if (optional) {
             sel = sel.substring(1);
         }
+        console.log(sel)
         const node = document.querySelector(sel);
         if (node) {
             nodes.push(node);
@@ -56,6 +83,7 @@ function getNodes(selector) {
             break;
         }
     }
+    console.log(nodes)
     return nodes;
 }
 
@@ -91,6 +119,7 @@ function setFocus() {
 }
 
 function select(selector) {
+    console.log(selector)
     deleteReader();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
@@ -190,7 +219,50 @@ chrome.runtime.onMessage.addListener(
         initActions(req, sendResponse);
 });
 
-chrome.runtime.sendMessage({
-    request: 'initHost',
-    client: 'content'
-});
+function fromStorage(keys) {
+    return new Promise((resolve) => {
+        StorageArea.get(keys, results => {
+            resolve(results)
+        });
+    });
+}
+
+async function injectCustomStyles(websiteProps) {
+    injectStyle(websiteProps.default, styleIds.custom.default);
+    injectStyle(websiteProps.dark, styleIds.custom.dark);
+}
+
+async function injectGeneralStyles() {
+    const defaultStyle = await fromStorage(keysGeneral.default);
+    const darkStyle = await fromStorage(keysGeneral.dark);
+    injectStyle(defaultStyle[keysGeneral.default], styleIds.general.default);
+    injectStyle(darkStyle[keysGeneral.dark], styleIds.general.dark);
+}
+
+/*
+alternatief voor initHost via background
+ */
+async function initHost() {
+    const hostName = getJcReaderHost(document.location.href);
+    const websitePropsObject = await fromStorage(hostName);
+    const websiteProps = websitePropsObject[hostName];
+    if (websiteProps.active === 'on') {
+        injectGeneralStyles().then();
+        injectCustomStyles(websiteProps).then();
+        setTimeout(() => {
+            select(websiteProps.selector);
+        }, 200);
+    }
+}
+
+initHost().then();
+
+/*
+message to background.js
+initHost in actions:
+ */
+// chrome.runtime.sendMessage({
+//     request: 'initHost',
+//     client: 'content'
+// }).then();
+

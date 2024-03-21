@@ -23,6 +23,7 @@ function injectCss(doc, tabId) {
 
 function removeStyle(doc, tabId) {
     // console.log(doc, tabId);
+    // voidStyle is in content
     chrome.tabs.sendMessage(tabId, {
         message: 'voidStyle',
         id: doc.styleId
