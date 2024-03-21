@@ -36,36 +36,22 @@ function toggle(classList, cb) {
     }
 }
 
-function turnOnDarkModeSwitch() {
-    const classList = document.getElementById('dark-toggle-switch').classList;
-    classList.remove('off');
-    classList.add('on');
+function messageToContent(message) {
+    chrome.tabs.query({
+        active: true
+    }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, message);
+    })
 }
 
 function toggleGeneralSettings(e) {
-    toggle(e.target.classList, mode => {
-        const message = {
-            message: 'toggleGeneralContent',
-            mode};
-        chrome.tabs.query({
-            active: true
-        }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, message);
-        })
-    })
+    toggle(e.target.classList, mode =>
+        messageToContent({message: 'toggleGeneralContent', mode}))
 }
 
 function toggleDarkSettings(e) {
-    toggle(e.target.classList, mode => {
-        const message = {
-            message: 'toggleDarkContent',
-            mode};
-        chrome.tabs.query({
-            active: true
-        }, tabs => {
-            chrome.tabs.sendMessage(tabs[0].id, message);
-        })
-    })
+    toggle(e.target.classList, mode =>
+        messageToContent({message: 'toggleDarkContent', mode}))
 }
 
 function handleCmds() {
