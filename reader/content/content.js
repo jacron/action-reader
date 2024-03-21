@@ -201,7 +201,7 @@ function removeStyles() {
     }
 }
 
-function toggleGeneralContent(req, sendResponse) {
+function toggleGeneralContent(req) {
     const {mode} = req;
     console.log(mode)
     if (mode === 'off') {
@@ -212,6 +212,17 @@ function toggleGeneralContent(req, sendResponse) {
     }
 }
 
+function toggleDarkContent(req) {
+    const {mode} = req;
+    console.log(mode)
+    if (mode === 'off') {
+        removeDark();
+    } else {
+        addDark();
+    }
+
+}
+
 const actionBindings = {
     onInitHost,  // called from initHost (actions.js)
     replaceStyle,
@@ -220,7 +231,8 @@ const actionBindings = {
     removeDark,
     addDark,
     voidStyle,
-    toggleGeneralContent  // nieuw
+    toggleGeneralContent,
+    toggleDarkContent
 };
 
 function initActions(req, sendResponse) {

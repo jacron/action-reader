@@ -44,34 +44,36 @@ function turnOnDarkModeSwitch() {
 
 function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
-        console.log(mode)
         const message = {
             message: 'toggleGeneralContent',
             mode};
         chrome.tabs.query({
             active: true
         }, tabs => {
-            console.log(tabs)
             chrome.tabs.sendMessage(tabs[0].id, message);
         })
     })
 }
 
-// function toggleDarkSettings(e) {
-//     toggle(e.target.classList, mode => {
-//         sendMessage({
-//             request: 'toggleDark',
-//             host: popup.activeHost,
-//             mode
-//         });
-//     })
-// }
+function toggleDarkSettings(e) {
+    toggle(e.target.classList, mode => {
+        const message = {
+            message: 'toggleDarkContent',
+            mode};
+        chrome.tabs.query({
+            active: true
+        }, tabs => {
+            chrome.tabs.sendMessage(tabs[0].id, message);
+        })
+    })
+}
 
 function handleCmds() {
     document.getElementById('cmdOpenEditors').addEventListener('click', openWin);
     document.getElementById('general-toggle-switch').addEventListener('click',
             e => toggleGeneralSettings(e));
-    // document.getElementById('dark-toggle').addEventListener('click', darkToggle);
+    document.getElementById('dark-toggle').addEventListener('click',
+        e => toggleDarkSettings(e));
 }
 
 handleCmds();
