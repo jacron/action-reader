@@ -14,15 +14,27 @@
 #dark-toggle {
     display: flex;
     align-items: center;
-    text-align: right;
 }
 .label {
     width: 60px;
     margin-right: 6px;
 }
 .general-controls {
-    margin: 12px 0;
+    margin: 0 0 12px 30px;
+    text-align: right;
 }
 .content {
-    padding: 0 12px;
+    padding: 24px;
+}
+body {
+    background-color: #00485b;
+    color: #eee;
+    margin: 0;
+    font-size: 18px;
+    width: 200px;
+}
+.header {
+    background-color: #333333;
+    padding: 8px 12px 12px 24px;
+    font-size: 22px;
 }
