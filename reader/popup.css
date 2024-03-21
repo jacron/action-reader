@@ -10,3 +10,16 @@
 .switch.off {
     background-position: 0 16px;
 }
+#general-toggle,
+#dark-toggle {
+    display: flex;
+    align-items: center;
+    text-align: right;
+}
+.label {
+    width: 60px;
+    margin-right: 6px;
+}
+.general-controls {
+    margin-bottom: 12px;
+}
