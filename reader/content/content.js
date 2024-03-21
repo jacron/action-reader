@@ -8,12 +8,12 @@ const keysGeneral = {
 
 const styleIds = {
     custom: {
-        default: 'custom-default-style-id',
-        dark: 'custom-dark-style-id'
+        default: 'splash-custom-default-style',  // 'custom-default-style-id',
+        dark: 'splash-custom-dark-style'  // 'custom-dark-style-id'
     },
     general: {
-        default: 'general-default-style-id',
-        dark: 'general-dark-style-id'
+        default: 'splash-default-style',  // 'general-default-style-id',
+        dark: 'splash-dark-style'  // 'general-dark-style-id'
     }
 }
 
@@ -39,7 +39,8 @@ function injectStyle(css, id) {
 
 function removeStyle(id) {
     const style = document.getElementById(id);
-    style.parentNode.removeChild(style);
+    if (style) style.parentNode.removeChild(style);
+    // else console.log(id + ' is een onbekend style element')
 }
 
 function createArticle(nodes) {
@@ -52,7 +53,6 @@ function createArticle(nodes) {
     }
     article.id = 'readerarticle';
     article.setAttribute('tabIndex', '-1');
-    // article.className = 'dark';
     return article;
 }
 
@@ -66,7 +66,7 @@ function createContainer() {
 function getNodes(selector) {
     let nodes = [];
     for (let sel of selector) {
-        if (sel.startsWith('//' || sel.length === 0)) {
+        if (sel.startsWith('//') || sel.length === 0) {
             continue;
         }
         let optional = sel[0] === '@';
@@ -83,7 +83,7 @@ function getNodes(selector) {
             break;
         }
     }
-    console.log(nodes)
+    // console.log(nodes)
     return nodes;
 }
 
@@ -165,7 +165,6 @@ function onInitHost(req) {
         injectStyle(darkText, 'splash-dark-style');
         injectStyle(custom.default, 'splash-custom-default-style');
         injectStyle(custom.dark, 'splash-custom-dark-style');
-        // addDark();
         setTimeout(() => {
             select(custom.selector);
         }, 200);
@@ -185,7 +184,23 @@ function replaceStyle(req) {
 }
 
 function voidStyle(req) {
-    document.getElementById(req.id).innerHTML = '';
+    const style = document.getElementById(req.id);
+    if (style) style.innerHTML = '';
+    // else console.log(req.id + ' is een onbekende style')
+}
+
+function toggleGeneralContent(req, sendResponse) {
+    const {mode} = req;
+    console.log(mode)
+    if (mode === 'off') {
+        // removeStyles();
+        // removeReader(background.tabId);
+        // articleRemoveDark(background.tabId);
+        sendResponse({data: 'general and custom styles and selector removed'});
+    } else {
+        // reInit(host);
+        sendResponse({data: 'general and custom styles and selector added'});
+    }
 }
 
 const actionBindings = {
@@ -196,13 +211,14 @@ const actionBindings = {
     removeDark,
     addDark,
     voidStyle,
+    toggleGeneralContent  // nieuw
 };
 
 function initActions(req, sendResponse) {
     if (req.message) {
-        const fun = actionBindings[req.message];
-        if (fun) {
-            fun(req);
+        const func = actionBindings[req.message];
+        if (func) {
+            func(req);
             sendResponse('okay');
         } else {
             console.error('invalid request', req.message);
@@ -216,6 +232,7 @@ function initActions(req, sendResponse) {
  */
 chrome.runtime.onMessage.addListener(
     (req, sender, sendResponse) => {
+        console.log(req)
         initActions(req, sendResponse);
 });
 

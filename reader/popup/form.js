@@ -87,6 +87,7 @@ function turnOnDarkModeSwitch() {
 
 function toggleGeneralSettings(e) {
     toggle(e.target.classList, mode => {
+        // bedenkelijk: mode is on of off!
         if (mode) {
             turnOnDarkModeSwitch();
         }
