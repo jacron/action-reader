@@ -14,16 +14,64 @@ function createWin(curWin) {
     })
 }
 
-function handleCmds() {
-    document.getElementById('cmdOpenEditors').addEventListener('click', () => {
+function openWin() {
+    chrome.tabs.query({
+        active: true
+    }, tabs => {
+        chrome.windows.get(tabs[0].windowId, curWin => {
+            createWin(curWin);
+        })
+    })
+}
+
+function toggle(classList, cb) {
+    if (classList.contains('on')) {
+        classList.remove('on');
+        classList.add('off');
+        cb('off');
+    } else {
+        classList.remove('off');
+        classList.add('on');
+        cb('on');
+    }
+}
+
+function turnOnDarkModeSwitch() {
+    const classList = document.getElementById('dark-toggle-switch').classList;
+    classList.remove('off');
+    classList.add('on');
+}
+
+function toggleGeneralSettings(e) {
+    toggle(e.target.classList, mode => {
+        console.log(mode)
         chrome.tabs.query({
             active: true
         }, tabs => {
-            chrome.windows.get(tabs[0].windowId, curWin => {
-                createWin(curWin);
-            })
+            console.log(tabs)
+            chrome.runtime.sendMessage({
+                message: 'toggleGeneralContent',
+                // host: popup.activeHost,
+                mode});
         })
     })
+}
+
+// function toggleDarkSettings(e) {
+//     toggle(e.target.classList, mode => {
+//         sendMessage({
+//             request: 'toggleDark',
+//             host: popup.activeHost,
+//             mode
+//         });
+//     })
+// }
+
+function handleCmds() {
+    document.getElementById('cmdOpenEditors').addEventListener('click', openWin);
+    document.getElementById('general-toggle-switch').addEventListener('click',
+            e => toggleGeneralSettings(e));
+    // document.getElementById('dark-toggle').addEventListener('click', darkToggle);
 }
 
 handleCmds();

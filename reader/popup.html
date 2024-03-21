@@ -3,10 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>jcReader</title>
+    <link href="./popup.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 jcReader
-<button id="cmdOpenEditors">Open editors</button>
+<div class="general-controls">
+    <div id="general-toggle">
+        <span class="label">general</span>
+        <span class="switch on" id="general-toggle-switch"></span>
+    </div>
+    <div id="dark-toggle">
+        <span class="label">dark</span>
+        <span class="switch on" id="dark-toggle-switch"></span>
+    </div>
+</div>
+<button id="cmdOpenEditors">Open&nbsp;editors</button>
 <script type="module" src="./popup.js"></script>
 </body>
 </html>

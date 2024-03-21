@@ -1,0 +1,12 @@
+.switch {
+    background: url('./images/toggle.png');
+    width: 32px;
+    height: 16px;
+    display: inline-block;
+}
+.switch.on {
+    background-position: 0 0;
+}
+.switch.off {
+    background-position: 0 16px;
+}
