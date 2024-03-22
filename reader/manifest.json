@@ -1,15 +1,14 @@
 {
   "name": "JReader",
   "description": "Create your own view for a website",
-  "version": "2.0.0",
+  "version": "3.0",
   "author": "Jan H Croonen",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "options_page": "options/options.html",
   "permissions": [
     "tabs",
     "storage",
     "activeTab",
-    "<all_urls>",
     "cookies",
     "downloads"
   ],
@@ -17,15 +16,16 @@
     "128": "images/reader white.png"
   },
   "background": {
-    "page": "background/background.html"
+    "service_worker": "background/background.js",
+    "type": "module"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "images/reader white.png",
-    "default_title": "Reader ^R",
+    "default_title": "Reader",
     "default_popup": "popup.html"
   },
   "content_scripts": [{
-    "matches": ["https://*/*", "http://*/*"],
+    "matches": ["https://*/*"],
     "js": [
       "content/content.js"
     ],
