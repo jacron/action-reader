@@ -1,3 +1,11 @@
+function messageToContent(message) {
+    chrome.tabs.query({
+        active: true
+    }, tabs => {
+        chrome.tabs.sendMessage(tabs[0].id, message);
+    })
+}
+
 function toggleOnOff(classList, cb) {
     if (classList.contains('on')) {
         classList.remove('on');
@@ -10,14 +18,6 @@ function toggleOnOff(classList, cb) {
     }
 }
 
-function messageToContent(message) {
-    chrome.tabs.query({
-        active: true
-    }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, message);
-    })
-}
-
 function toggleGeneralSettings(e) {
     toggleOnOff(e.target.classList, mode =>
         messageToContent({message: 'toggleGeneralContent', mode}))
@@ -28,4 +28,4 @@ function toggleDarkSettings(e) {
         messageToContent({message: 'toggleDarkContent', mode}))
 }
 
-export {toggleGeneralSettings, toggleDarkSettings}
+export {toggleGeneralSettings, toggleDarkSettings, messageToContent}

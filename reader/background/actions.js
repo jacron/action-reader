@@ -36,15 +36,28 @@ function saveHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function applyHost(req, sendResponse) {
-    // console.log('req (apply)', req);
+function _applyHost(req, tabId, sendResponse) {
     if (~['default', 'dark', '_default', '_dark'].indexOf(req.name )) {
-        injectCss(req, background.tabId);
+        injectCss(req, tabId);
     }
     if (req.name === 'selector') {
-        reInjectMakeReader(req.text, background.tabId);
+        reInjectMakeReader(req.text, tabId);
     }
     sendResponse({data: 'ok'});
+}
+
+function applyHost(req, sendResponse) {
+    const tabId = background.tabId;
+    if (!tabId) {
+        chrome.tabs.query({
+            active: true
+        }, tabs => {
+            _applyHost(req, tabs[0].id, sendResponse);
+        })
+
+    } else {
+        _applyHost(req, tabId, sendResponse);
+    }
 }
 
 function deleteHost(req, sendResponse) {
@@ -66,14 +79,12 @@ function reInit(name) {
     const host = new Host(name);
     host.get().then(data => {
         data = data[name];
-        // console.log('data', data);
         injectDefaultDark(background.tabId);
         monacoDocuments.default.text = data.default;
         monacoDocuments.dark.text = data.dark;
         monacoDocuments.selector.text = data.selector;
         injectCss(monacoDocuments.default, background.tabId);
         injectCss(monacoDocuments.dark, background.tabId);
-        // articleAddDark(background.tabId);
         reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
     })
 }
@@ -187,9 +198,9 @@ const actionBindings = {
     applyHost,
     closePopup,
     deleteHost,
-    toggleGeneral,
+    // toggleGeneral,
     toggleActive,
-    toggleDark,
+    // toggleDark,
     storeHost,
 };
 

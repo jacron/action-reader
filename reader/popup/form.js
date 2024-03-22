@@ -32,7 +32,7 @@ function updateDocument(doc) {
 }
 
 function save() {
-    /** saveHost active document, handled in  */
+    /** saveHost active document, handled in actions */
     updateDocument(popup.activeDoc);
     sendMessage({
         request: 'saveHost',

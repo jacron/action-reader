@@ -25,7 +25,7 @@ function showBadge(activeHost) {
     host.get().then(response => {
         chrome.browserAction.setBadgeText({
             text: isActiveHost(response) ? '1' : ''
-        }).then(() => {});
+        });
     });
 }
 
