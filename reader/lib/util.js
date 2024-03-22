@@ -9,4 +9,13 @@ function bind(type, bindings) {
     }
 }
 
-export {bind}
+function getJcReaderHost(url) {
+    if (!url) {
+        return url;
+    }
+    url = url.replace(/http[s]?:\/\//, '');
+    const host = url.split('/')[0];
+    return host.replace('www.', '');
+}
+
+export {bind, getJcReaderHost}

@@ -1,5 +1,5 @@
 import {background} from "./backgroundState.js";
-import {getJcReaderHost} from "./util.js";
+import {getJcReaderHost} from "../lib/util.js";
 
 function createWin(curWin) {
     chrome.windows.create({

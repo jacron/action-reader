@@ -4,7 +4,7 @@ import {injectCss, removeStyles, articleRemoveDark,
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
 import {monacoDocuments} from "../shared/constants.js";
-import {getJcReaderHost} from "./util.js";
+import {getJcReaderHost} from "../lib/util.js";
 
 function storeHost(req, sendResponse) {
     const host = new Host(req.host);
