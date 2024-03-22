@@ -18,11 +18,9 @@ function saveHost(req, sendResponse) {
     applyHost(req, sendResponse);
     switch (req.name) {
         case 'default':
-            // host.setCss(req.doc.text);
             host.store({default: req.text});
             break;
         case 'dark':
-            // host.setCss(req.doc.text);
             host.store({dark: req.text});
             break;
         case 'selector':

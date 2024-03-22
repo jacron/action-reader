@@ -1,6 +1,7 @@
 import {sendMessage} from '../shared/constants.js';
 import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
+import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 
 function closeMe() {
     sendMessage({request: 'closePopup'});
@@ -12,7 +13,6 @@ function postNew() {
         request: 'storeHost',
         host: popup.activeHost
     }, () => {
-        // initJcReader();
         sendMessage({
             request: 'initHost',
             client: 'popup'
@@ -32,7 +32,7 @@ function updateDocument(doc) {
 }
 
 function save() {
-    /** saveHost active document */
+    /** saveHost active document, handled in  */
     updateDocument(popup.activeDoc);
     sendMessage({
         request: 'saveHost',
@@ -67,54 +67,13 @@ function apply() {
         });
 }
 
-function toggle(classList, cb) {
-    if (classList.contains('on')) {
-        classList.remove('on');
-        classList.add('off');
-        cb('off');
-    } else {
-        classList.remove('off');
-        classList.add('on');
-        cb('on');
-    }
-}
-
-function turnOnDarkModeSwitch() {
-    const classList = document.getElementById('dark-toggle-switch').classList;
-    classList.remove('off');
-    classList.add('on');
-}
-
-function toggleGeneralSettings(e) {
-    toggle(e.target.classList, mode => {
-        // bedenkelijk: mode is on of off!
-        if (mode) {
-            turnOnDarkModeSwitch();
-        }
-        sendMessage({
-            request: 'toggleGeneral',
-            host: popup.activeHost,
-            mode});
-    })
-}
-
 function toggleActive(e) {
-    toggle(e.target.classList, mode => {
+    toggleOnOff(e.target.classList, mode => {
         sendMessage({
             request: 'toggleActive',
             host: popup.activeHost,
             mode});
     });
-}
-
-function toggleDarkSettings(e) {
-    toggle(e.target.classList, mode => {
-        sendMessage({
-            request: 'toggleDark',
-            host: popup.activeHost,
-            mode
-        });
-    })
 }
 
 function toggleForms(hostExists) {

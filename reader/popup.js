@@ -1,4 +1,5 @@
 import {background} from "./background/backgroundState.js";
+import {toggleDarkSettings, toggleGeneralSettings} from "./shared/popuplib.js";
 
 function createWin(curWin) {
     chrome.windows.create({
@@ -22,36 +23,6 @@ function openWin() {
             createWin(curWin);
         })
     })
-}
-
-function toggle(classList, cb) {
-    if (classList.contains('on')) {
-        classList.remove('on');
-        classList.add('off');
-        cb('off');
-    } else {
-        classList.remove('off');
-        classList.add('on');
-        cb('on');
-    }
-}
-
-function messageToContent(message) {
-    chrome.tabs.query({
-        active: true
-    }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, message);
-    })
-}
-
-function toggleGeneralSettings(e) {
-    toggle(e.target.classList, mode =>
-        messageToContent({message: 'toggleGeneralContent', mode}))
-}
-
-function toggleDarkSettings(e) {
-    toggle(e.target.classList, mode =>
-        messageToContent({message: 'toggleDarkContent', mode}))
 }
 
 function handleCmds() {
