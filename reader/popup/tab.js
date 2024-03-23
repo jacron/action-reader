@@ -110,7 +110,7 @@ function toggle(tabs, mode) {
 }
 
 function toggleCustom(mode) {
-    toggle(['default', 'dark', 'selector'], mode)
+    toggle(['default', 'dark', 'selector'], mode);
 }
 
 function toggleGeneral(mode) {
@@ -159,7 +159,6 @@ function initTabs(req) {
     monacoDocuments.selector.text = custom.selector;
     monacoDocuments._default.text = defaultText;
     monacoDocuments._dark.text = darkText;
-    selectTab('default');
 }
 
 function initSuperTabs() {

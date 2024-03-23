@@ -25,7 +25,7 @@ button:hover {
 #existing-reader-dialog,
 #new-reader-dialog {
   position: relative;
-  top: -20px;
+  top: -10px;
   width: 100%;
   height: calc(100% - 70px);
   text-align: center;
@@ -33,7 +33,7 @@ button:hover {
 }
 .controls {
   position: absolute;
-  bottom: -20px;
+  bottom: -16px;
   width: 100%;
   text-align: left;
 }
