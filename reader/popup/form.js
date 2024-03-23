@@ -1,9 +1,10 @@
 import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
-import {toggleDarkSettings, toggleGeneralSettings, toggleOnOff} from "../shared/popuplib.js";
+import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 
 function closeMe() {
-    chrome.runtime.sendMessage({request: 'closePopup'});
+    close();
+    // chrome.runtime.sendMessage({request: 'closePopup'});
 }
 
 function postNew() {
@@ -66,15 +67,6 @@ function apply() {
         });
 }
 
-function toggleActive(e) {
-    toggleOnOff(e.target.classList, mode => {
-        chrome.runtime.sendMessage({
-            request: 'toggleActive',
-            host: popup.activeHost,
-            mode});
-    });
-}
-
 function toggleForms(hostExists) {
     const existing = document.getElementById('existing-reader-dialog');
     const newview = document.getElementById('new-reader-dialog');
@@ -99,7 +91,6 @@ function setFormActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
-        ['active-toggle-switch', toggleActive]
     ];
     for (const binding of clickBindings) {
         const [id, fun] = binding;

@@ -88,25 +88,6 @@ function reInit(name) {
     })
 }
 
-function setActive(mode, name) {
-    const host = new Host(name);
-    host.store({active: mode});
-}
-
-function toggleActive(req, sendResponse) {
-    const {mode, host} = req;
-    setActive(mode, host);
-    if (mode === 'off') {
-        removeStyles();
-        removeReader(background.tabId);
-        articleRemoveDark(background.tabId);
-        sendResponse({data: 'general and custom styles and selector removed'});
-    } else {
-        reInit(host);
-        sendResponse({data: 'general and custom styles and selector added'});
-    }
-}
-
 function closePopup() {
     if (background.winId) {
         chrome.windows.remove(background.winId, () => {
@@ -173,9 +154,6 @@ const actionBindings = {
     applyHost,
     closePopup,
     deleteHost,
-    // toggleGeneral,
-    toggleActive,
-    // toggleDark,
     storeHost,
 };
 

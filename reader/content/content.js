@@ -216,7 +216,6 @@ function toggleDarkContent(req) {
     } else {
         addDark();
     }
-
 }
 
 const actionBindings = {

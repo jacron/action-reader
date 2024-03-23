@@ -23,6 +23,10 @@
   </div>
 
     <div id="existing-reader-dialog">
+        <div id="super-tabs">
+            <div class="custom">hostname...</div>
+            <div class="general">algemeen</div>
+        </div>
         <div id="tabs">
             <div class="selector">selector</div>
             <div class="default">default</div>
@@ -54,10 +58,6 @@
             <button id="cmd-apply">Apply</button>
             <button id="cmd-save">Save</button>
             <button id="reader-delete">Delete</button>
-            <div id="active-toggle">
-                <span class="label">active</span>
-                <span class="switch on" id="active-toggle-switch"></span>
-            </div>
             <a href="../options/options.html" target="_blank">General Settings</a>
         </div>
     </div>
@@ -72,6 +72,7 @@
         <a href="../options/options.html" target="_blank" style="color: white">
             General Settings</a>
     </div>
+
     <script type="module" src="./popup.js"></script>
     <script src="../node_modules/monaco-editor/min/vs/loader.js"></script>
   </body>
