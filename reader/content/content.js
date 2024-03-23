@@ -281,7 +281,7 @@ async function initHost() {
     const darkStyleObject = await fromStorage(keysGeneral.dark);
     const defaultStyle = defaultStyleObject[keysGeneral.default];
     const darkStyle = darkStyleObject[keysGeneral.dark];
-    if (websiteProps.active === 'on') {
+    if (websiteProps && websiteProps.active === 'on') {
         injectGeneralStyles(defaultStyle, darkStyle);
         injectCustomStyles(websiteProps).then();
         setTimeout(() => {

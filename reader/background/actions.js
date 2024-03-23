@@ -1,6 +1,5 @@
-import {Host, storeDefault, storeDark, retrieveDefaultDark} from "./host.js";
-import {injectCss, removeStyles, articleRemoveDark,
-    articleAddDark} from "./styling.js";
+import {Host, storeDefault, storeDark} from "./host.js";
+import {injectCss, removeStyles, articleRemoveDark} from "./styling.js";
 import {reInjectMakeReader, removeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
 import {monacoDocuments} from "../shared/constants.js";
@@ -66,45 +65,31 @@ function deleteHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function injectDefaultDark(_tabId) {
-    retrieveDefaultDark().then(data => {
-        monacoDocuments._default.text = data['_default'];
-        monacoDocuments._dark.text = data['_dark'];
-        injectCss(monacoDocuments._default, _tabId);
-        injectCss(monacoDocuments._dark, _tabId);
-    });
+function injectGeneral(responseGeneral) {
+    monacoDocuments._default.text = responseGeneral['_default'];
+    monacoDocuments._dark.text = responseGeneral['_dark'];
+    injectCss(monacoDocuments._default, background.tabId);
+    injectCss(monacoDocuments._dark, background.tabId);
 }
 
 function reInit(name) {
     const host = new Host(name);
-    host.get().then(data => {
-        data = data[name];
-        injectDefaultDark(background.tabId);
-        monacoDocuments.default.text = data.default;
-        monacoDocuments.dark.text = data.dark;
-        monacoDocuments.selector.text = data.selector;
-        injectCss(monacoDocuments.default, background.tabId);
-        injectCss(monacoDocuments.dark, background.tabId);
-        reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
+    host.getCustom().then(responseCustom => {
+        responseCustom = responseCustom[name];
+        host.getGeneral().then(responseGeneral => {
+            injectGeneral(responseGeneral);
+            monacoDocuments.default.text = responseCustom.default;
+            monacoDocuments.dark.text = responseCustom.dark;
+            monacoDocuments.selector.text = responseCustom.selector;
+            injectCss(monacoDocuments.default, background.tabId);
+            injectCss(monacoDocuments.dark, background.tabId);
+            reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
+        })
     })
-}
-
-function toggleGeneral(req, sendResponse) {
-    const {mode, host} = req;
-    if (mode === 'off') {
-        removeStyles();
-        removeReader(background.tabId);
-        articleRemoveDark(background.tabId);
-        sendResponse({data: 'general and custom styles and selector removed'});
-    } else {
-        reInit(host);
-        sendResponse({data: 'general and custom styles and selector added'});
-    }
 }
 
 function setActive(mode, name) {
     const host = new Host(name);
-    // console.log(mode);
     host.store({active: mode});
 }
 
@@ -122,26 +107,37 @@ function toggleActive(req, sendResponse) {
     }
 }
 
-function toggleDark(req, sendResponse) {
-    const {mode} = req;
-    if (mode === 'off') {
-        articleRemoveDark(background.tabId);
-        sendResponse({data: 'dark styles removed'});
-    } else {
-        retrieveDefaultDark().then(data => {
-            monacoDocuments.dark.text = data['_dark'];
-            sendResponse({data: 'dark styles added'});
-            articleAddDark(background.tabId);
-        });
-    }
-}
-
 function closePopup() {
     if (background.winId) {
         chrome.windows.remove(background.winId, () => {
             background.winId = null
         });
     }
+}
+
+function _initHost(req, tab, sendResponse) {
+    const _activeHost = getJcReaderHost(tab.url);
+    const host = new Host(_activeHost);
+    host.getCustom().then(responseCustom => {
+        host.getGeneral().then(responseGeneral => {
+            const res = {
+                message: 'onInitHost',
+                host: _activeHost,
+                custom: responseCustom[_activeHost],
+                defaultText: responseGeneral['_default'],
+                darkText: responseGeneral['_dark']
+            };
+            if (req.client === 'content') {
+                chrome.tabs.sendMessage(tab.id, res);
+            } else {
+                chrome.runtime.sendMessage(res);
+            }
+            sendResponse(false);
+        });
+    }).catch(err => {
+        console.error(err);
+        sendResponse(false);
+    });
 }
 
 function initHost(req, sendResponse, sender) {
@@ -163,28 +159,7 @@ function initHost(req, sendResponse, sender) {
                 }
             }
             // console.log(tab)
-            const _activeHost = getJcReaderHost(tab.url);
-            const host = new Host(_activeHost);
-            host.get().then(response => {
-                retrieveDefaultDark().then(data => {
-                    const res = {
-                        message: 'onInitHost',
-                        host: _activeHost,
-                        custom: response[_activeHost],
-                        defaultText: data['_default'],
-                        darkText: data['_dark']
-                    };
-                    if (req.client === 'content') {
-                        chrome.tabs.sendMessage(tab.id, res);
-                    } else {
-                        chrome.runtime.sendMessage(res);
-                    }
-                    sendResponse(false);
-                });
-            }).catch(err => {
-                console.error(err);
-                sendResponse(false);
-            });
+            _initHost(req, tab, sendResponse);
         }
     });
     return true;

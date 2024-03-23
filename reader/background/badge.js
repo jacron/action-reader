@@ -3,17 +3,15 @@ import {Host} from "./host.js";
 
 function updateBadge(url) {
     const activeHost = getJcReaderHost(url);
-    if (!activeHost) {
+    if (!activeHost || !activeHost.name) {
+        return;
+    }
+    if (activeHost.name.length === 0) {  // maybe the popup
         return;
     }
     const host = new Host(activeHost);
-    if (host.name.length === 0) {  // maybe the popup
-        return;
-    }
     host.isActive().then(activeOn => {
-        chrome.action.setBadgeText({
-            text: activeOn ? 'on' : ''
-        });
+        chrome.action.setBadgeText({text: activeOn ? 'on' : ''});
     })
 }
 

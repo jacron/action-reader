@@ -1,19 +1,18 @@
-import {sendMessage} from '../shared/constants.js';
 import {setDirty} from "./tab.js";
 import {popup} from "./popupState.js";
-import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
+import {toggleDarkSettings, toggleGeneralSettings, toggleOnOff} from "../shared/popuplib.js";
 
 function closeMe() {
-    sendMessage({request: 'closePopup'});
+    chrome.runtime.sendMessage({request: 'closePopup'});
 }
 
 function postNew() {
     console.log('activeHost', popup.activeHost);
-    sendMessage({
+    chrome.runtime.sendMessage({
         request: 'storeHost',
         host: popup.activeHost
     }, () => {
-        sendMessage({
+        chrome.runtime.sendMessage({
             request: 'initHost',
             client: 'popup'
         }, () => { });
@@ -22,7 +21,7 @@ function postNew() {
 
 function deleteReader() {
     if (confirm(`'${popup.activeHost}' verwijderen?`)) {
-        sendMessage({request: 'deleteHost', host: popup.activeHost },
+        chrome.runtime.sendMessage({request: 'deleteHost', host: popup.activeHost },
             () => toggleForms(false));
     }
 }
@@ -34,7 +33,7 @@ function updateDocument(doc) {
 function save() {
     /** saveHost active document, handled in actions */
     updateDocument(popup.activeDoc);
-    sendMessage({
+    chrome.runtime.sendMessage({
         request: 'saveHost',
         name: popup.activeDoc.name,
         text: popup.activeDoc.text,
@@ -53,7 +52,7 @@ function save() {
 function apply() {
     updateDocument(popup.activeDoc);
     console.log('activeDoc', popup.activeDoc);
-    sendMessage({
+    chrome.runtime.sendMessage({
             request: 'applyHost',
             name: popup.activeDoc.name,
             text: popup.activeDoc.text,
@@ -69,7 +68,7 @@ function apply() {
 
 function toggleActive(e) {
     toggleOnOff(e.target.classList, mode => {
-        sendMessage({
+        chrome.runtime.sendMessage({
             request: 'toggleActive',
             host: popup.activeHost,
             mode});

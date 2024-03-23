@@ -84,11 +84,6 @@ const dynClass = {
         selector: '.selected',
     },
 };
-/**
- * shorthand function call
- *
- */
-const sendMessage = chrome.runtime.sendMessage;
 
 /**
  * systemLibraryUrl for server handling read/write json file
@@ -99,4 +94,4 @@ const jsonStorage = {
     jsonfile: 'readerdata.json',
 };
 
-export {monacoDocuments, dynClass, sendMessage, vsPath}
+export {monacoDocuments, dynClass, vsPath}

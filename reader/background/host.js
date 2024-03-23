@@ -10,7 +10,7 @@ class Host {
     css = '';
 
     store(changes) {
-        this.get().then(response => {
+        this.getCustom().then(response => {
             const newHost = {};
             if (changes) {
                 response = response[this.name];
@@ -32,7 +32,7 @@ class Host {
 
     isActive() {
         return new Promise((resolve) => {
-            this.get().then(response => {
+            this.getCustom().then(response => {
                 const entries = Object.entries(response);
                 if (entries.length > 0) {
                     const [site, options] = entries[0];
@@ -45,8 +45,17 @@ class Host {
         })
     }
 
-    get() {
+    getCustom() {
         const keys = [this.name];
+        return new Promise((resolve) => {
+            StorageArea.get(keys, results => {
+                resolve(results)
+            });
+        });
+    }
+
+    getGeneral() {
+        const keys = [KEY_DEFAULT, KEY_DARK];
         return new Promise((resolve) => {
             StorageArea.get(keys, results => {
                 resolve(results)
@@ -59,15 +68,6 @@ class Host {
     }
 }
 
-function retrieveDefaultDark() {
-    const keys = [KEY_DEFAULT, KEY_DARK];
-    return new Promise((resolve) => {
-        StorageArea.get(keys, results => {
-            resolve(results)
-        });
-    });
-}
-
 function storeDefault(css) {
     StorageArea.set({[KEY_DEFAULT]: css}).then(() => {})
 }
@@ -76,4 +76,4 @@ function storeDark(css) {
     StorageArea.set({[KEY_DARK]: css}).then(() => {})
 }
 
-export { Host, storeDark, storeDefault, retrieveDefaultDark}
+export { Host, storeDark, storeDefault}

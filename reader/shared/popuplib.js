@@ -28,4 +28,4 @@ function toggleDarkSettings(e) {
         messageToContent({message: 'toggleDarkContent', mode}))
 }
 
-export {toggleGeneralSettings, toggleDarkSettings, messageToContent}
+export {toggleGeneralSettings, toggleDarkSettings, messageToContent, toggleOnOff}
