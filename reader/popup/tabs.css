@@ -1,0 +1,36 @@
+#tabs, #super-tabs {
+    display: flex;
+}
+#tabs > div {
+    display: inline-block;
+    padding: 7px;
+    cursor: default;
+    background-color: rgba(50,50,250,.5);
+    /*width: 50px;*/
+    z-index: 1;
+    height: 15px;
+    text-align: center;
+}
+#tabs > div.selected {
+    background-color: blue;
+    position: relative;
+    top: 2px;
+}
+#super-tabs {
+    display: flex;
+}
+#super-tabs > div {
+    display: inline-block;
+    padding: 7px;
+    cursor: default;
+    background-color: rgba(50,250,250,.5);
+    /*width: 50px;*/
+    z-index: 1;
+    height: 15px;
+    text-align: center;
+}
+#super-tabs > div.selected {
+    background-color: rgba(50,250,250,.8);
+    position: relative;
+    /*top: 2px;*/
+}

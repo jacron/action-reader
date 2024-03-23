@@ -35,7 +35,7 @@ function _openWin() {
     }, tabs => {
         chrome.windows.get(tabs[0].windowId, curWin => {
             createWin(curWin);
-            // close();
+            close();
         })
     })
 }
