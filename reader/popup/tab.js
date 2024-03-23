@@ -47,6 +47,7 @@ function initEditor(doc) {
         description.setAttribute('title', doc.tooltip);
     }
 
+    /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
     require.config({ paths: {
             'vs': vsPath,
         }});
@@ -75,14 +76,10 @@ function initEditor(doc) {
         model.onDidChangeContent(() => checkDirty(model, doc))
     });
 }
-// function setActiveDoc(activeDoc) {
-//     popup.activeDoc = activeDoc;
-// }
 
 
 function setEditor(doc) {
     popup.activeDoc = doc;
-    // setActiveDoc(doc);
     if (doc.editor === null) {
         initEditor(doc);
     } else {
@@ -105,17 +102,69 @@ function selectTab(tab) {
     setEditor(doc);
 }
 
-function setTabActions() {
-    const tabs = document.getElementById('tabs');
-    tabs.addEventListener('click', e => {
-        const target = e.target;
-        const tabs = ['default', 'dark', 'selector', '_default', '_dark'];
-        for (const tab of tabs) {
-            if (~target.classList.value.indexOf(tab)) {
-                selectTab(tab);
-            }
-        }
-    });
+function toggle(tabs, mode) {
+    const displayValue = mode === 'on' ? 'inline-block' : 'none';
+    for (const tab of tabs) {
+        document.querySelector('#tabs .' + tab).style.display = displayValue;
+    }
 }
 
-export {setTabActions, selectTab, setDirty}
+function toggleCustom(mode) {
+    toggle(['default', 'dark', 'selector'], mode)
+}
+
+function toggleGeneral(mode) {
+    toggle(['_default', '_dark'], mode);
+}
+
+function selectSuperTab(tab) {
+    const supertabs = document.getElementById('super-tabs');
+    removeSelected(supertabs);
+    supertabs.querySelector('.' + tab).classList.add(dynClass.SELECTED.className);
+    if (tab === 'custom') {
+        toggleCustom('on');
+        toggleGeneral('off');
+        selectTab('default');
+    } else {
+        toggleCustom('off');
+        toggleGeneral('on');
+        selectTab('_default');
+    }
+}
+
+function tabsClickHandler(e) {
+    const target = e.target;
+    const tabs = ['default', 'dark', 'selector', '_default', '_dark'];
+    for (const tab of tabs) {
+        if (~target.classList.value.indexOf(tab)) {
+            selectTab(tab);
+        }
+    }
+}
+
+function superTabsClickHandler(e) {
+    const target = e.target;
+    const tabs = ['custom', 'general'];
+    for (const tab of tabs) {
+        if (~target.classList.value.indexOf(tab)) {
+            selectSuperTab(tab);
+        }
+    }
+}
+
+function initTabs(req) {
+    const {custom, darkText, defaultText} = req;
+    monacoDocuments.default.text = custom.default;
+    monacoDocuments.dark.text = custom.dark;
+    monacoDocuments.selector.text = custom.selector;
+    monacoDocuments._default.text = defaultText;
+    monacoDocuments._dark.text = darkText;
+    selectTab('default');
+}
+
+function initSuperTabs() {
+    selectSuperTab('custom');
+}
+
+export {superTabsClickHandler, tabsClickHandler, selectTab, setDirty,
+    initTabs, initSuperTabs}

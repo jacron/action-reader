@@ -48,3 +48,6 @@ button {
 button:hover {
     background-color: #333;
 }
+#cmdOpenEditors:hover a {
+    text-decoration: underline;
+}

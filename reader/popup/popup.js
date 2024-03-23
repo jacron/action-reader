@@ -1,6 +1,5 @@
-import {setFormActions, toggleForms} from './form.js';
-import {show} from './editor.js';
-import {setTabActions} from './tab.js';
+import {setFormActions, formsExistingOrNew} from './form.js';
+import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
 
 function initHost() {
@@ -12,9 +11,10 @@ function initHost() {
 function onInitHost(req) {
     popup.activeHost = req.host;
     document.getElementById('host-name').innerText = req.host;
-    toggleForms(req.custom);
+    formsExistingOrNew(req.custom);
     if (req.custom) {
-        show(req);
+        initTabs(req);
+        initSuperTabs();
     }
 }
 
@@ -29,8 +29,13 @@ function messageListener(req, sender, sendResponse) {
 
 chrome.runtime.onMessage.addListener(messageListener);
 
+function handleTabs() {
+    document.getElementById('tabs').addEventListener('click', tabsClickHandler);
+    document.getElementById('super-tabs').addEventListener('click', superTabsClickHandler);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     setFormActions();
-    setTabActions();
+    handleTabs();
     initHost();
 });

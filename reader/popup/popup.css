@@ -25,6 +25,7 @@ button:hover {
 #existing-reader-dialog,
 #new-reader-dialog {
   position: relative;
+  top: -20px;
   width: 100%;
   height: calc(100% - 70px);
   text-align: center;
@@ -32,7 +33,7 @@ button:hover {
 }
 .controls {
   position: absolute;
-  bottom: 5px;
+  bottom: -20px;
   width: 100%;
   text-align: left;
 }
@@ -65,6 +66,9 @@ button:hover {
   padding: 2px 0 0 12px;
   background: blue;
 }
+#tabs, #super-tabs {
+  text-align: left;
+}
 #tabs > div {
   display: inline-block;
   padding: 7px;
@@ -80,8 +84,20 @@ button:hover {
   position: relative;
   top: 2px;
 }
-#tabs {
-  text-align: left;
+#super-tabs > div {
+  display: inline-block;
+  padding: 7px;
+  cursor: default;
+  background-color: rgba(50,50,250,.5);
+  width: 50px;
+  z-index: 1;
+  height: 15px;
+  text-align: center;
+}
+#super-tabs > div.selected {
+  background-color: blue;
+  position: relative;
+  top: 2px;
 }
 .monaco-editor {
   width: 100%;

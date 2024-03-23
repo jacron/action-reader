@@ -23,7 +23,7 @@ function postNew() {
 function deleteReader() {
     if (confirm(`'${popup.activeHost}' verwijderen?`)) {
         chrome.runtime.sendMessage({request: 'deleteHost', host: popup.activeHost },
-            () => toggleForms(false));
+            () => formsExistingOrNew(false));
     }
 }
 
@@ -61,13 +61,12 @@ function apply() {
             styleId: popup.activeDoc.styleId,
         },
         () => {
-            // console.log(response)
             popup.activeDoc.editor.focus();
             setDirty(false, popup.activeDoc);
         });
 }
 
-function toggleForms(hostExists) {
+function formsExistingOrNew(hostExists) {
     const existing = document.getElementById('existing-reader-dialog');
     const newview = document.getElementById('new-reader-dialog');
     const generalControls = document.querySelector('.general-controls');
@@ -93,14 +92,13 @@ function setFormActions() {
         ['dark-toggle-switch', toggleDarkSettings],
     ];
     for (const binding of clickBindings) {
-        const [id, fun] = binding;
+        const [id, func] = binding;
         const element = document.getElementById(id);
         if (!element) {
             console.error('no element found with id:', id);
         }
-        element.addEventListener(
-            'click', fun);
+        element.addEventListener('click', func);
     }
 }
 
-export {setFormActions, toggleForms}
+export {setFormActions, formsExistingOrNew}

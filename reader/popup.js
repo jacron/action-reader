@@ -1,8 +1,6 @@
 import {background} from "./background/backgroundState.js";
 import {toggleDarkSettings, toggleGeneralSettings} from "./shared/popuplib.js";
 
-let openedWinId = -1;
-
 function createWin(curWin) {
     chrome.windows.create({
         url: 'popup/popup.html',
@@ -12,7 +10,6 @@ function createWin(curWin) {
         top: curWin.top,
         left: curWin.left - 500
     }, win => {
-        openedWinId = win.id;
         background.winId = win.id;
         background.tTabId = win.tabs[0].id;
     })
@@ -38,17 +35,26 @@ function _openWin() {
     }, tabs => {
         chrome.windows.get(tabs[0].windowId, curWin => {
             createWin(curWin);
+            // close();
         })
     })
 }
 
+function closeWin() {
+    chrome.windows.remove(background.winId);
+    background.winId = null;
+}
+
 function openWin() {
-    if (openedWinId === -1) {
+    if (background.winId === null) {
         _openWin();
         return;
     }
-    isWindowExistent(openedWinId).then(r => {
+    console.log(background.winId)
+    isWindowExistent(background.winId).then(r => {
+        console.log(r)
         if (!r) _openWin();
+        else closeWin();
     })
 }
 

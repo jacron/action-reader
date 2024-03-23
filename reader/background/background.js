@@ -10,7 +10,7 @@ function activateListener(activeInfo) {
 }
 
 function updateListener(_tabId, info) {
-    if (info.status === 'loading') {
+    if (info.status === 'loading' || info.status === 'complete') {
         updateBadge(info.url);
     }
 }
