@@ -3,10 +3,7 @@ import {Host} from "./host.js";
 
 function updateBadge(url) {
     const activeHost = getJcReaderHost(url);
-    if (!activeHost || !activeHost.name) {
-        return;
-    }
-    if (activeHost.name.length === 0) {  // maybe the popup
+    if (!activeHost || activeHost.length === 0) {  // maybe the popup
         return;
     }
     const host = new Host(activeHost);
