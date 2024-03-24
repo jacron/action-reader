@@ -12,5 +12,7 @@ prefix selector with @ to make it optional
 
 ![voorbeeld](reader/images/icon.png) 
 
-this extension needs npm i
+npm i
+
 for installing monaco editor
+
