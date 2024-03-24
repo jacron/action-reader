@@ -81,7 +81,7 @@ function formsExistingOrNew(hostExists) {
     }
 }
 
-function setFormActions() {
+function handleFormClickActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
         ['new-answer-yes', postNew],
@@ -101,4 +101,4 @@ function setFormActions() {
     }
 }
 
-export {setFormActions, formsExistingOrNew}
+export {handleFormClickActions, formsExistingOrNew}

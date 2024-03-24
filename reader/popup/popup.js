@@ -1,4 +1,4 @@
-import {setFormActions, formsExistingOrNew} from './form.js';
+import {handleFormClickActions, formsExistingOrNew} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
 
@@ -27,15 +27,25 @@ function messageListener(req, sender, sendResponse) {
     }
 }
 
-chrome.runtime.onMessage.addListener(messageListener);
+function handleKeyboardDown() {
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            close();
+        }
+    })
+}
 
-function handleTabs() {
+function handleTabClickActions() {
     document.getElementById('tabs').addEventListener('click', tabsClickHandler);
     document.getElementById('super-tabs').addEventListener('click', superTabsClickHandler);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    setFormActions();
-    handleTabs();
+    handleFormClickActions();
+    handleTabClickActions();
+    handleKeyboardDown();
     initHost();
 });
+
+chrome.runtime.onMessage.addListener(messageListener);
+
