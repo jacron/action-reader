@@ -1,19 +1,6 @@
 import {background} from "./background/backgroundState.js";
 import {toggleDarkSettings, toggleGeneralSettings} from "./shared/popuplib.js";
-
-function createWin(curWin) {
-    chrome.windows.create({
-        url: 'popup/popup.html',
-        type: 'popup',
-        width: 500,
-        height: curWin.height,
-        top: curWin.top,
-        left: curWin.left - 500
-    }, win => {
-        background.winId = win.id;
-        background.tTabId = win.tabs[0].id;
-    })
-}
+import {createWin} from "./background/openEditors.js";
 
 function isWindowExistent(windowId) {
     return new Promise((resolve, reject) => {
@@ -67,3 +54,5 @@ function handleCmds() {
 }
 
 handleCmds();
+
+export {_openWin}

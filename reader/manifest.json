@@ -30,5 +30,20 @@
       "content/content.js"
     ],
     "all_frames": false
-  }]
+  }],
+  "commands": {
+    "open-editors": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+J",
+        "mac": "MacCtrl+J"
+      },
+      "description": "Open de editors"
+    },
+    "_execute_action": {
+      "suggested_key": {
+        "mac": "MacCtrl+R"
+      },
+      "description": "Open de extensie"
+    }
+  }
 }
