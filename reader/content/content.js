@@ -181,16 +181,6 @@ function replaceStyle(req) {
     injectStyle(req.css, req.id);
 }
 
-function _voidStyle(id) {
-    const style = document.getElementById(id);
-    if (style) style.innerHTML = '';
-    // else console.log(req.id + ' is een onbekende style')
-}
-
-function voidStyle(req) {
-    _voidStyle(req.id);
-}
-
 function removeStyles() {
     for (const theme in styleIds) {
         for (const styleId of Object.values(styleIds[theme])) {
@@ -205,7 +195,7 @@ function toggleGeneralContent(req) {
         removeStyles();
         deleteReaderArticle();
     } else {
-        initHost().then();
+        contentInitHost().then();
     }
 }
 
@@ -218,19 +208,22 @@ function toggleDarkContent(req) {
     }
 }
 
+function giveMeStylesAndSelector(req) {
+    console.log(req)
+}
+
 const actionBindings = {
+    initHost: contentInitHost,
     onInitHost,  // called from initHost (actions.js)
     replaceStyle,
     reSelect,
-    deleteReaderArticle,
-    removeDark,
-    addDark,
-    voidStyle,
     toggleGeneralContent,
-    toggleDarkContent
+    toggleDarkContent,
+    giveMeStylesAndSelector
 };
 
 function initActions(req, sendResponse) {
+    console.log(req)
     if (req.message) {
         const func = actionBindings[req.message];
         if (func) {
@@ -242,14 +235,6 @@ function initActions(req, sendResponse) {
         }
     }
 }
-
-/*
-
- */
-chrome.runtime.onMessage.addListener(
-    (req, sender, sendResponse) => {
-        initActions(req, sendResponse);
-});
 
 function fromStorage(keys) {
     return new Promise((resolve) => {
@@ -272,8 +257,13 @@ function injectGeneralStyles(defaultStyle, darkStyle) {
 /*
 alternatief voor initHost via background
  */
-async function initHost() {
+async function contentInitHost() {
+    console.log('*** in contentInitHost')
     const hostName = getJcReaderHost(document.location.href);
+    StorageArea.set({['hostname']: hostName}, () => {});
+    StorageArea.get(['hostname'], result => {
+        console.log('*** ' + result.hostname)
+    });
     const websitePropsObject = await fromStorage(hostName);
     const websiteProps = websitePropsObject[hostName];
     const defaultStyleObject = await fromStorage(keysGeneral.default);
@@ -294,7 +284,7 @@ async function initHost() {
     }
 }
 
-initHost().then();
+contentInitHost().then();
 
 /*
 message to background.js
@@ -304,4 +294,12 @@ initHost in actions:
 //     request: 'initHost',
 //     client: 'content'
 // }).then();
+
+/*
+message from background/actions.js
+ */
+chrome.runtime.onMessage.addListener(
+    (req, sender, sendResponse) => {
+        initActions(req, sendResponse);
+    });
 

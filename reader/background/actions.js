@@ -2,6 +2,7 @@ import {Host, storeDefault, storeDark} from "./host.js";
 import {background} from './backgroundState.js';
 import {getJcReaderHost} from "../lib/util.js";
 import {StorageArea} from "./backgroundState.js";
+import {withActiveTab} from "../shared/activeTab.js";
 
 function newHost(req, sendResponse) {
     StorageArea.set({[req.host]: {}}, () => {});
@@ -10,6 +11,7 @@ function newHost(req, sendResponse) {
 
 function saveHost(req, sendResponse) {
     const host = new Host(req.host);
+    console.log(host)
 
     applyHost(req, sendResponse);
     switch (req.name) {
@@ -48,6 +50,8 @@ function reInjectMakeReader(selector, tabId) {
 }
 
 function _applyHost(req, tabId, sendResponse) {
+    console.log('*** in _applyHost')
+    console.log(req)
     if (~['default', 'dark', '_default', '_dark'].indexOf(req.name )) {
         injectCss(req, tabId);
     }
@@ -71,8 +75,7 @@ function applyHost(req, sendResponse) {
     }
 }
 
-function _initHost(req, tab, sendResponse) {
-    const _activeHost = getJcReaderHost(tab.url);
+function _initHost(req, _activeHost, sendResponse) {
     const host = new Host(_activeHost);
     host.getCustom().then(responseCustom => {
         host.getGeneral().then(responseGeneral => {
@@ -83,11 +86,7 @@ function _initHost(req, tab, sendResponse) {
                 defaultText: responseGeneral['_default'],
                 darkText: responseGeneral['_dark']
             };
-            if (req.client === 'content') {
-                chrome.tabs.sendMessage(tab.id, res);
-            } else {
-                chrome.runtime.sendMessage(res, () => {});
-            }
+            chrome.runtime.sendMessage(res, () => {});
             sendResponse(false);
         });
     }).catch(err => {
@@ -97,27 +96,11 @@ function _initHost(req, tab, sendResponse) {
 }
 
 function initHost(req, sendResponse) {
-    console.log('*** initHost...')
-    // console.log(sender.origin)
-    // if (!sender.origin.startsWith('http')) {
-    //     return;
-    // }
-    chrome.tabs.query({
-        active: true,
-    }, tabs => {
-        // console.log(tabs)
-        if (tabs.length > 0) {
-            let tab;
-            for (const t of tabs) {
-                if (t.url.startsWith('http')) {
-                    tab = t;
-                    break;
-                }
-            }
-            // console.log(tab)
-            _initHost(req, tab, sendResponse);
-        }
-    });
+    console.log('*** initHost in actions.js...')
+    withActiveTab(tab => {
+        const _activeHost = getJcReaderHost(tab.url);
+        _initHost(req, _activeHost, sendResponse);
+    })
     return true;
 }
 
@@ -130,7 +113,7 @@ const actionBindings = {
 
 function initActions(req, sendResponse, sender) {
     if (req.request) {
-        // console.log('req', req);
+        console.log('req', req);
         const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse, sender);
