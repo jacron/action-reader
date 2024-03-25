@@ -113,7 +113,6 @@ const actionBindings = {
 
 function initActions(req, sendResponse, sender) {
     if (req.request) {
-        console.log('req', req);
         const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse, sender);
