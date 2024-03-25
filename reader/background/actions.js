@@ -2,10 +2,10 @@ import {Host, storeDefault, storeDark} from "./host.js";
 import {reInjectMakeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
 import {getJcReaderHost} from "../lib/util.js";
+import {StorageArea} from "./backgroundState.js";
 
-function storeHost(req, sendResponse) {
-    const host = new Host(req.host);
-    host.store();  // empty changes
+function newHost(req, sendResponse) {
+    StorageArea.set({[req.host]: {}}, () => {});
     sendResponse({data: 'ok'});
 }
 
@@ -65,12 +65,6 @@ function applyHost(req, sendResponse) {
     }
 }
 
-function deleteHost(req, sendResponse) {
-    const host = new Host(req.host);
-    host.delete();
-    sendResponse({data: 'ok'});
-}
-
 function _initHost(req, tab, sendResponse) {
     const _activeHost = getJcReaderHost(tab.url);
     const host = new Host(_activeHost);
@@ -125,8 +119,7 @@ const actionBindings = {
     initHost,
     saveHost,
     applyHost,
-    deleteHost,
-    storeHost,
+    newHost,
 };
 
 function initActions(req, sendResponse, sender) {

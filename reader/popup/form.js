@@ -9,7 +9,7 @@ function closeMe() {
 function postNew() {
     console.log('activeHost', popup.activeHost);
     chrome.runtime.sendMessage({
-        request: 'storeHost',
+        request: 'newHost',
         host: popup.activeHost
     }, () => {
         chrome.runtime.sendMessage({

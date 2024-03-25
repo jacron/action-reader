@@ -1,4 +1,5 @@
-const StorageArea = chrome.storage.local;
+import {StorageArea} from "./backgroundState.js";
+
 const KEY_DEFAULT = '_default';
 const KEY_DARK = '_dark';
 
@@ -63,9 +64,6 @@ class Host {
         });
     }
 
-    delete() {
-        StorageArea.remove([this.name]).then(() => {});
-    }
 }
 
 function storeDefault(css) {
@@ -76,4 +74,9 @@ function storeDark(css) {
     StorageArea.set({[KEY_DARK]: css}).then(() => {})
 }
 
-export { Host, storeDark, storeDefault}
+/* delete host: for options/storage */
+function deleteHost(key) {
+    StorageArea.remove([key]).then(() => {});
+}
+
+export { Host, storeDark, storeDefault, deleteHost}

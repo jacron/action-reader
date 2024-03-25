@@ -6,5 +6,6 @@ const background = {
     activeHost: null,
     lastSavedVersion: null,
 };
+const StorageArea = chrome.storage.local;
 
-export {background}
+export {background, StorageArea}
