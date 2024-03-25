@@ -1,5 +1,4 @@
 import {Host, storeDefault, storeDark} from "./host.js";
-import {reInjectMakeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
 import {getJcReaderHost} from "../lib/util.js";
 import {StorageArea} from "./backgroundState.js";
@@ -38,6 +37,13 @@ function injectCss(doc, tabId) {
         message: 'replaceStyle',
         css: doc.text,
         id: doc.styleId
+    });
+}
+
+function reInjectMakeReader(selector, tabId) {
+    chrome.tabs.sendMessage(tabId, {
+        message: 'reSelect',
+        selector
     });
 }
 
