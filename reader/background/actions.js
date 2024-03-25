@@ -1,8 +1,6 @@
 import {Host, storeDefault, storeDark} from "./host.js";
-import {injectCss, removeStyles, articleRemoveDark} from "./styling.js";
-import {reInjectMakeReader, removeReader} from "./makeReader.js";
+import {reInjectMakeReader} from "./makeReader.js";
 import {background} from './backgroundState.js';
-import {monacoDocuments} from "../shared/constants.js";
 import {getJcReaderHost} from "../lib/util.js";
 
 function storeHost(req, sendResponse) {
@@ -35,6 +33,14 @@ function saveHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
+function injectCss(doc, tabId) {
+    chrome.tabs.sendMessage(tabId, {
+        message: 'replaceStyle',
+        css: doc.text,
+        id: doc.styleId
+    });
+}
+
 function _applyHost(req, tabId, sendResponse) {
     if (~['default', 'dark', '_default', '_dark'].indexOf(req.name )) {
         injectCss(req, tabId);
@@ -65,37 +71,6 @@ function deleteHost(req, sendResponse) {
     sendResponse({data: 'ok'});
 }
 
-function injectGeneral(responseGeneral) {
-    monacoDocuments._default.text = responseGeneral['_default'];
-    monacoDocuments._dark.text = responseGeneral['_dark'];
-    injectCss(monacoDocuments._default, background.tabId);
-    injectCss(monacoDocuments._dark, background.tabId);
-}
-
-function reInit(name) {
-    const host = new Host(name);
-    host.getCustom().then(responseCustom => {
-        responseCustom = responseCustom[name];
-        host.getGeneral().then(responseGeneral => {
-            injectGeneral(responseGeneral);
-            monacoDocuments.default.text = responseCustom.default;
-            monacoDocuments.dark.text = responseCustom.dark;
-            monacoDocuments.selector.text = responseCustom.selector;
-            injectCss(monacoDocuments.default, background.tabId);
-            injectCss(monacoDocuments.dark, background.tabId);
-            reInjectMakeReader(monacoDocuments.selector.text, background.tabId);
-        })
-    })
-}
-
-function closePopup() {
-    if (background.winId) {
-        chrome.windows.remove(background.winId, () => {
-            background.winId = null
-        });
-    }
-}
-
 function _initHost(req, tab, sendResponse) {
     const _activeHost = getJcReaderHost(tab.url);
     const host = new Host(_activeHost);
@@ -111,7 +86,7 @@ function _initHost(req, tab, sendResponse) {
             if (req.client === 'content') {
                 chrome.tabs.sendMessage(tab.id, res);
             } else {
-                chrome.runtime.sendMessage(res);
+                chrome.runtime.sendMessage(res, () => {});
             }
             sendResponse(false);
         });
@@ -121,7 +96,7 @@ function _initHost(req, tab, sendResponse) {
     });
 }
 
-function initHost(req, sendResponse, sender) {
+function initHost(req, sendResponse) {
     console.log('*** initHost...')
     // console.log(sender.origin)
     // if (!sender.origin.startsWith('http')) {
@@ -147,12 +122,9 @@ function initHost(req, sendResponse, sender) {
 }
 
 const actionBindings = {
-    // content, popup
     initHost,
-    // popup
     saveHost,
     applyHost,
-    closePopup,
     deleteHost,
     storeHost,
 };

@@ -1,10 +1,9 @@
-import {setDirty} from "./tab.js";
+import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
 import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 
 function closeMe() {
     close();
-    // chrome.runtime.sendMessage({request: 'closePopup'});
 }
 
 function postNew() {
