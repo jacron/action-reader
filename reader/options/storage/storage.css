@@ -17,6 +17,7 @@ body h3 {
 }
 a {
     text-decoration: none;
+    cursor: pointer;
 }
 a:hover {
     text-decoration: underline;
@@ -48,4 +49,13 @@ a:hover {
     position: absolute;
     left: 10px;
     top: 10px;
+}
+#delete-site {
+    color: red;
+    visibility: hidden;
+    cursor: pointer;
+}
+#delete-site:hover {
+    color: yellow;
+    background-color: #00485b;
 }

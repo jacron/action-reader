@@ -1,4 +1,5 @@
-import {vsPath} from "../../shared/constants.js";
+import  {vsPath} from "../../shared/monaco.js";
+import {StorageArea} from "../../background/backgroundState";
 
 let sites = null;
 let editors = {};
@@ -29,15 +30,22 @@ function makeCheckbox(value) {
     return input;
 }
 
-function makeAnchor(name) {
+function makeAnchor(name, value) {
     const anchor = document.createElement('a');
     anchor.innerText = ' ' + name;
-    anchor.setAttribute('href', 'https://' + name)
+    anchor.addEventListener('click', () => {
+        setName(name);
+        showEditors(value);
+    })
+
     return anchor;
 }
 
 function setName(name) {
-    document.getElementById('site-name').innerText = name;
+    const anchor = document.getElementById('site-name');
+    anchor.innerText = name;
+    anchor.setAttribute('href', 'https://' + name);
+    document.getElementById('delete-site').style.visibility = 'visible';
 }
 
 function createEditor(value, language, editorId) {
@@ -135,21 +143,20 @@ function initToggle() {
     })
 }
 
-function makeEditButton(name, value) {
-    const button = document.createElement('button');
-    button.innerText = 'show';
-    button.addEventListener('click', () => {
-        setName(name);
-        showEditors(value);
+function initDelete() {
+    const cmdDelete = document.getElementById('delete-site');
+    cmdDelete.addEventListener('click', (e) => {
+        if (confirm('_Delete this host from your list?_')) {
+            const nameElement = document.getElementById('site-name');
+            StorageArea.remove(nameElement.innerText.trim());
+        }
     })
-    return button;
 }
 
 function siteLi(name, value) {
     const li = document.createElement('li');
     li.appendChild(makeCheckbox(value));
-    li.appendChild(makeEditButton(name, value));
-    li.appendChild(makeAnchor(name));
+    li.appendChild(makeAnchor(name, value));
     return li;
 }
 
@@ -162,16 +169,20 @@ function listSites(sites) {
     }
 }
 
+function _init(sites1) {
+    listSites(sites1, 'storagelist');
+    sites = sites1;
+    /* require (2x) werkt hier dankzij monaco library */
+    require.config({ paths: {
+            'vs': '../' + vsPath,
+        }});
+    require(['vs/editor/editor.main'], () => {});
+    initToggle();
+    initDelete();
+}
+
 function init() {
-    chrome.storage.local.get(null, sites1 => {
-        listSites(sites1, 'storagelist');
-        sites = sites1;
-        require.config({ paths: {
-                'vs': '../' + vsPath,
-            }});
-        require(['vs/editor/editor.main'], () => {});
-        initToggle();
-    })
+    chrome.storage.local.get(null, _init);
 }
 
 init();
