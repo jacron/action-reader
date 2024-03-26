@@ -1,6 +1,7 @@
 import {handleFormClickActions, formsExistingOrNew} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
+import {StorageArea} from "../background/backgroundState.js";
 
 function initHost() {
     chrome.runtime.sendMessage({
@@ -9,7 +10,6 @@ function initHost() {
 }
 
 function onInitHost(req) {
-    console.log(req);
     popup.activeHost = req.host;
     document.getElementById('host-name').innerText = req.host;
     formsExistingOrNew(req.custom);

@@ -1,6 +1,9 @@
 console.log("*** contentscript loaded for jreader!");
 
 const StorageArea = chrome.storage.local;
+const KEY_CLASSES = "hostClasses";
+const KEY_IDS = 'hostIds';
+
 const keysGeneral = {
     default: '_default',
     dark: '_dark'
@@ -208,10 +211,6 @@ function toggleDarkContent(req) {
     }
 }
 
-function giveMeStylesAndSelector(req) {
-    console.log(req)
-}
-
 const actionBindings = {
     initHost: contentInitHost,
     onInitHost,  // called from initHost (actions.js)
@@ -219,7 +218,6 @@ const actionBindings = {
     reSelect,
     toggleGeneralContent,
     toggleDarkContent,
-    giveMeStylesAndSelector
 };
 
 function initActions(req, sendResponse) {
@@ -287,15 +285,6 @@ async function contentInitHost() {
 contentInitHost().then();
 
 /*
-message to background.js
-initHost in actions:
- */
-// chrome.runtime.sendMessage({
-//     request: 'initHost',
-//     client: 'content'
-// }).then();
-
-/*
 message from background/actions.js
  */
 chrome.runtime.onMessage.addListener(
@@ -303,3 +292,19 @@ chrome.runtime.onMessage.addListener(
         initActions(req, sendResponse);
     });
 
+/* verzamel class namen voor autocomplete lijst in monaco editor */
+/* gebruik een set om dubbelen te voorkomen */
+const classes = new Set();
+const ids = new Set();
+
+document.querySelectorAll('*').forEach(element => {
+    element.classList.forEach(className => {
+        classes.add(className);
+    });
+    if (element.id) {
+        ids.add(element.id);
+    }
+    console.log(ids);
+    StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
+    StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
+});
