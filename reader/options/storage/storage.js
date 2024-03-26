@@ -1,5 +1,5 @@
 import  {vsPath} from "../../shared/monaco.js";
-import {StorageArea} from "../../background/backgroundState";
+import {deleteHost} from "../../background/host.js";
 
 let sites = null;
 let editors = {};
@@ -48,6 +48,12 @@ function setName(name) {
     document.getElementById('delete-site').style.visibility = 'visible';
 }
 
+function reSetName(name) {
+    const anchor = document.getElementById('site-name');
+    anchor.innerText = '';
+    document.getElementById('delete-site').style.visibility = 'hidden';
+}
+
 function createEditor(value, language, editorId) {
     const monacoOptions = {
         lineNumbers: false,
@@ -69,7 +75,7 @@ function createEditor(value, language, editorId) {
     return monaco.editor.create(document.getElementById(editorId), monacoOptions);
 }
 
-function showToggle() {
+function showToggler() {
     const toggle = document.getElementById('toggle-container');
     toggle.style.display = 'block';
 }
@@ -107,7 +113,7 @@ function showEditorGeneral(value) {
 }
 
 function showEditors(value) {
-    showToggle();
+    showToggler();
     if (value.active) { // value is an object
         showEditorsSite(value);
     } else {  // value is a string
@@ -145,10 +151,12 @@ function initToggle() {
 
 function initDelete() {
     const cmdDelete = document.getElementById('delete-site');
-    cmdDelete.addEventListener('click', (e) => {
+    cmdDelete.addEventListener('click', () => {
         if (confirm('_Delete this host from your list?_')) {
             const nameElement = document.getElementById('site-name');
-            StorageArea.remove(nameElement.innerText.trim());
+            deleteHost(nameElement.innerText.trim());
+            listSites();
+            reSetName();
         }
     })
 }
@@ -160,8 +168,9 @@ function siteLi(name, value) {
     return li;
 }
 
-function listSites(sites) {
+function _listSites(sites) {
     const sitesList = document.getElementById('sites-list');
+    sitesList.innerHTML = '';
     for (const [key, value] of Object.entries(sites)) {
         if (key.length > 0) {
             sitesList.appendChild(siteLi(key, value));
@@ -169,20 +178,23 @@ function listSites(sites) {
     }
 }
 
-function _init(sites1) {
-    listSites(sites1, 'storagelist');
-    sites = sites1;
+function listSites() {
+    chrome.storage.local.get(null, sites1 => {
+        _listSites(sites1);
+        sites = sites1;
+    });
+}
+
+function init() {
     /* require (2x) werkt hier dankzij monaco library */
     require.config({ paths: {
             'vs': '../' + vsPath,
         }});
     require(['vs/editor/editor.main'], () => {});
+
     initToggle();
     initDelete();
-}
-
-function init() {
-    chrome.storage.local.get(null, _init);
+    listSites();
 }
 
 init();
