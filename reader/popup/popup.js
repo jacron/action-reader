@@ -16,6 +16,8 @@ function onInitHost(req) {
     if (req.custom) {
         initTabs(req);
         initSuperTabs();
+    } else {
+        document.getElementById('new-host-name').innerText = req.host;
     }
 }
 
