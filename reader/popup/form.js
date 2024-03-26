@@ -19,13 +19,6 @@ function postNew() {
     });
 }
 
-function deleteReader() {
-    if (confirm(`'${popup.activeHost}' verwijderen?`)) {
-        chrome.runtime.sendMessage({request: 'deleteHost', host: popup.activeHost },
-            () => formsExistingOrNew(false));
-    }
-}
-
 function updateDocument(doc) {
     doc.text = doc.editor.getValue();
 }
@@ -84,7 +77,6 @@ function handleFormClickActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
         ['new-answer-yes', postNew],
-        ['reader-delete', deleteReader],
         ['cmd-save', save],
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],

@@ -1,38 +1,8 @@
 import {handleFormClickActions, formsExistingOrNew} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
-import {getJcReaderHost} from "../lib/util.js";
-import {Host} from "../background/host.js";
-
-// function fetchData() {
-//     withActiveTab((tab) => {
-//         const _activeHost = getJcReaderHost(tab.url);
-//         const host = new Host(_activeHost);
-//         host.getCustom().then(responseCustom => {
-//             host.getGeneral().then(responseGeneral => {
-//                 const res = {
-//                     message: 'onInitHost',
-//                     host: _activeHost,
-//                     custom: responseCustom[_activeHost],
-//                     defaultText: responseGeneral['_default'],
-//                     darkText: responseGeneral['_dark']
-//                 };
-//                 onInitHost(res);
-//             });
-//         }).catch(err => {
-//             console.error(err);
-//         });
-//     })
-// }
 
 function initHost() {
-    /* nieuwe aanpak zal zonder background zijn, direct naar content.js */
-    // eerst testen of message wordt ontvangen
-    // console.log(chrome)
-    // _initHost();
-    /* nee, laat ik zelf mijn gegevens ophalen die ik nodig heb! */
-    // fetchData();
-    /* hier staat nog de oude aanroep van background/actions */
     chrome.runtime.sendMessage({
         request: 'initHost',
         client: 'popup'}, () => {});
