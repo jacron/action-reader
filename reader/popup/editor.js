@@ -84,7 +84,6 @@ function _initEditor(doc, selectors, editor) {
                     suggestions
                 }
             },
-            // triggerCharacters: ['.']
         });
         doc.editor = monaco.editor.create(editor, {
             lineNumbers: false,
