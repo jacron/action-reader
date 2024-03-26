@@ -36,29 +36,41 @@ function checkDirty(model, doc) {
 }
 
 const KEY_CLASSES = "hostClasses";
+const KEY_IDS = 'hostIds';
 
 function getCurrentHostClasses() {
     return new Promise(resolve => {
-        StorageArea.get([KEY_CLASSES], results => {
-            resolve(results[KEY_CLASSES]);
+        StorageArea.get([KEY_CLASSES, KEY_IDS], results => {
+            console.log(results)
+            resolve(results);
         })
     })
 }
 
-function hostClassNames(hostClasses) {
-    return hostClasses.map(className => {
-        const name = '.' + className
-        return {
+function makeSuggestions(sel) {
+    /* mix classes en ids in selectors */
+    const selectors = [];
+    sel[KEY_CLASSES].map(className => {
+        const name = '.' + className;
+        selectors.push({
             label: name,
             insertText: name
-        }
+        })
     })
+    sel[KEY_IDS].map(idName => {
+        const name = '#' + idName;
+        selectors.push({
+            label: name,
+            insertText: name
+        })
+    })
+    return selectors;
 }
 
-function _initEditor(doc, hostClasses, editor) {
+function _initEditor(doc, selectors, editor) {
     console.log('*** classes from Host')
-    console.log(hostClasses)
-    const suggestions = hostClassNames(hostClasses);
+    console.log(selectors)
+    const suggestions = makeSuggestions(selectors);
 
     /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
     require.config({ paths: {
@@ -111,8 +123,8 @@ function initEditor(doc) {
     if (doc.tooltip) {
         description.setAttribute('title', doc.tooltip);
     }
-    getCurrentHostClasses().then(classes => {
-        _initEditor(doc, classes, editor);
+    getCurrentHostClasses().then(selectors => {
+        _initEditor(doc, selectors, editor);
     });
 }
 
