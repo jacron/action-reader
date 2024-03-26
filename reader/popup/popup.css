@@ -25,11 +25,13 @@ button:hover {
 #existing-reader-dialog,
 #new-reader-dialog {
   position: relative;
-  top: -10px;
-  width: 100%;
-  height: calc(100% - 70px);
+  height: calc(100% - 40px);
   text-align: center;
   display: none;
+}
+#new-reader-dialog {
+  top: 20px;
+  line-height: 1.6;
 }
 .controls {
   position: absolute;
@@ -48,7 +50,7 @@ button:hover {
   text-decoration: underline;
 }
 .new-controls {
-  margin-top: 12px;
+  margin: 12px 0;
 }
 .editor {
   border: 2px solid blue;
