@@ -1,5 +1,8 @@
 import {StorageArea} from "../background/backgroundState.js";
 
+const KEY_CLASSES = "hostClasses";
+const KEY_IDS = 'hostIds';
+
 function makeSuggestions(sel) {
     /* mix classes en ids in selectors */
     const selectors = [];
@@ -20,21 +23,10 @@ function makeSuggestions(sel) {
     return selectors;
 }
 
-const KEY_CLASSES = "hostClasses";
-const KEY_IDS = 'hostIds';
-
-function getCurrentHostClasses() {
-    return new Promise(resolve => {
-        StorageArea.get([KEY_CLASSES, KEY_IDS], results => {
-            resolve(results);
-        })
-    })
-}
-
 function registerSuggestions() {
     /* require werkt hier dankzij monaco library */
     require(['vs/editor/editor.main'], () => {
-        getCurrentHostClasses().then(selectors => {
+        StorageArea.get([KEY_CLASSES, KEY_IDS], selectors => {
             const suggestions = makeSuggestions(selectors);
             monaco.languages.registerCompletionItemProvider('css', {
                 provideCompletionItems: function() {
