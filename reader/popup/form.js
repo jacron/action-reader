@@ -92,4 +92,4 @@ function handleFormClickActions() {
     }
 }
 
-export {handleFormClickActions, formsExistingOrNew}
+export {handleFormClickActions, formsExistingOrNew, save, apply}

@@ -1,4 +1,4 @@
-import {handleFormClickActions, formsExistingOrNew} from './form.js';
+import {handleFormClickActions, formsExistingOrNew, save, apply} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
@@ -54,8 +54,19 @@ function messageListener(req, sender, sendResponse) {
 
 function handleKeyboardDown() {
     document.addEventListener('keydown', e => {
+        // console.log(e)
         if (e.key === 'Escape') {
             close();
+        }
+        if (e.metaKey && e.shiftKey && e.key === 's') {
+            console.log('CmdShS gedrukt')
+            save();
+            e.preventDefault()
+        }
+        if (e.metaKey && e.shiftKey && e.key === 'a') {
+            console.log('CmdShA gedrukt')
+            apply();
+            e.preventDefault()
         }
     })
 }
