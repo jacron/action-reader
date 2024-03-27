@@ -1,6 +1,5 @@
-import {monacoDocuments, vsPath} from "../shared/monaco.js";
+import {monacoDocuments} from "../shared/monaco.js";
 import {popup} from "./popupState.js";
-import {StorageArea} from "../background/backgroundState.js";
 
 function hideEditors() {
     for (const entry of Object.entries(monacoDocuments)) {
@@ -17,7 +16,6 @@ function showEditor(doc) {
 function setDirty(dirty, doc) {
     const name = doc.name;
     const tabs = document.getElementById('tabs');
-
     tabs.querySelector('.' + name).innerText =
         dirty ? name + '*' : name;
 }
@@ -35,73 +33,31 @@ function checkDirty(model, doc) {
         doc);
 }
 
-const KEY_CLASSES = "hostClasses";
-const KEY_IDS = 'hostIds';
-
-function getCurrentHostClasses() {
-    return new Promise(resolve => {
-        StorageArea.get([KEY_CLASSES, KEY_IDS], results => {
-            console.log(results)
-            resolve(results);
-        })
-    })
+function createEditor(doc, editorId) {
+    const monacoOptions = {
+        lineNumbers: false,
+        value: doc.text,
+        language: doc.language,
+        theme: 'vs-dark',
+        automaticLayout: true,
+        minimap: {
+            enabled: false
+        },
+        parameterHints: {
+            enabled: false
+        },
+        codeLens: false,
+        hover: {
+            enabled: false
+        },
+    };
+    doc.editor = monaco.editor.create(editorId, monacoOptions);
 }
 
-function makeSuggestions(sel) {
-    /* mix classes en ids in selectors */
-    const selectors = [];
-    sel[KEY_CLASSES].map(className => {
-        const name = '.' + className;
-        selectors.push({
-            label: name,
-            insertText: name
-        })
-    })
-    sel[KEY_IDS].map(idName => {
-        const name = '#' + idName;
-        selectors.push({
-            label: name,
-            insertText: name
-        })
-    })
-    return selectors;
-}
-
-function _initEditor(doc, selectors, editor) {
-    console.log('*** classes from Host')
-    console.log(selectors)
-    const suggestions = makeSuggestions(selectors);
-
+function _initEditor(doc, editorId) {
     /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
-    require.config({ paths: {
-            'vs': vsPath,
-        }});
     require(['vs/editor/editor.main'], () => {
-        monaco.languages.registerCompletionItemProvider(doc.language, {
-            provideCompletionItems: function(model, position) {
-                return {
-                    incomplete: false,
-                    suggestions
-                }
-            },
-        });
-        doc.editor = monaco.editor.create(editor, {
-            lineNumbers: false,
-            value: doc.text,
-            language: doc.language,
-            theme: 'vs-dark',
-            automaticLayout: true,
-            minimap: {
-                enabled: false
-            },
-            parameterHints: {
-                enabled: false
-            },
-            codeLens: false,
-            hover: {
-                enabled: false
-            },
-        });
+        createEditor(doc, editorId);
         document.getElementById(doc.id).style.visibility = 'visible';
         doc.editor.focus();
         const model = doc.editor.getModel();
@@ -116,15 +72,13 @@ function initEditor(doc) {
         console.error('no element with id:', doc.id);
         return;
     }
-    const editor = editorElement.querySelector('.the-editor');
+    const editorId = editorElement.querySelector('.the-editor');
     const description = editorElement.querySelector('.description');
     description.innerText = doc.description.replace('@site', popup.activeHost);
     if (doc.tooltip) {
         description.setAttribute('title', doc.tooltip);
     }
-    getCurrentHostClasses().then(selectors => {
-        _initEditor(doc, selectors, editor);
-    });
+    _initEditor(doc, editorId);
 }
 
 function setEditor(doc) {
