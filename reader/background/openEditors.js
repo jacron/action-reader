@@ -1,4 +1,5 @@
 import {background} from "./backgroundState.js";
+import {withActiveTab} from "../shared/activeTab.js";
 
 function createWin(curWin) {
     let left = curWin.left - 500;
@@ -19,10 +20,8 @@ function createWin(curWin) {
 }
 
 function openEditors() {
-    chrome.tabs.query({
-        active: true
-    }, tabs => {
-        chrome.windows.get(tabs[0].windowId, curWin => {
+    withActiveTab(tab => {
+        chrome.windows.get(tab.windowId, curWin => {
             createWin(curWin);
         })
     })

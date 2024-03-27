@@ -10,7 +10,8 @@
     "storage",
     "activeTab",
     "cookies",
-    "downloads"
+    "downloads",
+    "contextMenus"
   ],
   "icons": {
     "128": "images/reader white.png"

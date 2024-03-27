@@ -10,7 +10,9 @@ function hideEditors() {
 function showEditor(doc) {
     hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
-    doc.editor.focus();
+    if (doc.editor) {
+        doc.editor.focus();
+    }
 }
 
 function setDirty(dirty, doc) {

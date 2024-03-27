@@ -211,6 +211,11 @@ function toggleDarkContent(req) {
     }
 }
 
+function contextMenuClicked() {
+    console.log('*** contetxMenu clicked, on:')
+    console.log(target)
+}
+
 const actionBindings = {
     initHost: contentInitHost,
     onInitHost,  // called from initHost (actions.js)
@@ -218,6 +223,7 @@ const actionBindings = {
     reSelect,
     toggleGeneralContent,
     toggleDarkContent,
+    contextMenuClicked
 };
 
 function initActions(req, sendResponse) {
@@ -292,19 +298,32 @@ chrome.runtime.onMessage.addListener(
         initActions(req, sendResponse);
     });
 
-/* verzamel class namen voor autocomplete lijst in monaco editor */
-/* gebruik een set om dubbelen te voorkomen */
-const classes = new Set();
-const ids = new Set();
+function getClassAndIdNames() {
+    /* verzamel class namen voor autocomplete lijst in monaco editor */
+    /* gebruik een set om dubbelen te voorkomen */
+    const classes = new Set();
+    const ids = new Set();
 
-document.querySelectorAll('*').forEach(element => {
-    element.classList.forEach(className => {
-        classes.add(className);
+    document.querySelectorAll('*').forEach(element => {
+        element.classList.forEach(className => {
+            classes.add(className);
+        });
+        if (element.id) {
+            ids.add(element.id);
+        }
     });
-    if (element.id) {
-        ids.add(element.id);
-    }
-    console.log(ids);
     StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
-});
+}
+
+getClassAndIdNames();
+
+let target = null;
+
+function onContextMenu() {
+    document.addEventListener("contextmenu", function(event) {
+        target = event.target;
+    });
+}
+
+onContextMenu();
