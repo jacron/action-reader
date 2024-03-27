@@ -3,6 +3,7 @@ import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from '
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
 import {registerSuggestions} from "./suggestions.js";
+import {insertText} from "./editor.js";
 
 function initHost() {
     chrome.runtime.sendMessage({
@@ -22,6 +23,19 @@ function onInitHost(req) {
     }
 }
 
+function dataToText(data) {
+    const {targetClasses, targetId} = data;
+    let text = targetClasses.join('.');
+    if (text.length) {
+        text = '.' + text;
+    }
+    if (targetId) {
+        text += '#' + targetId;
+    }
+    console.log(text);
+    return text + '\n';
+}
+
 function messageListener(req, sender, sendResponse) {
     switch(req.message) {
         case 'onInitHost':
@@ -29,12 +43,13 @@ function messageListener(req, sender, sendResponse) {
             sendResponse('handled');
             break;
         case 'contextMenuClickTarget':
-            console.log(req.data);
+            insertText(dataToText(req.data));
             sendResponse('handled');
             break;
         default:
             sendResponse('no request handled');
     }
+    return true;
 }
 
 function handleKeyboardDown() {

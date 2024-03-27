@@ -28,7 +28,7 @@ function contextMenuListener(info, tab) {
     withActiveTab(tab => {
         chrome.tabs.sendMessage(tab.id, {
             message: 'contextMenuClicked'
-        })
+        }, res => console.log(res))
     })
 }
 

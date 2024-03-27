@@ -89,4 +89,13 @@ function setEditor(doc) {
     }
 }
 
-export {setEditor, setDirty}
+function insertText(text) {
+    const editor = popup.activeDoc.editor;
+    if (editor) {
+        editor.trigger('keyboard', 'type', {text});
+    } else {
+        console.log('*** editor NOT defined')
+    }
+}
+
+export {setEditor, setDirty, insertText}

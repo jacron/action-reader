@@ -218,10 +218,6 @@ function classListToArray(classList) {
 }
 
 function contextMenuClicked() {
-    console.log('*** contetxMenu clicked, on:')
-    console.log(target)
-    console.log(target.classList)
-    console.log(target.id)
     chrome.runtime.sendMessage( {
         message: 'contextMenuClickTarget',
         data: {
@@ -242,7 +238,6 @@ const actionBindings = {
 };
 
 function initActions(req, sendResponse) {
-    console.log(req)
     if (req.message) {
         const func = actionBindings[req.message];
         if (func) {
@@ -303,7 +298,6 @@ async function contentInitHost() {
     }
 }
 
-contentInitHost().then();
 
 /*
 message from background/actions.js
@@ -331,7 +325,6 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
-getClassAndIdNames();
 
 let target = null;
 
@@ -341,4 +334,6 @@ function onContextMenu() {
     });
 }
 
+contentInitHost().then();
+getClassAndIdNames();
 onContextMenu();
