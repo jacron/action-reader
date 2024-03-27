@@ -1,4 +1,4 @@
-import  {vsPath} from "../../shared/monaco.js";
+import  {vsPath} from "../../shared/monacoSettings.js";
 import {deleteHost} from "../../background/host.js";
 
 let sites = null;

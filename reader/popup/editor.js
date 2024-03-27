@@ -1,4 +1,4 @@
-import {monacoDocuments} from "../shared/monaco.js";
+import {monacoDocuments} from "../shared/monacoSettings.js";
 import {popup} from "./popupState.js";
 
 function hideEditors() {
@@ -33,8 +33,8 @@ function checkDirty(model, doc) {
         doc);
 }
 
-function createEditor(doc, editorId) {
-    const monacoOptions = {
+function editorOptions(doc) {
+    return {
         lineNumbers: false,
         value: doc.text,
         language: doc.language,
@@ -51,14 +51,13 @@ function createEditor(doc, editorId) {
             enabled: false
         },
     };
-    doc.editor = monaco.editor.create(editorId, monacoOptions);
 }
 
-function _initEditor(doc, editorId) {
+function _initEditor(doc, editorElement) {
     /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
+
     require(['vs/editor/editor.main'], () => {
-        createEditor(doc, editorId);
-        document.getElementById(doc.id).style.visibility = 'visible';
+        doc.editor = monaco.editor.create(editorElement, editorOptions(doc));
         doc.editor.focus();
         const model = doc.editor.getModel();
         doc.lastSavedVersion = model.getAlternativeVersionId();
@@ -67,18 +66,16 @@ function _initEditor(doc, editorId) {
 }
 
 function initEditor(doc) {
-    const editorElement = document.getElementById(doc.id);
-    if (!editorElement) {
+    const editorElementContainer = document.getElementById(doc.id);
+    if (!editorElementContainer) {
         console.error('no element with id:', doc.id);
         return;
     }
-    const editorId = editorElement.querySelector('.the-editor');
-    const description = editorElement.querySelector('.description');
-    description.innerText = doc.description.replace('@site', popup.activeHost);
-    if (doc.tooltip) {
-        description.setAttribute('title', doc.tooltip);
-    }
-    _initEditor(doc, editorId);
+    const editorElement = editorElementContainer.querySelector('.the-editor');
+    const descriptionElement = editorElementContainer.querySelector('.description');
+    descriptionElement.innerText = doc.description.replace('@site', popup.activeHost);
+    editorElementContainer.style.visibility = 'visible';
+    _initEditor(doc, editorElement);
 }
 
 function setEditor(doc) {

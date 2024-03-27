@@ -1,7 +1,7 @@
 import {handleFormClickActions, formsExistingOrNew} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
-import {vsPath} from "../shared/monaco.js";
+import {vsPath} from "../shared/monacoSettings.js";
 import {registerSuggestions} from "./suggestions.js";
 
 function initHost() {

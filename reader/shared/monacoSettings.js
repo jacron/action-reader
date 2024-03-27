@@ -8,7 +8,6 @@ const monacoDocuments = {
     default: {
         name: 'default',
         description: 'General styling for @site',
-        text: '',
         language: 'css',
         className: 'default',
         selector: '.default',
@@ -20,7 +19,6 @@ const monacoDocuments = {
     dark: {
         name: 'dark',
         description: 'Dark mode styling for @site',
-        text: '',
         language: 'css',
         className: 'dark',
         selector: '.dark',
@@ -32,7 +30,6 @@ const monacoDocuments = {
     selector: {
         name: 'selector',
         description: 'Elements in @site to display (@ optional)',
-        text: '',
         className: 'selector',
         selector: '.selector',
         editor: null,
@@ -42,7 +39,6 @@ const monacoDocuments = {
     _default: {
         name: '_default',
         description: 'General styling for all sites',
-        text: '',
         language: 'css',
         className: '_default',
         selector: '._default',
@@ -54,7 +50,6 @@ const monacoDocuments = {
     _dark: {
         name: '_dark',
         description: 'Dark mode styling for all sites',
-        text: '',
         language: 'css',
         className: '_dark',
         selector: '._dark',

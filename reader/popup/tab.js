@@ -1,4 +1,4 @@
-import {monacoDocuments} from '../shared/monaco.js';
+import {monacoDocuments} from '../shared/monacoSettings.js';
 import {setEditor} from "./editor.js";
 
 /**
