@@ -23,11 +23,17 @@ function onInitHost(req) {
 }
 
 function messageListener(req, sender, sendResponse) {
-    if (req.message === 'onInitHost') {
-        onInitHost(req);
-        sendResponse('handled');
-    } else {
-        sendResponse('no request handled');
+    switch(req.message) {
+        case 'onInitHost':
+            onInitHost(req);
+            sendResponse('handled');
+            break;
+        case 'contextMenuClickTarget':
+            console.log(req.data);
+            sendResponse('handled');
+            break;
+        default:
+            sendResponse('no request handled');
     }
 }
 

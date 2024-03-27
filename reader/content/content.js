@@ -211,9 +211,24 @@ function toggleDarkContent(req) {
     }
 }
 
+function classListToArray(classList) {
+    const classes = [];
+    classList.forEach(className => classes.push(className));
+    return classes;
+}
+
 function contextMenuClicked() {
     console.log('*** contetxMenu clicked, on:')
     console.log(target)
+    console.log(target.classList)
+    console.log(target.id)
+    chrome.runtime.sendMessage( {
+        message: 'contextMenuClickTarget',
+        data: {
+            targetClasses: classListToArray(target.classList),
+            targetId: target.id
+        }
+    }, () => {})
 }
 
 const actionBindings = {
