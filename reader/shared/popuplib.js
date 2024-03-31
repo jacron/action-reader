@@ -2,7 +2,7 @@ function messageToContent(message) {
     chrome.tabs.query({
         active: true
     }, tabs => {
-        chrome.tabs.sendMessage(tabs[0].id, message);
+        chrome.tabs.sendMessage(tabs[0].id, message, () => {});
     })
 }
 

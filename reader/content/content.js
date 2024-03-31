@@ -123,11 +123,8 @@ function select(selector) {
     deleteReader();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
-        // const timeout = 10;
-        // setTimeout(() => {
-            const nodes = getNodes(selectors);
-            injectArticle(nodes);
-        // }, timeout);
+        const nodes = getNodes(selectors);
+        injectArticle(nodes);
         setFocus();
     }
 }
@@ -137,10 +134,7 @@ function addDark() {
         document.getElementById('readerarticle').classList.add('dark')
     }
     document.body.classList.add('dark');
-    injectStyle(initedHost.custom.dark, 'splash-custom-dark-style');
-    injectStyle(initedHost.darkText, 'splash-dark-style');
-    setTimeout(() => {
-    });
+    reinjectStyles();
 }
 
 function removeDark() {
@@ -210,20 +204,14 @@ function toggleDarkContent(req) {
     }
 }
 
-function classListToArray(classList) {
-    const classes = [];
-    classList.forEach(className => classes.push(className));
-    return classes;
-}
-
-function contextMenuClicked() {
-    chrome.runtime.sendMessage( {
-        message: 'contextMenuClickTarget',
-        data: {
-            targetClasses: classListToArray(target.classList),
-            targetId: target.id
-        }
-    }, () => {})
+function reinjectStyles() {
+    const {custom, darkText, defaultText} = initedHost;
+    // dark styles
+    injectStyle(custom.dark, 'splash-custom-dark-style');
+    injectStyle(darkText, 'splash-dark-style');
+    // default styles
+    injectStyle(custom.default, 'splash-custom-default-style');
+    injectStyle(defaultText, 'splash-default-style');
 }
 
 const actionBindings = {
@@ -233,7 +221,7 @@ const actionBindings = {
     reSelect,
     toggleGeneralContent,
     toggleDarkContent,
-    contextMenuClicked
+    reinjectStyles
 };
 
 function initActions(req, sendResponse) {
@@ -286,9 +274,7 @@ async function contentInitHost() {
     if (websiteProps && websiteProps.active === 'on') {
         injectGeneralStyles(defaultStyle, darkStyle);
         injectCustomStyles(websiteProps).then();
-        // setTimeout(() => {
-            select(websiteProps.selector);
-        // }, 0);
+        select(websiteProps.selector);
     }
     initedHost = {
         custom: websiteProps,
@@ -297,14 +283,12 @@ async function contentInitHost() {
     }
 }
 
-
 /*
 message from background/actions.js
  */
-chrome.runtime.onMessage.addListener(
-    (req, sender, sendResponse) => {
-        initActions(req, sendResponse);
-    });
+function messageListener(req, sender, sendResponse) {
+    initActions(req, sendResponse);
+}
 
 function getClassAndIdNames() {
     /* verzamel class namen voor autocomplete lijst in monaco editor */
@@ -324,15 +308,7 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
-
-let target = null;
-
-function onContextMenu() {
-    document.addEventListener("contextmenu", function(event) {
-        target = event.target;
-    });
-}
-
 contentInitHost().then();
 getClassAndIdNames();
-onContextMenu();
+
+chrome.runtime.onMessage.addListener(messageListener);

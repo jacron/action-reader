@@ -39,13 +39,20 @@
         "default": "Ctrl+Shift+J",
         "mac": "MacCtrl+J"
       },
-      "description": "Open de editors"
+      "description": "Open editors"
+    },
+    "reinject-styles": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "MacCtrl+K"
+      },
+      "description": "Reload the styles"
     },
     "_execute_action": {
       "suggested_key": {
         "mac": "MacCtrl+R"
       },
-      "description": "Open de extensie"
+      "description": "Open extension"
     }
   }
 }
