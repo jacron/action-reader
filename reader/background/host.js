@@ -2,6 +2,7 @@ import {StorageArea} from "./backgroundState.js";
 
 const KEY_DEFAULT = '_default';
 const KEY_DARK = '_dark';
+const KEY_HOSTNAME = 'hostname';
 
 class Host {
     constructor(name) {
@@ -20,11 +21,13 @@ class Host {
                     newHost.dark = changes.dark || '';
                     newHost.selector = changes.selector || '';
                     newHost.active = changes.active || 'on';
+                    newHost.delay = changes.delay;  // maybe null
                 } else {
                     newHost.default = changes.default || response.default || '';
                     newHost.dark = changes.dark || response.dark || '';
                     newHost.selector = changes.selector || response.selector || '';
                     newHost.active = changes.active || response.active || 'on';
+                    newHost.delay = changes.delay || response.delay;
                 }
             }
             StorageArea.set({[this.name]: newHost}, () => {});
@@ -63,7 +66,6 @@ class Host {
             });
         });
     }
-
 }
 
 function storeDefault(css) {
@@ -74,9 +76,19 @@ function storeDark(css) {
     StorageArea.set({[KEY_DARK]: css}).then(() => {})
 }
 
+function getCurrentHost() {
+    return new Promise((resolve, reject) => {
+        StorageArea.get([KEY_HOSTNAME], results => {
+            if (results) {
+                resolve(new Host(results[KEY_HOSTNAME]));
+            } else reject();
+        })
+    })
+}
+
 /* delete host: for options/storage */
 function deleteHost(key) {
     StorageArea.remove([key]).then(() => {});
 }
 
-export { Host, storeDark, storeDefault, deleteHost}
+export { Host, storeDark, storeDefault, deleteHost, getCurrentHost}

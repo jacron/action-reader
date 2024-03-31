@@ -60,9 +60,13 @@ button:hover {
   width: 100%;
   visibility: hidden;
   margin-top: 6px;
+  background-color: #777;
 }
 .the-editor {
   height: calc(100% - 22px);
+}
+.the-editor.small {
+  height: calc(100% - 100px);
 }
 .description {
   height: 20px;

@@ -1,6 +1,7 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
 import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
+import {getCurrentHost} from "../background/host.js";
 
 function closeMe() {
     close();
@@ -86,7 +87,7 @@ function handleFormClickActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
-        ['cmd-replace', replace]
+        ['cmd-replace', replace],
     ];
     for (const binding of clickBindings) {
         const [id, func] = binding;
@@ -98,4 +99,14 @@ function handleFormClickActions() {
     }
 }
 
-export {handleFormClickActions, formsExistingOrNew, save, apply}
+function handleFormKeydown() {
+    const inputDelay = document.getElementById('editor-input-delay');
+    inputDelay.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            console.log(inputDelay.value);
+            getCurrentHost().then(host => host.store({delay: inputDelay.value}));
+        }
+    })
+}
+
+export {handleFormClickActions, handleFormKeydown, formsExistingOrNew, save, apply}

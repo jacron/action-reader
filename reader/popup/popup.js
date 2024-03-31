@@ -1,14 +1,24 @@
-import {handleFormClickActions, formsExistingOrNew, save, apply} from './form.js';
+import {handleFormClickActions, formsExistingOrNew, save, apply, handleFormKeydown} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
 import {registerSuggestions} from "./suggestions.js";
 import {insertText} from "./editor.js";
+import {Host} from "../background/host.js";
 
 function initHost() {
     chrome.runtime.sendMessage({
         request: 'initHost',
         client: 'popup'}, () => {});
+}
+
+function initDelay(hostName) {
+    const host = new Host(hostName);
+    host.getCustom().then(results => {
+        const obj = results[hostName];
+        const inputDelay = document.getElementById('editor-input-delay');
+        inputDelay.value = obj.delay || '';
+    })
 }
 
 function onInitHost(req) {
@@ -21,6 +31,7 @@ function onInitHost(req) {
     } else {
         document.getElementById('new-host-name').innerText = req.host;
     }
+    initDelay(req.host);
 }
 
 function dataToText(data) {
@@ -78,6 +89,7 @@ function handleTabClickActions() {
 
 document.addEventListener('DOMContentLoaded', function () {
     handleFormClickActions();
+    handleFormKeydown();
     handleTabClickActions();
     handleKeyboardDown();
     initHost();
