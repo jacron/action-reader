@@ -20,7 +20,7 @@ function createWin(curWin) {
 }
 
 function openEditors() {
-    withActiveTab(tab => {
+    withActiveTab().then(tab => {
         chrome.windows.get(tab.windowId, curWin => {
             createWin(curWin);
         })

@@ -120,15 +120,14 @@ function setFocus() {
 }
 
 function select(selector) {
-    // console.log(selector)
     deleteReader();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
-        const timeout = 10;
-        setTimeout(() => {
+        // const timeout = 10;
+        // setTimeout(() => {
             const nodes = getNodes(selectors);
             injectArticle(nodes);
-        }, timeout);
+        // }, timeout);
         setFocus();
     }
 }
@@ -287,9 +286,9 @@ async function contentInitHost() {
     if (websiteProps && websiteProps.active === 'on') {
         injectGeneralStyles(defaultStyle, darkStyle);
         injectCustomStyles(websiteProps).then();
-        setTimeout(() => {
+        // setTimeout(() => {
             select(websiteProps.selector);
-        }, 200);
+        // }, 0);
     }
     initedHost = {
         custom: websiteProps,

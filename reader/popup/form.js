@@ -73,6 +73,11 @@ function formsExistingOrNew(hostExists) {
     }
 }
 
+function replace() {
+    popup.activeDoc.editor.getAction('editor.action.startFindReplaceAction').run().then();
+    console.log(popup.activeDoc.editor.getSupportedActions());
+}
+
 function handleFormClickActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -81,6 +86,7 @@ function handleFormClickActions() {
         ['cmd-apply', apply],
         ['general-toggle-switch', toggleGeneralSettings],
         ['dark-toggle-switch', toggleDarkSettings],
+        ['cmd-replace', replace]
     ];
     for (const binding of clickBindings) {
         const [id, func] = binding;

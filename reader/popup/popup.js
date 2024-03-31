@@ -59,7 +59,7 @@ function handleKeyboardDown() {
             close();
         }
         if (e.metaKey && e.shiftKey && e.key === 's') {
-            console.log('CmdShS gedrukt')
+            // console.log('CmdShS gedrukt')
             save();
             e.preventDefault()
         }

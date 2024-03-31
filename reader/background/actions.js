@@ -97,7 +97,7 @@ function _initHost(req, _activeHost, sendResponse) {
 
 function initHost(req, sendResponse) {
     console.log('*** initHost in actions.js...')
-    withActiveTab(tab => {
+    withActiveTab().then(tab => {
         const _activeHost = getJcReaderHost(tab.url);
         _initHost(req, _activeHost, sendResponse);
     })
@@ -112,7 +112,7 @@ const actionBindings = {
 };
 
 function initActions(req, sendResponse, sender) {
-    if (req.request) {
+    if (req.request) {  // req: client, request
         const fun = actionBindings[req.request];
         if (fun) {
             fun(req, sendResponse, sender);
