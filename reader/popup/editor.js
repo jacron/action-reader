@@ -3,12 +3,12 @@ import {popup} from "./popupState.js";
 
 function hideEditors() {
     for (const entry of Object.entries(monacoDocuments)) {
-        document.getElementById(entry[1].id).style.visibility = 'hidden';
+        const id = entry[1].id;
+        document.getElementById(id).style.visibility = 'hidden';
     }
 }
 
 function showEditor(doc) {
-    hideEditors();
     document.getElementById(doc.id).style.visibility = 'visible';
     if (doc.editor) {
         doc.editor.focus();
@@ -81,6 +81,7 @@ function initEditor(doc) {
 }
 
 function setEditor(doc) {
+    hideEditors();
     popup.activeDoc = doc;
     if (doc.editor === null) {
         initEditor(doc);

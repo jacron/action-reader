@@ -312,3 +312,6 @@ contentInitHost().then();
 getClassAndIdNames();
 
 chrome.runtime.onMessage.addListener(messageListener);
+
+//experiment, zou alleen voor nytimes soelaas moeten bieden
+setTimeout(() => reinjectStyles(), 2000);
