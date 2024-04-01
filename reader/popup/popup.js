@@ -12,12 +12,20 @@ function initHost() {
         client: 'popup'}, () => {});
 }
 
+function getHostDelay(hostName) {
+    return new Promise((resolve) => {
+        const host = new Host(hostName);
+        host.getCustom().then(results => {
+            const obj = results[hostName];
+            resolve(obj.delay);
+        })
+    })
+}
+
 function initDelay(hostName) {
-    const host = new Host(hostName);
-    host.getCustom().then(results => {
-        const obj = results[hostName];
+    getHostDelay(hostName).then(delay => {
         const inputDelay = document.getElementById('editor-input-delay');
-        inputDelay.value = obj.delay || '';
+        inputDelay.value = delay || '';
     })
 }
 

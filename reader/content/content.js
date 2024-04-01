@@ -20,6 +20,16 @@ const styleIds = {
     }
 }
 
+function getHostDelay(hostName) {
+    const keys = [hostName];
+    return new Promise((resolve) => {
+        StorageArea.get(keys, results => {
+            const obj = results[hostName];
+            resolve(obj.delay);
+        });
+    })
+}
+
 function getJcReaderHost(url) {
     if (!url) {
         return url;
@@ -281,6 +291,11 @@ async function contentInitHost() {
         darkText: darkStyle,
         defaultText: defaultStyle
     }
+    getHostDelay(hostName).then(delay => {
+        if (delay) {
+            setTimeout(() => reinjectStyles(), +delay);
+        }
+    })
 }
 
 /*
@@ -312,6 +327,3 @@ contentInitHost().then();
 getClassAndIdNames();
 
 chrome.runtime.onMessage.addListener(messageListener);
-
-//experiment, zou alleen voor nytimes soelaas moeten bieden
-setTimeout(() => reinjectStyles(), 2000);

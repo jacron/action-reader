@@ -99,12 +99,23 @@ function handleFormClickActions() {
     }
 }
 
+function showSavedDelayMsg () {
+    const msg = document.getElementById('delay-saved-msg');
+    msg.style.display = 'block';
+    setTimeout(() => {
+        msg.style.display = 'none';
+    }, 5000)
+}
+
 function handleFormKeydown() {
     const inputDelay = document.getElementById('editor-input-delay');
     inputDelay.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             console.log(inputDelay.value);
-            getCurrentHost().then(host => host.store({delay: inputDelay.value}));
+            getCurrentHost().then(host => {
+                host.store({delay: inputDelay.value});
+                showSavedDelayMsg();
+            });
         }
     })
 }
