@@ -6,7 +6,11 @@ let editors = {};
 
 function updateSite(input) {
     const li = input.parentElement;
-    const name = li.querySelector('span').innerText.trim();
+    const span = li.querySelector('span');
+    if (!span) {
+        return;
+    }
+    const name = span.innerText.trim();
     for (const [key, value] of Object.entries(sites)) {
         if (key === name) {
             value.active = input.checked ? 'on' : 'off';

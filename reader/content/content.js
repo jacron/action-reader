@@ -25,7 +25,9 @@ function getHostDelay(hostName) {
     return new Promise((resolve) => {
         StorageArea.get(keys, results => {
             const obj = results[hostName];
-            resolve(obj.delay);
+            if (obj) {
+                resolve(obj.delay);
+            }
         });
     })
 }
@@ -271,31 +273,33 @@ alternatief voor initHost via background
 async function contentInitHost() {
     console.log('*** in contentInitHost')
     const hostName = getJcReaderHost(document.location.href);
-    StorageArea.set({['hostname']: hostName}, () => {});
-    StorageArea.get(['hostname'], result => {
-        console.log('*** ' + result.hostname)
-    });
+    // StorageArea.get(['hostname'], result => {
+    //     console.log('*** ' + result.hostname)
+    // });
     const websitePropsObject = await fromStorage(hostName);
-    const websiteProps = websitePropsObject[hostName];
-    const defaultStyleObject = await fromStorage(keysGeneral.default);
-    const darkStyleObject = await fromStorage(keysGeneral.dark);
-    const defaultStyle = defaultStyleObject[keysGeneral.default];
-    const darkStyle = darkStyleObject[keysGeneral.dark];
-    if (websiteProps && websiteProps.active === 'on') {
-        injectGeneralStyles(defaultStyle, darkStyle);
-        injectCustomStyles(websiteProps).then();
-        select(websiteProps.selector);
-    }
-    initedHost = {
-        custom: websiteProps,
-        darkText: darkStyle,
-        defaultText: defaultStyle
-    }
-    getHostDelay(hostName).then(delay => {
-        if (delay) {
-            setTimeout(() => reinjectStyles(), +delay);
+    if (websitePropsObject) {  // host exists
+        StorageArea.set({['hostname']: hostName}, () => {});
+        const websiteProps = websitePropsObject[hostName];
+        const defaultStyleObject = await fromStorage(keysGeneral.default);
+        const darkStyleObject = await fromStorage(keysGeneral.dark);
+        const defaultStyle = defaultStyleObject[keysGeneral.default];
+        const darkStyle = darkStyleObject[keysGeneral.dark];
+        if (websiteProps && websiteProps.active === 'on') {
+            injectGeneralStyles(defaultStyle, darkStyle);
+            injectCustomStyles(websiteProps).then();
+            select(websiteProps.selector);
         }
-    })
+        initedHost = {
+            custom: websiteProps,
+            darkText: darkStyle,
+            defaultText: defaultStyle
+        }
+        getHostDelay(hostName).then(delay => {
+            if (delay) {
+                setTimeout(() => reinjectStyles(), +delay);
+            }
+        })
+    }
 }
 
 /*
