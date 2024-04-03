@@ -20,11 +20,17 @@ function createWin(curWin) {
 }
 
 function openEditors() {
-    withActiveTab().then(tab => {
-        chrome.windows.get(tab.windowId, curWin => {
-            createWin(curWin);
+    if (!background.winId) {
+        withActiveTab().then(tab => {
+            chrome.windows.get(tab.windowId, curWin => {
+                createWin(curWin);
+            })
         })
-    })
+    } else {
+        chrome.windows.remove(background.winId);
+        background.winId = null;
+        background.tTabId = null;
+    }
 }
 
 export {openEditors, createWin}
