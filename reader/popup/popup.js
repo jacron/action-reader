@@ -17,7 +17,9 @@ function getHostDelay(hostName) {
         const host = new Host(hostName);
         host.getCustom().then(results => {
             const obj = results[hostName];
-            resolve(obj.delay);
+            if (obj) {
+                resolve(obj.delay);
+            }
         })
     })
 }
@@ -73,7 +75,6 @@ function messageListener(req, sender, sendResponse) {
 
 function handleKeyboardDown() {
     document.addEventListener('keydown', e => {
-        // console.log(e)
         if (e.key === 'Escape') {
             close();
         }
@@ -83,7 +84,7 @@ function handleKeyboardDown() {
             e.preventDefault()
         }
         if (e.metaKey && e.shiftKey && e.key === 'a') {
-            console.log('CmdShA gedrukt')
+            // console.log('CmdShA gedrukt')
             apply();
             e.preventDefault()
         }

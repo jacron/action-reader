@@ -41,18 +41,18 @@
       },
       "description": "Open editors"
     },
-    "reinject-styles": {
+    "toggle-dark": {
       "suggested_key": {
-        "default": "Ctrl+Shift+K",
-        "mac": "MacCtrl+K"
+        "default": "Ctrl+Shift+D",
+        "mac": "MacCtrl+D"
       },
-      "description": "Reload the styles"
+      "description": "Toggle dark mode"
     },
-    "_execute_action": {
+    "toggle-reader": {
       "suggested_key": {
         "mac": "MacCtrl+R"
       },
-      "description": "Open extension"
+      "description": "Toggle reader"
     }
   }
 }

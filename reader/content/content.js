@@ -3,12 +3,10 @@ console.log("*** contentscript loaded for jreader!");
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
-
 const keysGeneral = {
     default: '_default',
     dark: '_dark'
 }
-
 const styleIds = {
     custom: {
         default: 'splash-custom-default-style',  // 'custom-default-style-id',
@@ -19,6 +17,9 @@ const styleIds = {
         dark: 'splash-dark-style'  // 'general-dark-style-id'
     }
 }
+let initedHost = null; // {custom, darkText, defaultText}
+/* initieel is readerOn true, als een soort quasi global hier */
+let readerOn = true;
 
 function getHostDelay(hostName) {
     const keys = [hostName];
@@ -160,8 +161,6 @@ function removeDark() {
     });
 }
 
-let initedHost = null; // {custom, darkText, defaultText}
-
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
     initedHost = req;
@@ -171,6 +170,7 @@ function onInitHost(req) {
         injectStyle(darkText, 'splash-dark-style');
         injectStyle(custom.default, 'splash-custom-default-style');
         injectStyle(custom.dark, 'splash-custom-dark-style');
+        document.body.classList.add('dark');
         setTimeout(() => {
             select(custom.selector);
         }, 200);
@@ -199,31 +199,49 @@ function removeStyles() {
 
 function toggleGeneralContent(req) {
     const {mode} = req;
-    if (mode === 'off') {
+    if (mode) {
+        contentInitHost().then();
+    } else {
         removeStyles();
         deleteReaderArticle();
-    } else {
-        contentInitHost().then();
     }
 }
 
 function toggleDarkContent(req) {
     const {mode} = req;
-    if (mode === 'off') {
+    if (mode) {
+        addDark();
+    } else {
+        removeDark();
+    }
+}
+
+function reinjectStyles() {
+    const {custom, darkText, defaultText} = initedHost;
+    /* dark styles */
+    injectStyle(custom.dark, 'splash-custom-dark-style');
+    injectStyle(darkText, 'splash-dark-style');
+    /* default styles */
+    injectStyle(custom.default, 'splash-custom-default-style');
+    injectStyle(defaultText, 'splash-default-style');
+}
+
+function toggleDark() {
+    if (document.body.classList.contains('dark')) {
         removeDark();
     } else {
         addDark();
     }
 }
 
-function reinjectStyles() {
-    const {custom, darkText, defaultText} = initedHost;
-    // dark styles
-    injectStyle(custom.dark, 'splash-custom-dark-style');
-    injectStyle(darkText, 'splash-dark-style');
-    // default styles
-    injectStyle(custom.default, 'splash-custom-default-style');
-    injectStyle(defaultText, 'splash-default-style');
+function toggleReader() {
+    readerOn = !readerOn;
+    if (readerOn) {
+        contentInitHost().then();
+    } else {
+        removeStyles();
+        deleteReaderArticle();
+    }
 }
 
 const actionBindings = {
@@ -233,7 +251,8 @@ const actionBindings = {
     reSelect,
     toggleGeneralContent,
     toggleDarkContent,
-    reinjectStyles
+    toggleDark,
+    toggleReader
 };
 
 function initActions(req, sendResponse) {
@@ -267,15 +286,30 @@ function injectGeneralStyles(defaultStyle, darkStyle) {
     injectStyle(darkStyle, styleIds.general.dark);
 }
 
+function getClassAndIdNames() {
+    /* verzamel class namen voor autocomplete lijst in monaco editor */
+    /* gebruik een set om dubbelen te voorkomen */
+    const classes = new Set();
+    const ids = new Set();
+
+    document.querySelectorAll('*').forEach(element => {
+        element.classList.forEach(className => {
+            classes.add(className);
+        });
+        if (element.id) {
+            ids.add(element.id);
+        }
+    });
+    StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
+    StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
+}
+
 /*
 alternatief voor initHost via background
  */
 async function contentInitHost() {
     console.log('*** in contentInitHost')
     const hostName = getJcReaderHost(document.location.href);
-    // StorageArea.get(['hostname'], result => {
-    //     console.log('*** ' + result.hostname)
-    // });
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
@@ -288,6 +322,7 @@ async function contentInitHost() {
             injectGeneralStyles(defaultStyle, darkStyle);
             injectCustomStyles(websiteProps).then();
             select(websiteProps.selector);
+            document.body.classList.add('dark');
         }
         initedHost = {
             custom: websiteProps,
@@ -309,25 +344,8 @@ function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
 
-function getClassAndIdNames() {
-    /* verzamel class namen voor autocomplete lijst in monaco editor */
-    /* gebruik een set om dubbelen te voorkomen */
-    const classes = new Set();
-    const ids = new Set();
-
-    document.querySelectorAll('*').forEach(element => {
-        element.classList.forEach(className => {
-            classes.add(className);
-        });
-        if (element.id) {
-            ids.add(element.id);
-        }
-    });
-    StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
-    StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
-}
-
-contentInitHost().then();
-getClassAndIdNames();
+contentInitHost().then(() => {
+    getClassAndIdNames();
+});
 
 chrome.runtime.onMessage.addListener(messageListener);

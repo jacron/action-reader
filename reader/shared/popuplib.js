@@ -10,11 +10,11 @@ function toggleOnOff(classList, cb) {
     if (classList.contains('on')) {
         classList.remove('on');
         classList.add('off');
-        cb('off');
+        cb(false);
     } else {
         classList.remove('off');
         classList.add('on');
-        cb('on');
+        cb(true);
     }
 }
 

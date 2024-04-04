@@ -1,7 +1,7 @@
 import {initActions} from "./actions.js";
 import {updateBadge} from "./badge.js";
-import {openEditors} from "./openEditors.js";
 import {messageToContent} from "../shared/popuplib.js";
+import {openEditors} from "./openEditors.js";
 
 function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse, sender);
@@ -18,11 +18,16 @@ function updateListener(_tabId, info) {
 }
 
 function commandListener(command) {
-    if (command === 'open-editors') {
-        openEditors();
-    }
-    if (command === 'reinject-styles') {
-        messageToContent({message: 'reinjectStyles'})
+    switch(command) {
+        case 'open-editors':
+            openEditors();
+            break;
+        case 'toggle-reader':
+            messageToContent({message: 'toggleReader'})
+            break;
+        case 'toggle-dark':
+            messageToContent({message: 'toggleDark'})
+            break;
     }
 }
 
