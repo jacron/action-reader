@@ -11,8 +11,6 @@ function newHost(req, sendResponse) {
 
 function saveHost(req, sendResponse) {
     const host = new Host(req.host);
-    console.log(host)
-
     applyHost(req, sendResponse);
     switch (req.name) {
         case 'default':
@@ -51,7 +49,6 @@ function reInjectMakeReader(selector, tabId) {
 
 function _applyHost(req, tabId, sendResponse) {
     console.log('*** in _applyHost')
-    console.log(req)
     if (~['default', 'dark', '_default', '_dark'].indexOf(req.name )) {
         injectCss(req, tabId);
     }
