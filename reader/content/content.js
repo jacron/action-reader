@@ -147,7 +147,9 @@ function addDark() {
         document.getElementById('readerarticle').classList.add('dark')
     }
     document.body.classList.add('dark');
-    reinjectStyles();
+    const {custom, darkText} = initedHost;
+    injectStyle(custom.dark, 'splash-custom-dark-style');
+    injectStyle(darkText, 'splash-dark-style');
 }
 
 function removeDark() {

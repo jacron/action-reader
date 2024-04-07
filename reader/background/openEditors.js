@@ -27,10 +27,18 @@ function openEditors() {
             })
         })
     } else {
-        chrome.windows.remove(background.winId);
+        chrome.windows.remove(background.winId).then();
         background.winId = null;
         background.tTabId = null;
     }
 }
 
-export {openEditors, createWin}
+function closeEditors() {
+    if (background.winId) {
+        chrome.windows.remove(background.winId).then();
+        background.winId = null;
+        background.tTabId = null;
+    }
+}
+
+export {openEditors, createWin, closeEditors}

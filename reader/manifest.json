@@ -41,6 +41,13 @@
       },
       "description": "Open editors"
     },
+    "close-editors": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "MacCtrl+K"
+      },
+      "description": "Open editors"
+    },
     "toggle-dark": {
       "suggested_key": {
         "default": "Ctrl+Shift+D",

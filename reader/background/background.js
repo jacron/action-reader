@@ -1,7 +1,7 @@
 import {initActions} from "./actions.js";
 import {updateBadge} from "./badge.js";
 import {messageToContent} from "../shared/popuplib.js";
-import {openEditors} from "./openEditors.js";
+import {closeEditors, openEditors} from "./openEditors.js";
 
 function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse, sender);
@@ -21,6 +21,9 @@ function commandListener(command) {
     switch(command) {
         case 'open-editors':
             openEditors();
+            break;
+        case 'close-editors':
+            closeEditors();
             break;
         case 'toggle-reader':
             messageToContent({message: 'toggleReader'})
