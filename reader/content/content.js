@@ -298,6 +298,30 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
+async function setStyles(websiteProps, settings) {
+    if (websiteProps && websiteProps.active === 'on') {
+        if (settings[KEY_BOOLEAN_READER] === undefined || settings[KEY_BOOLEAN_READER] === true) {
+            const defaultStyleObject = await fromStorage(keysGeneral.default);
+            const defaultStyle = defaultStyleObject[keysGeneral.default];
+            injectStyle(defaultStyle, styleIds.general.default);
+            injectStyle(websiteProps.default, styleIds.custom.default);
+            select(websiteProps.selector);
+        }
+        if (settings[KEY_BOOLEAN_DARK] === undefined || settings[KEY_BOOLEAN_DARK] === true) {
+            const darkStyleObject = await fromStorage(keysGeneral.dark);
+            const darkStyle = darkStyleObject[keysGeneral.dark];
+            injectStyle(darkStyle, styleIds.general.dark);
+            injectStyle(websiteProps.dark, styleIds.custom.dark);
+            document.body.classList.add('dark');
+        }
+    }
+    initedHost = {
+        custom: websiteProps,
+        darkText: darkStyle,
+        defaultText: defaultStyle
+    }
+}
+
 /*
 alternatief voor initHost via background
  */
@@ -308,28 +332,7 @@ async function contentInitHost() {
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
-        const websiteProps = websitePropsObject[hostName];
-        const defaultStyleObject = await fromStorage(keysGeneral.default);
-        const defaultStyle = defaultStyleObject[keysGeneral.default];
-        const darkStyleObject = await fromStorage(keysGeneral.dark);
-        const darkStyle = darkStyleObject[keysGeneral.dark];
-        if (websiteProps && websiteProps.active === 'on') {
-            if (settings[KEY_BOOLEAN_READER]) {
-                injectStyle(defaultStyle, styleIds.general.default);
-                injectStyle(websiteProps.default, styleIds.custom.default);
-                select(websiteProps.selector);
-            }
-            if (settings[KEY_BOOLEAN_DARK]) {
-                injectStyle(darkStyle, styleIds.general.dark);
-                injectStyle(websiteProps.dark, styleIds.custom.dark);
-                document.body.classList.add('dark');
-            }
-        }
-        initedHost = {
-            custom: websiteProps,
-            darkText: darkStyle,
-            defaultText: defaultStyle
-        }
+        await setStyles(websitePropsObject[hostName], settings);
         getHostDelay(hostName).then(delay => {
             if (delay) {
                 setTimeout(() => reinjectStyles(), +delay);
