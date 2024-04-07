@@ -3,6 +3,8 @@ console.log("*** contentscript loaded for jreader!");
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
+const KEY_BOOLEAN_READER = '__readermode';
+const KEY_BOOLEAN_DARK = '__darkmode';
 const keysGeneral = {
     default: '_default',
     dark: '_dark'
@@ -278,16 +280,6 @@ function fromStorage(keys) {
     });
 }
 
-async function injectCustomStyles(websiteProps) {
-    injectStyle(websiteProps.default, styleIds.custom.default);
-    injectStyle(websiteProps.dark, styleIds.custom.dark);
-}
-
-function injectGeneralStyles(defaultStyle, darkStyle) {
-    injectStyle(defaultStyle, styleIds.general.default);
-    injectStyle(darkStyle, styleIds.general.dark);
-}
-
 function getClassAndIdNames() {
     /* verzamel class namen voor autocomplete lijst in monaco editor */
     /* gebruik een set om dubbelen te voorkomen */
@@ -310,21 +302,28 @@ function getClassAndIdNames() {
 alternatief voor initHost via background
  */
 async function contentInitHost() {
-    console.log('*** in contentInitHost')
+    console.log('*** in contentInitHost');
+    const settings = await fromStorage([KEY_BOOLEAN_READER, KEY_BOOLEAN_DARK]);
     const hostName = getJcReaderHost(document.location.href);
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
         const websiteProps = websitePropsObject[hostName];
         const defaultStyleObject = await fromStorage(keysGeneral.default);
-        const darkStyleObject = await fromStorage(keysGeneral.dark);
         const defaultStyle = defaultStyleObject[keysGeneral.default];
+        const darkStyleObject = await fromStorage(keysGeneral.dark);
         const darkStyle = darkStyleObject[keysGeneral.dark];
         if (websiteProps && websiteProps.active === 'on') {
-            injectGeneralStyles(defaultStyle, darkStyle);
-            injectCustomStyles(websiteProps).then();
-            select(websiteProps.selector);
-            document.body.classList.add('dark');
+            if (settings[KEY_BOOLEAN_READER]) {
+                injectStyle(defaultStyle, styleIds.general.default);
+                injectStyle(websiteProps.default, styleIds.custom.default);
+                select(websiteProps.selector);
+            }
+            if (settings[KEY_BOOLEAN_DARK]) {
+                injectStyle(darkStyle, styleIds.general.dark);
+                injectStyle(websiteProps.dark, styleIds.custom.dark);
+                document.body.classList.add('dark');
+            }
         }
         initedHost = {
             custom: websiteProps,
