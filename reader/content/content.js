@@ -299,17 +299,17 @@ function getClassAndIdNames() {
 }
 
 async function setStyles(websiteProps, settings) {
+    const darkStyleObject = await fromStorage(keysGeneral.dark);
+    const darkStyle = darkStyleObject[keysGeneral.dark];
+    const defaultStyleObject = await fromStorage(keysGeneral.default);
+    const defaultStyle = defaultStyleObject[keysGeneral.default];
     if (websiteProps && websiteProps.active === 'on') {
         if (settings[KEY_BOOLEAN_READER] === undefined || settings[KEY_BOOLEAN_READER] === true) {
-            const defaultStyleObject = await fromStorage(keysGeneral.default);
-            const defaultStyle = defaultStyleObject[keysGeneral.default];
             injectStyle(defaultStyle, styleIds.general.default);
             injectStyle(websiteProps.default, styleIds.custom.default);
             select(websiteProps.selector);
         }
         if (settings[KEY_BOOLEAN_DARK] === undefined || settings[KEY_BOOLEAN_DARK] === true) {
-            const darkStyleObject = await fromStorage(keysGeneral.dark);
-            const darkStyle = darkStyleObject[keysGeneral.dark];
             injectStyle(darkStyle, styleIds.general.dark);
             injectStyle(websiteProps.dark, styleIds.custom.dark);
             document.body.classList.add('dark');
