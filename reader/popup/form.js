@@ -1,15 +1,7 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
-import {setSwitch, toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
+import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 import {getCurrentHost} from "../background/host.js";
-
-const STORAGE = chrome.storage.local;
-const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
-const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
-
-function undefinedOrTrue(x) {
-    return x === undefined || x === true;
-}
 
 function closeMe() {
     close();
@@ -67,19 +59,23 @@ function apply() {
         });
 }
 
-function formsExistingOrNew(hostExists) {
-    const existing = document.getElementById('existing-reader-dialog');
-    const newview = document.getElementById('new-reader-dialog');
-    const generalControls = document.querySelector('.general-controls');
-    if (hostExists) {
-        existing.style.display = 'block';
-        newview.style.display = 'none';
-        generalControls.style.display = 'block';
-    } else {
-        existing.style.display = 'none';
-        newview.style.display = 'block';
-        generalControls.style.display = 'none';
+function showElement(elementId, visible) {
+    if (!document.getElementById(elementId)) {
+        console.log('*** id not exists:' + elementId)
     }
+    document.getElementById(elementId).style.display = visible ? 'block' : 'none';
+}
+
+function showExisting() {
+    showElement('existing-reader-dialog', true);
+    showElement('new-reader-dialog', false);
+    showElement('general-controls', true);
+}
+
+function showNew() {
+    showElement('existing-reader-dialog', false);
+    showElement('new-reader-dialog', true);
+    showElement('general-controls', false);
 }
 
 function replace() {
@@ -93,8 +89,8 @@ function handleFormClickActions() {
         ['new-answer-yes', postNew],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        ['general-toggle-switch', toggleGeneralSettings],
-        ['dark-toggle-switch', toggleDarkSettings],
+        // ['general-toggle-switch', toggleGeneralSettings],
+        // ['dark-toggle-switch', toggleDarkSettings],
         ['cmd-replace', replace],
     ];
     for (const binding of clickBindings) {
@@ -128,11 +124,4 @@ function handleFormKeydown() {
     })
 }
 
-function initSwitches() {
-    STORAGE.get([KEY_BOOLEAN_CUSTOM_DARK, KEY_BOOLEAN_CUSTOM_READER], results => {
-        setSwitch('dark-toggle-switch', undefinedOrTrue(results[KEY_BOOLEAN_CUSTOM_DARK]));
-        setSwitch('general-toggle-switch', undefinedOrTrue(results[KEY_BOOLEAN_CUSTOM_READER]));
-    })
-}
-
-export {handleFormClickActions, handleFormKeydown, formsExistingOrNew, save, apply, initSwitches}
+export {handleFormClickActions, handleFormKeydown, showExisting, showNew, save, apply}

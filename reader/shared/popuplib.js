@@ -6,18 +6,6 @@ function messageToContent(message) {
     })
 }
 
-function setSwitch(switchElementId, state) {
-    const switchElement = document.getElementById(switchElementId);
-    const classList = switchElement.classList;
-    if (state) {
-        classList.remove('off');
-        classList.add('on');
-    } else {
-        classList.remove('on');
-        classList.add('off');
-    }
-}
-
 function toggleOnOff(classList, cb) {
     if (classList.contains('on')) {
         classList.remove('on');
@@ -32,12 +20,16 @@ function toggleOnOff(classList, cb) {
 
 function toggleGeneralSettings(e) {
     toggleOnOff(e.target.classList, mode =>
-        messageToContent({message: 'toggleGeneralContent', mode}))
+    {
+        messageToContent({message: 'toggleGeneralContent', mode})
+    })
 }
 
 function toggleDarkSettings(e) {
     toggleOnOff(e.target.classList, mode =>
-        messageToContent({message: 'toggleDarkContent', mode}))
+    {
+        messageToContent({message: 'toggleDarkContent', mode})
+    })
 }
 
-export {toggleGeneralSettings, toggleDarkSettings, messageToContent, setSwitch}
+export {toggleGeneralSettings, toggleDarkSettings, messageToContent}

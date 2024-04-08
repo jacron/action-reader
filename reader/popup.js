@@ -3,8 +3,8 @@ import {toggleDarkSettings, toggleGeneralSettings} from "./shared/popuplib.js";
 import {createWin} from "./background/openEditors.js";
 
 function isWindowExistent(windowId) {
-    return new Promise((resolve, reject) => {
-        chrome.windows.get(windowId, (window) => {
+    return new Promise((resolve) => {
+        chrome.windows.get(windowId, () => {
             if (chrome.runtime.lastError) {
                 // Window not found, likely doesn't exist
                 resolve(false);
@@ -28,7 +28,7 @@ function _openWin() {
 }
 
 function closeWin() {
-    chrome.windows.remove(background.winId);
+    chrome.windows.remove(background.winId).then();
     background.winId = null;
 }
 

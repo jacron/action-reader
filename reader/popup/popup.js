@@ -1,54 +1,49 @@
-import {handleFormClickActions, formsExistingOrNew, handleFormKeydown, initSwitches} from './form.js';
-import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
+import {handleFormClickActions, handleFormKeydown, showExisting, showNew} from './form.js';
+import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
 import {registerSuggestions} from "./suggestions.js";
-import {Host} from "../background/host.js";
 import {initDelay} from "./delay.js";
 import {handleKeyboardDown} from "./keyboardDown.js";
+import {initSwitches} from "./switches.js";
 
+const STORAGE = chrome.storage.local;
 const KEY_OPENED_HOST = '_opened_host';
+const KEY_DEFAULT = '_default';
+const KEY_DARK = '_dark';
 
-function initHost() {
-    chrome.storage.local.get([KEY_OPENED_HOST], results => {
-        const _activeHost = results[KEY_OPENED_HOST];
-        console.log('*** activeHost=' + _activeHost)
-        popup.activeHost = _activeHost;
-        document.getElementById('host-name').innerText = _activeHost;
-        const host = new Host(_activeHost);
-        host.getCustom().then(responseCustom => {
-            host.getGeneral().then(responseGeneral => {
-                const custom = responseCustom[_activeHost];
-                formsExistingOrNew(custom);
-                if (custom) {
-                    initTabs(custom, responseGeneral);
-                    initSuperTabs();
-                } else {
-                    document.getElementById('new-host-name').innerText = _activeHost;
-                }
-                initDelay(_activeHost);
-            });
-        }).catch(err => {
-            console.error(err);
-        });
-    })
+function initEditors(results, _activeHost) {
+    const custom = results[_activeHost];
+    if (custom) {
+        showExisting();
+        initTabs(custom, results[KEY_DEFAULT], results[KEY_DARK]);
+        initSuperTabs();
+        initSwitches(_activeHost, custom);
+    } else {
+        showNew();
+        document.getElementById('new-host-name').innerText = _activeHost;
+    }
+    initDelay(_activeHost);
 }
 
-function handleTabClickActions() {
-    document.getElementById('tabs').addEventListener('click', tabsClickHandler);
-    document.getElementById('super-tabs').addEventListener('click', superTabsClickHandler);
+function initHost(_activeHost) {
+    console.log('*** activeHost=' + _activeHost)
+    popup.activeHost = _activeHost;
+    document.getElementById('host-name').innerText = _activeHost;
+    STORAGE.get([_activeHost, KEY_DEFAULT, KEY_DARK], results => {
+        initEditors(results, _activeHost);
+    })
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     handleFormClickActions();
     handleFormKeydown();
-    initSwitches();
     handleTabClickActions();
     handleKeyboardDown();
-    initHost();
+    STORAGE.get([KEY_OPENED_HOST], results => {
+        initHost(results[KEY_OPENED_HOST]);
+    })
     /* require werkt hier dankzij monaco library */
-    require.config({ paths: {
-            vs: vsPath,
-        }});
+    require.config({ paths: { vs: vsPath}});
     registerSuggestions();
 });

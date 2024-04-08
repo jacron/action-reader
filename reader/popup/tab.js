@@ -78,11 +78,12 @@ function superTabsClickHandler(e) {
     }
 }
 
-function initTabs(custom, responseGeneral) {
-    const defaultText = responseGeneral['_default'];
-    const darkText = responseGeneral['_dark'];
+function handleTabClickActions() {
+    document.getElementById('tabs').addEventListener('click', tabsClickHandler);
+    document.getElementById('super-tabs').addEventListener('click', superTabsClickHandler);
+}
 
-    // const {custom, darkText, defaultText} = req;
+function initTabs(custom, defaultText, darkText) {
     monacoDocuments.default.text = custom.default;
     monacoDocuments.dark.text = custom.dark;
     monacoDocuments.selector.text = custom.selector;
@@ -94,5 +95,4 @@ function initSuperTabs() {
     selectSuperTab('custom');
 }
 
-export {superTabsClickHandler, tabsClickHandler,
-    selectTab, initTabs, initSuperTabs}
+export { handleTabClickActions, selectTab, initTabs, initSuperTabs}
