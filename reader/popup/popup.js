@@ -1,93 +1,36 @@
-import {handleFormClickActions, formsExistingOrNew, save, apply, handleFormKeydown} from './form.js';
+import {handleFormClickActions, formsExistingOrNew, handleFormKeydown, initSwitches} from './form.js';
 import {tabsClickHandler, superTabsClickHandler, initTabs, initSuperTabs} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
 import {registerSuggestions} from "./suggestions.js";
-import {insertText} from "./editor.js";
 import {Host} from "../background/host.js";
+import {initDelay} from "./delay.js";
+import {handleKeyboardDown} from "./keyboardDown.js";
+
+const KEY_OPENED_HOST = '_opened_host';
 
 function initHost() {
-    chrome.runtime.sendMessage({
-        request: 'initHost',
-        client: 'popup'}, () => {});
-}
-
-function getHostDelay(hostName) {
-    return new Promise((resolve) => {
-        const host = new Host(hostName);
-        host.getCustom().then(results => {
-            const obj = results[hostName];
-            if (obj) {
-                resolve(obj.delay);
-            }
-        })
-    })
-}
-
-function initDelay(hostName) {
-    getHostDelay(hostName).then(delay => {
-        const inputDelay = document.getElementById('editor-input-delay');
-        inputDelay.value = delay || '';
-    })
-}
-
-function onInitHost(req) {
-    popup.activeHost = req.host;
-    document.getElementById('host-name').innerText = req.host;
-    formsExistingOrNew(req.custom);
-    if (req.custom) {
-        initTabs(req);
-        initSuperTabs();
-    } else {
-        document.getElementById('new-host-name').innerText = req.host;
-    }
-    initDelay(req.host);
-}
-
-function dataToText(data) {
-    const {targetClasses, targetId} = data;
-    let text = targetClasses.join('.');
-    if (text.length) {
-        text = '.' + text;
-    }
-    if (targetId) {
-        text += '#' + targetId;
-    }
-    console.log(text);
-    return text + '\n';
-}
-
-function messageListener(req, sender, sendResponse) {
-    switch(req.message) {
-        case 'onInitHost':
-            onInitHost(req);
-            sendResponse('handled');
-            break;
-        case 'contextMenuClickTarget':
-            insertText(dataToText(req.data));
-            sendResponse('handled');
-            break;
-        default:
-            sendResponse('no request handled');
-    }
-    return true;
-}
-
-function handleKeyboardDown() {
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            close();
-        }
-        if (e.metaKey && e.shiftKey && e.key === 's') {
-            // console.log('CmdShS gedrukt')
-            save();
-            e.preventDefault()
-        }
-        if (e.metaKey && e.shiftKey && e.key === 'a') {
-            // console.log('CmdShA gedrukt')
-            apply();
-            e.preventDefault()
-        }
+    chrome.storage.local.get([KEY_OPENED_HOST], results => {
+        const _activeHost = results[KEY_OPENED_HOST];
+        console.log('*** activeHost=' + _activeHost)
+        popup.activeHost = _activeHost;
+        document.getElementById('host-name').innerText = _activeHost;
+        const host = new Host(_activeHost);
+        host.getCustom().then(responseCustom => {
+            host.getGeneral().then(responseGeneral => {
+                const custom = responseCustom[_activeHost];
+                formsExistingOrNew(custom);
+                if (custom) {
+                    initTabs(custom, responseGeneral);
+                    initSuperTabs();
+                } else {
+                    document.getElementById('new-host-name').innerText = _activeHost;
+                }
+                initDelay(_activeHost);
+            });
+        }).catch(err => {
+            console.error(err);
+        });
     })
 }
 
@@ -99,6 +42,7 @@ function handleTabClickActions() {
 document.addEventListener('DOMContentLoaded', function () {
     handleFormClickActions();
     handleFormKeydown();
+    initSwitches();
     handleTabClickActions();
     handleKeyboardDown();
     initHost();
@@ -108,6 +52,3 @@ document.addEventListener('DOMContentLoaded', function () {
         }});
     registerSuggestions();
 });
-
-chrome.runtime.onMessage.addListener(messageListener);
-

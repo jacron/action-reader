@@ -1,4 +1,4 @@
-#action JCReader
+# action JCReader
 
 popup window shows status and some controls
 
@@ -14,7 +14,7 @@ prefix selector with @ to make it optional
 
 npm i
 
-for installing monaco editor
+# for installing monaco editor
 
 ## Voeg classes en ids van webpagina toe aan autocomplete lijsten van editor
 1. in content, na laden, maak een lijstje van classes en ids in de DOM en sla ze op in local storage van chrome
@@ -27,4 +27,20 @@ for installing monaco editor
 3. background na klik op item message sturen naar content met als inhoud, er is op mij geklikt
 4. content reageert op de message door zelf een message te sturen naar popup2 met als inhoud de uit de target afgeleide classes en id, afgesloten met een newline
 5. popup2 plakt de ontvangen classes (evt: en id) in op de plaats van de cursor in de actieve editor
+
+# data structuren in jreader
+
+## general (alle hosts)
+1. _dark
+2. _default
+3. _darkOn
+4. _readerOn
+
+## custom (per host)
+1. dark
+2. default
+3. darkOn
+4. defaultOn
+5. selector
+6. active
 

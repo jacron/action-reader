@@ -184,6 +184,7 @@ function _listSites(sites) {
 
 function listSites() {
     chrome.storage.local.get(null, sites1 => {
+        console.log(sites1);
         _listSites(sites1);
         sites = sites1;
     });

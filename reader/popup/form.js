@@ -1,7 +1,15 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
-import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
+import {setSwitch, toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 import {getCurrentHost} from "../background/host.js";
+
+const STORAGE = chrome.storage.local;
+const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
+const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
+
+function undefinedOrTrue(x) {
+    return x === undefined || x === true;
+}
 
 function closeMe() {
     close();
@@ -120,4 +128,11 @@ function handleFormKeydown() {
     })
 }
 
-export {handleFormClickActions, handleFormKeydown, formsExistingOrNew, save, apply}
+function initSwitches() {
+    STORAGE.get([KEY_BOOLEAN_CUSTOM_DARK, KEY_BOOLEAN_CUSTOM_READER], results => {
+        setSwitch('dark-toggle-switch', undefinedOrTrue(results[KEY_BOOLEAN_CUSTOM_DARK]));
+        setSwitch('general-toggle-switch', undefinedOrTrue(results[KEY_BOOLEAN_CUSTOM_READER]));
+    })
+}
+
+export {handleFormClickActions, handleFormKeydown, formsExistingOrNew, save, apply, initSwitches}

@@ -3,8 +3,11 @@ console.log("*** contentscript loaded for jreader!");
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
-const KEY_BOOLEAN_READER = '__readermode';
-const KEY_BOOLEAN_DARK = '__darkmode';
+const KEY_BOOLEAN_GENERAL_READER = '_readerOn';
+const KEY_BOOLEAN_GENERAL_DARK = '_darkOn';
+const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
+const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
+
 const keysGeneral = {
     default: '_default',
     dark: '_dark'
@@ -19,7 +22,12 @@ const styleIds = {
         dark: 'splash-dark-style'  // 'general-dark-style-id'
     }
 }
-let initedHost = null; // {custom, darkText, defaultText}
+let initedHost = {
+    custom: null,
+    darkText: null,
+    defaultText: null
+}
+
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
 
@@ -298,27 +306,41 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
-async function setStyles(websiteProps, settings) {
-    const darkStyleObject = await fromStorage(keysGeneral.dark);
-    const darkStyle = darkStyleObject[keysGeneral.dark];
-    const defaultStyleObject = await fromStorage(keysGeneral.default);
-    const defaultStyle = defaultStyleObject[keysGeneral.default];
-    if (websiteProps && websiteProps.active === 'on') {
-        if (settings[KEY_BOOLEAN_READER] === undefined || settings[KEY_BOOLEAN_READER] === true) {
+function undefinedOrTrue(x) {
+    return x === undefined || x === true;
+}
+
+async function setDefaultStyles(settings, websiteProps) {
+    if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_READER])) {
+        if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_READER])) {
+            const defaultStyleObject = await fromStorage(keysGeneral.default);
+            const defaultStyle = defaultStyleObject[keysGeneral.default];
             injectStyle(defaultStyle, styleIds.general.default);
-            injectStyle(websiteProps.default, styleIds.custom.default);
-            select(websiteProps.selector);
+            initedHost.defaultText = defaultStyle;
         }
-        if (settings[KEY_BOOLEAN_DARK] === undefined || settings[KEY_BOOLEAN_DARK] === true) {
-            injectStyle(darkStyle, styleIds.general.dark);
-            injectStyle(websiteProps.dark, styleIds.custom.dark);
-            document.body.classList.add('dark');
-        }
+        injectStyle(websiteProps.default, styleIds.custom.default);
+        select(websiteProps.selector);
     }
-    initedHost = {
-        custom: websiteProps,
-        darkText: darkStyle,
-        defaultText: defaultStyle
+}
+
+async function setDarkStyles(settings, websiteProps) {
+    if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_DARK])) {
+        if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_DARK])) {
+            const darkStyleObject = await fromStorage(keysGeneral.dark);
+            const darkStyle = darkStyleObject[keysGeneral.dark];
+            injectStyle(darkStyle, styleIds.general.dark);
+            initedHost.darkText = darkStyle;
+        }
+        injectStyle(websiteProps.dark, styleIds.custom.dark);
+        document.body.classList.add('dark');
+    }
+}
+
+async function setStyles(websiteProps, settings) {
+    initedHost.custom = websiteProps;
+    if (websiteProps && websiteProps.active === 'on') {
+        await setDefaultStyles(settings, websiteProps);
+        await setDarkStyles(settings, websiteProps);
     }
 }
 
@@ -327,8 +349,9 @@ alternatief voor initHost via background
  */
 async function contentInitHost() {
     console.log('*** in contentInitHost');
-    const settings = await fromStorage([KEY_BOOLEAN_READER, KEY_BOOLEAN_DARK]);
+    const settings = await fromStorage([KEY_BOOLEAN_GENERAL_READER, KEY_BOOLEAN_GENERAL_DARK]);
     const hostName = getJcReaderHost(document.location.href);
+    console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});

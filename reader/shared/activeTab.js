@@ -1,14 +1,15 @@
-function withActiveTab(cb) {
+function withActiveTab() {
     return new Promise((resolve, reject) => {
-        chrome.tabs.query({
-            active: true
-        }, tabs => {
-            if (tabs.length > 0) {
-                resolve(tabs[0]);
+        chrome.windows.getCurrent({
+            populate: true
+        }).then(window => {
+            const activeTab = window.tabs.filter(tab => tab.active);
+            if (activeTab.length > 0) {
+                resolve(activeTab[0]);
             } else {
                 reject();
             }
-        });
+        })
     })
 }
 

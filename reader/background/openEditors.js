@@ -1,5 +1,8 @@
 import {background} from "./backgroundState.js";
 import {withActiveTab} from "../shared/activeTab.js";
+import {getJcReaderHost} from "../lib/util.js";
+
+const KEY_OPENED_HOST = '_opened_host';
 
 function createWin(curWin) {
     let left = curWin.left - 500;
@@ -23,11 +26,12 @@ function openEditors() {
     if (!background.winId) {
         withActiveTab().then(tab => {
             chrome.windows.get(tab.windowId, curWin => {
+                chrome.storage.local.set({[KEY_OPENED_HOST]: getJcReaderHost(tab.url)});
                 createWin(curWin);
             })
         })
     } else {
-        chrome.windows.remove(background.winId).then();
+        chrome.windows.remove(background.winId).then().catch(() => {console.log('no window with id')});
         background.winId = null;
         background.tTabId = null;
     }

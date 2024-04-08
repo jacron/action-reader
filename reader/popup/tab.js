@@ -78,8 +78,11 @@ function superTabsClickHandler(e) {
     }
 }
 
-function initTabs(req) {
-    const {custom, darkText, defaultText} = req;
+function initTabs(custom, responseGeneral) {
+    const defaultText = responseGeneral['_default'];
+    const darkText = responseGeneral['_dark'];
+
+    // const {custom, darkText, defaultText} = req;
     monacoDocuments.default.text = custom.default;
     monacoDocuments.dark.text = custom.dark;
     monacoDocuments.selector.text = custom.selector;
