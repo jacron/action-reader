@@ -1,12 +1,11 @@
-console.log("*** contentscript loaded for jreader!");
 
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
-const KEY_BOOLEAN_GENERAL_READER = '_readerOn';
-const KEY_BOOLEAN_GENERAL_DARK = '_darkOn';
-const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
-const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
+// const KEY_BOOLEAN_GENERAL_READER = '_readerOn';
+// const KEY_BOOLEAN_GENERAL_DARK = '_darkOn';
+// const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
+// const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
 
 const keysGeneral = {
     default: '_default',
@@ -103,7 +102,7 @@ function getNodes(selector) {
         if (node) {
             nodes.push(node);
         } else if (!optional) {
-            console.log(sel, ' is not a node');
+            console.log(`*${sel}* is not a node`);
             nodes = [];
             break;
         }
@@ -112,18 +111,14 @@ function getNodes(selector) {
 }
 
 function injectArticle(nodes) {
-    if (nodes.length > 0) {
-        const readerArticle = createArticle(nodes);
-        const container = createContainer();
-        container.appendChild(readerArticle);
-        setTimeout(() => {
-            document.body.appendChild(container);
-            console.log('readerArticle appended');
-            readerArticle.focus();
-        }, 100);
-    } else {
-        console.log('No content for reader found');
-    }
+    const readerArticle = createArticle(nodes);
+    const container = createContainer();
+    container.appendChild(readerArticle);
+    setTimeout(() => {
+        document.body.appendChild(container);
+        console.log('readerArticle appended');
+        readerArticle.focus();
+    }, 100);
 }
 
 function deleteReader() {
@@ -147,9 +142,15 @@ function select(selector) {
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
         const nodes = getNodes(selectors);
-        injectArticle(nodes);
-        setFocus();
+        if (nodes.length > 0) {
+            injectArticle(nodes);
+            setFocus();
+            return true;
+        } else {
+            console.log('No content for reader found');
+        }
     }
+    return false;
 }
 
 function addDark() {
@@ -176,16 +177,18 @@ function removeDark() {
 function onInitHost(req) {
     const {custom, darkText, defaultText} = req;
     initedHost = req;
-    if (custom && custom.active === 'on')
+    // if (custom && custom.active === 'on')
     {
-        injectStyle(defaultText, 'splash-default-style');
-        injectStyle(darkText, 'splash-dark-style');
+        if (select(custom.selector)) {
+            injectStyle(defaultText, 'splash-default-style');
+            injectStyle(darkText, 'splash-dark-style');
+        }
         injectStyle(custom.default, 'splash-custom-default-style');
         injectStyle(custom.dark, 'splash-custom-dark-style');
         document.body.classList.add('dark');
-        setTimeout(() => {
-            select(custom.selector);
-        }, 200);
+        // setTimeout(() => {
+        //     select(custom.selector);
+        // }, 200);
     }
 }
 
@@ -306,41 +309,45 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
-function undefinedOrTrue(x) {
-    return x === undefined || x === true;
-}
+// function undefinedOrTrue(x) {
+//     return x === undefined || x === true;
+// }
 
-async function setDefaultStyles(settings, websiteProps) {
-    if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_READER])) {
-        if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_READER])) {
-            const defaultStyleObject = await fromStorage(keysGeneral.default);
-            const defaultStyle = defaultStyleObject[keysGeneral.default];
-            injectStyle(defaultStyle, styleIds.general.default);
-            initedHost.defaultText = defaultStyle;
-        }
-        injectStyle(websiteProps.default, styleIds.custom.default);
-        select(websiteProps.selector);
+async function setDefaultStyles(settings, websiteProps, immersive) {
+    // if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_READER])) {
+    //     if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_READER])) {
+    if (immersive) {
+        const defaultStyleObject = await fromStorage(keysGeneral.default);
+        const defaultStyle = defaultStyleObject[keysGeneral.default];
+        injectStyle(defaultStyle, styleIds.general.default);
+        initedHost.defaultText = defaultStyle;
     }
+        // }
+        injectStyle(websiteProps.default, styleIds.custom.default);
+    // }
 }
 
-async function setDarkStyles(settings, websiteProps) {
-    if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_DARK])) {
-        if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_DARK])) {
-            const darkStyleObject = await fromStorage(keysGeneral.dark);
-            const darkStyle = darkStyleObject[keysGeneral.dark];
-            injectStyle(darkStyle, styleIds.general.dark);
-            initedHost.darkText = darkStyle;
-        }
+async function setDarkStyles(settings, websiteProps, immersive) {
+    // if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_DARK])) {
+    //     if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_DARK])) {
+    if (immersive) {
+        const darkStyleObject = await fromStorage(keysGeneral.dark);
+        const darkStyle = darkStyleObject[keysGeneral.dark];
+        injectStyle(darkStyle, styleIds.general.dark);
+        initedHost.darkText = darkStyle;
+    }
+        // }
         injectStyle(websiteProps.dark, styleIds.custom.dark);
         document.body.classList.add('dark');
-    }
+    // }
 }
 
 async function setStyles(websiteProps, settings) {
     initedHost.custom = websiteProps;
     if (websiteProps && websiteProps.active === 'on') {
-        await setDefaultStyles(settings, websiteProps);
-        await setDarkStyles(settings, websiteProps);
+        const immersive = select(websiteProps.selector);
+        await setDefaultStyles(settings, websiteProps, immersive);
+        await setDarkStyles(settings, websiteProps, immersive);
     }
 }
 
@@ -349,10 +356,11 @@ alternatief voor initHost via background
  */
 async function contentInitHost() {
     console.log('*** in contentInitHost');
-    const settings = await fromStorage([KEY_BOOLEAN_GENERAL_READER, KEY_BOOLEAN_GENERAL_DARK]);
+    // const settings = await fromStorage([KEY_BOOLEAN_GENERAL_READER, KEY_BOOLEAN_GENERAL_DARK]);
     const hostName = getJcReaderHost(document.location.href);
     console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
+    const settings = null;  // placehodler for obsolete
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
         await setStyles(websitePropsObject[hostName], settings);
@@ -371,8 +379,43 @@ function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
 
-contentInitHost().then(() => {
-    getClassAndIdNames();
-});
+// function inspectStylesheet(stylesheet) {
+//     for (const cssrule of stylesheet.cssRules) {
+//         if (cssrule.style) {
+//             if (cssrule.style.background) {
+//                 console.log('*** background=' + cssrule.style.background);
+//                 console.log(cssrule.selectorText);
+//             }
+//             if (cssrule.style.backgroundColor) {
+//                 console.log('*** backgroundColor=' + cssrule.style.backgroundColor);
+//             }
+//             // if (cssrule.style.color) {
+//             //     console.log('*** color=' + cssrule.style.color);
+//             //     console.log(cssrule.selectorText)
+//             // }
+//         }
+//     }
+// }
+//
+// function inspectBackgroundColor() {
+//     for (const stylesheet of document.styleSheets) {
+//         console.log('****** stylesheet');
+//         console.log(stylesheet.href); // URL van het stylesheet
+//         try {
+//             inspectStylesheet(stylesheet)
+//         } catch (e) {
+//             console.log('@@@ error with url:' + stylesheet.href);
+//             console.error(e)
+//         }
+//     }
+// }
 
-chrome.runtime.onMessage.addListener(messageListener);
+export function main() {
+    console.log("*** contentscript loaded for jreader!");
+    // inspectBackgroundColor();
+    contentInitHost().then(() => {
+        getClassAndIdNames();
+    });
+    chrome.runtime.onMessage.addListener(messageListener);
+}
+

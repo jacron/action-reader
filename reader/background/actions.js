@@ -72,6 +72,35 @@ function applyHost(req, sendResponse) {
     }
 }
 
+function _initHost(req, _activeHost, sendResponse) {
+    const host = new Host(_activeHost);
+    host.getCustom().then(responseCustom => {
+        host.getGeneral().then(responseGeneral => {
+            const res = {
+                message: 'onInitHost',
+                host: _activeHost,
+                custom: responseCustom[_activeHost],
+                defaultText: responseGeneral['_default'],
+                darkText: responseGeneral['_dark']
+            };
+            chrome.runtime.sendMessage(res, () => {});
+            sendResponse(false);
+        });
+    }).catch(err => {
+        console.error(err);
+        sendResponse(false);
+    });
+}
+
+function initHost(req, sendResponse) {
+    console.log('*** initHost in actions.js...')
+    withActiveTab().then(tab => {
+        const _activeHost = getJcReaderHost(tab.url);
+        _initHost(req, _activeHost, sendResponse);
+    })
+    return true;
+}
+
 const actionBindings = {
     saveHost,
     applyHost,

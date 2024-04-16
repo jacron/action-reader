@@ -8,7 +8,11 @@ function messageListener(req, sender, sendResponse) {
 }
 
 function activateListener(activeInfo) {
-    chrome.tabs.get(activeInfo.tabId, activeTab => updateBadge(activeTab.url));
+    chrome.tabs.get(activeInfo.tabId, activeTab => {
+        if (activeTab) {
+            updateBadge(activeTab.url)
+        }
+    });
 }
 
 function updateListener(_tabId, info) {
