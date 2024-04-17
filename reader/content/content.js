@@ -46,7 +46,7 @@ function getJcReaderHost(url) {
     if (!url) {
         return url;
     }
-    url = url.replace(/http[s]?:\/\//, '');
+    url = url.replace(/https?:\/\//, '');
     const host = url.split('/')[0];
     return host.replace('www.', '');
 }
@@ -174,24 +174,6 @@ function removeDark() {
     });
 }
 
-function onInitHost(req) {
-    const {custom, darkText, defaultText} = req;
-    initedHost = req;
-    // if (custom && custom.active === 'on')
-    {
-        if (select(custom.selector)) {
-            injectStyle(defaultText, 'splash-default-style');
-            injectStyle(darkText, 'splash-dark-style');
-        }
-        injectStyle(custom.default, 'splash-custom-default-style');
-        injectStyle(custom.dark, 'splash-custom-dark-style');
-        document.body.classList.add('dark');
-        // setTimeout(() => {
-        //     select(custom.selector);
-        // }, 200);
-    }
-}
-
 function reSelect(req) {
     select(req.selector);
 }
@@ -260,8 +242,6 @@ function toggleReader() {
 }
 
 const actionBindings = {
-    initHost: contentInitHost,
-    onInitHost,  // called from initHost (actions.js)
     replaceStyle,
     reSelect,
     toggleGeneralContent,
@@ -351,12 +331,8 @@ async function setStyles(websiteProps, settings) {
     }
 }
 
-/*
-alternatief voor initHost via background
- */
 async function contentInitHost() {
     console.log('*** in contentInitHost');
-    // const settings = await fromStorage([KEY_BOOLEAN_GENERAL_READER, KEY_BOOLEAN_GENERAL_DARK]);
     const hostName = getJcReaderHost(document.location.href);
     console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
@@ -378,37 +354,6 @@ message from background/actions.js
 function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
-
-// function inspectStylesheet(stylesheet) {
-//     for (const cssrule of stylesheet.cssRules) {
-//         if (cssrule.style) {
-//             if (cssrule.style.background) {
-//                 console.log('*** background=' + cssrule.style.background);
-//                 console.log(cssrule.selectorText);
-//             }
-//             if (cssrule.style.backgroundColor) {
-//                 console.log('*** backgroundColor=' + cssrule.style.backgroundColor);
-//             }
-//             // if (cssrule.style.color) {
-//             //     console.log('*** color=' + cssrule.style.color);
-//             //     console.log(cssrule.selectorText)
-//             // }
-//         }
-//     }
-// }
-//
-// function inspectBackgroundColor() {
-//     for (const stylesheet of document.styleSheets) {
-//         console.log('****** stylesheet');
-//         console.log(stylesheet.href); // URL van het stylesheet
-//         try {
-//             inspectStylesheet(stylesheet)
-//         } catch (e) {
-//             console.log('@@@ error with url:' + stylesheet.href);
-//             console.error(e)
-//         }
-//     }
-// }
 
 export function main() {
     console.log("*** contentscript loaded for jreader!");

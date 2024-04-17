@@ -16,6 +16,7 @@ function initEditors(results, _activeHost) {
     const custom = results[_activeHost];
     if (custom) {
         showExisting();
+        document.getElementById('host-name').innerText = _activeHost;
         initTabs(custom, results[KEY_DEFAULT], results[KEY_DARK]);
         initSuperTabs();
         initSwitches(_activeHost, custom);
@@ -29,7 +30,6 @@ function initEditors(results, _activeHost) {
 function initHost(_activeHost) {
     console.log('*** activeHost=' + _activeHost)
     popup.activeHost = _activeHost;
-    document.getElementById('host-name').innerText = _activeHost;
     STORAGE.get([_activeHost, KEY_DEFAULT, KEY_DARK], results => {
         initEditors(results, _activeHost);
     })

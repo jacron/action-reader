@@ -1,8 +1,10 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
-import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
+// import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 import {getCurrentHost} from "../background/host.js";
 import {initHost} from "./popup.js";
+import {StorageArea} from "../background/backgroundState.js";
+import {applyHost, saveHost} from "./saveHost.js";
 
 function closeMe() {
     close();
@@ -10,55 +12,64 @@ function closeMe() {
 
 function postNew() {
     console.log('activeHost', popup.activeHost);
-    chrome.runtime.sendMessage({
-        request: 'newHost',
-        host: popup.activeHost
-    }, () => {
+    StorageArea.set({[popup.activeHost]: {}}, () => {
         initHost(popup.activeHost);
-        // chrome.runtime.sendMessage({
-        //     request: 'initHost',
-        //     client: 'popup'
-        // }, () => { });
     });
 }
 
-function updateDocument(doc) {
+function updateDocument() {
+    const doc = popup.activeDoc
     doc.text = doc.editor.getValue();
 }
 
 function save() {
+    updateDocument();
+    saveHost();
+    popup.activeDoc.editor.focus();
+    popup.activeDoc.lastSavedVersion =
+        popup.activeDoc.editor
+            .getModel()
+            .getAlternativeVersionId();
+    setDirty(false, popup.activeDoc);
+
+
     /** saveHost active document, handled in actions */
-    updateDocument(popup.activeDoc);
-    chrome.runtime.sendMessage({
-        request: 'saveHost',
-        name: popup.activeDoc.name,
-        text: popup.activeDoc.text,
-        styleId: popup.activeDoc.styleId,
-        host: popup.activeHost,
-    }, () => {
-        popup.activeDoc.editor.focus();
-        popup.activeDoc.lastSavedVersion =
-            popup.activeDoc.editor
-                .getModel()
-                .getAlternativeVersionId();
-        setDirty(false, popup.activeDoc);
-    });
+    // chrome.runtime.sendMessage({
+    //     request: 'saveHost',
+    //     name: popup.activeDoc.name,
+    //     text: popup.activeDoc.text,
+    //     styleId: popup.activeDoc.styleId,
+    //     host: popup.activeHost,
+    // }, () => {
+    //     popup.activeDoc.editor.focus();
+    //     popup.activeDoc.lastSavedVersion =
+    //         popup.activeDoc.editor
+    //             .getModel()
+    //             .getAlternativeVersionId();
+    //     setDirty(false, popup.activeDoc);
+    // });
 }
 
 function apply() {
-    updateDocument(popup.activeDoc);
     console.log('activeDoc', popup.activeDoc);
-    chrome.runtime.sendMessage({
-            request: 'applyHost',
-            name: popup.activeDoc.name,
-            text: popup.activeDoc.text,
-            host: popup.activeHost,
-            styleId: popup.activeDoc.styleId,
-        },
-        () => {
-            popup.activeDoc.editor.focus();
-            setDirty(false, popup.activeDoc);
-        });
+    updateDocument();
+    applyHost();
+    popup.activeDoc.editor.focus();
+    setDirty(false, popup.activeDoc);
+
+
+
+    // chrome.runtime.sendMessage({
+    //         request: 'applyHost',
+    //         name: popup.activeDoc.name,
+    //         text: popup.activeDoc.text,
+    //         host: popup.activeHost,
+    //         styleId: popup.activeDoc.styleId,
+    //     },
+    //     () => {
+    //         popup.activeDoc.editor.focus();
+    //         setDirty(false, popup.activeDoc);
+    //     });
 }
 
 function showElement(elementId, visible) {
