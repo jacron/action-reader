@@ -47,3 +47,5 @@ document.addEventListener('DOMContentLoaded', function () {
     require.config({ paths: { vs: vsPath}});
     registerSuggestions();
 });
+
+export {initHost}

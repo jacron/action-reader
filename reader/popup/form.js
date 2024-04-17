@@ -2,6 +2,7 @@ import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
 import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
 import {getCurrentHost} from "../background/host.js";
+import {initHost} from "./popup.js";
 
 function closeMe() {
     close();
@@ -13,10 +14,11 @@ function postNew() {
         request: 'newHost',
         host: popup.activeHost
     }, () => {
-        chrome.runtime.sendMessage({
-            request: 'initHost',
-            client: 'popup'
-        }, () => { });
+        initHost(popup.activeHost);
+        // chrome.runtime.sendMessage({
+        //     request: 'initHost',
+        //     client: 'popup'
+        // }, () => { });
     });
 }
 
