@@ -1,7 +1,17 @@
-import {Host, storeDark, storeDefault} from "../background/host.js";
-import {background} from "../background/backgroundState.js";
+import {Host} from "../background/host.js";
+import {background, StorageArea} from "../background/backgroundState.js";
 import {popup} from "./popupState.js";
-import {withActiveTab} from "../shared/activeTab.js";
+
+const KEY_DEFAULT = '_default';
+const KEY_DARK = '_dark';
+
+function storeDefault(css) {
+    StorageArea.set({[KEY_DEFAULT]: css}).then(() => {})
+}
+
+function storeDark(css) {
+    StorageArea.set({[KEY_DARK]: css}).then(() => {})
+}
 
 function saveHost() {
     const host = new Host(popup.activeHost);
@@ -24,7 +34,6 @@ function saveHost() {
             storeDark(text);
             break;
     }
-    // sendResponse({data: 'ok'});
 }
 
 function injectCss(tabId) {
@@ -52,15 +61,12 @@ function _applyHost(tabId) {
     if (name === 'selector') {
         reInjectMakeReader(text, tabId);
     }
-    // sendResponse({data: 'ok'});
 }
 
 function applyHost() {
     const tabId = background.tabId;
     if (!tabId) {
-        // withActiveTab().then(tab => {
-        //     _applyHost(tab.id);
-        // })
+        // NIET withActiveTab gebruiken!
         chrome.tabs.query({
             active: true
         }, tabs => {

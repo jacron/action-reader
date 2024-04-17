@@ -1,9 +1,5 @@
 import {StorageArea} from "./backgroundState.js";
 
-const KEY_DEFAULT = '_default';
-const KEY_DARK = '_dark';
-const KEY_HOSTNAME = 'hostname';
-
 class Host {
     constructor(name) {
         this.name = name;
@@ -58,37 +54,6 @@ class Host {
         });
     }
 
-    getGeneral() {
-        const keys = [KEY_DEFAULT, KEY_DARK];
-        return new Promise((resolve) => {
-            StorageArea.get(keys, results => {
-                resolve(results)
-            });
-        });
-    }
 }
 
-function storeDefault(css) {
-    StorageArea.set({[KEY_DEFAULT]: css}).then(() => {})
-}
-
-function storeDark(css) {
-    StorageArea.set({[KEY_DARK]: css}).then(() => {})
-}
-
-function getCurrentHost() {
-    return new Promise((resolve, reject) => {
-        StorageArea.get([KEY_HOSTNAME], results => {
-            if (results) {
-                resolve(new Host(results[KEY_HOSTNAME]));
-            } else reject();
-        })
-    })
-}
-
-/* delete host: for options/storage */
-function deleteHost(key) {
-    StorageArea.remove([key]).then(() => {});
-}
-
-export { Host, storeDark, storeDefault, deleteHost, getCurrentHost}
+export { Host }

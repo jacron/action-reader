@@ -2,10 +2,6 @@ import {updateBadge} from "./badge.js";
 import {messageToContent} from "../shared/popuplib.js";
 import {closeEditors, openEditors} from "./openEditors.js";
 
-// function messageListener(req, sender, sendResponse) {
-//     initActions(req, sendResponse, sender);
-// }
-
 function activateListener(activeInfo) {
     chrome.tabs.get(activeInfo.tabId, activeTab => {
         if (activeTab) {
@@ -39,5 +35,4 @@ function commandListener(command) {
 
 chrome.tabs.onUpdated.addListener(updateListener);
 chrome.tabs.onActivated.addListener(activateListener);
-// chrome.runtime.onMessage.addListener(messageListener);
 chrome.commands.onCommand.addListener(commandListener);

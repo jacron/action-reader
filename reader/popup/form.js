@@ -1,10 +1,11 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
-// import {toggleDarkSettings, toggleGeneralSettings} from "../shared/popuplib.js";
-import {getCurrentHost} from "../background/host.js";
+import {Host} from "../background/host.js";
 import {initHost} from "./popup.js";
 import {StorageArea} from "../background/backgroundState.js";
 import {applyHost, saveHost} from "./saveHost.js";
+
+const KEY_HOSTNAME = 'hostname';
 
 function closeMe() {
     close();
@@ -31,23 +32,6 @@ function save() {
             .getModel()
             .getAlternativeVersionId();
     setDirty(false, popup.activeDoc);
-
-
-    /** saveHost active document, handled in actions */
-    // chrome.runtime.sendMessage({
-    //     request: 'saveHost',
-    //     name: popup.activeDoc.name,
-    //     text: popup.activeDoc.text,
-    //     styleId: popup.activeDoc.styleId,
-    //     host: popup.activeHost,
-    // }, () => {
-    //     popup.activeDoc.editor.focus();
-    //     popup.activeDoc.lastSavedVersion =
-    //         popup.activeDoc.editor
-    //             .getModel()
-    //             .getAlternativeVersionId();
-    //     setDirty(false, popup.activeDoc);
-    // });
 }
 
 function apply() {
@@ -56,20 +40,6 @@ function apply() {
     applyHost();
     popup.activeDoc.editor.focus();
     setDirty(false, popup.activeDoc);
-
-
-
-    // chrome.runtime.sendMessage({
-    //         request: 'applyHost',
-    //         name: popup.activeDoc.name,
-    //         text: popup.activeDoc.text,
-    //         host: popup.activeHost,
-    //         styleId: popup.activeDoc.styleId,
-    //     },
-    //     () => {
-    //         popup.activeDoc.editor.focus();
-    //         setDirty(false, popup.activeDoc);
-    //     });
 }
 
 function showElement(elementId, visible) {
@@ -122,6 +92,16 @@ function showSavedDelayMsg () {
     setTimeout(() => {
         msg.style.display = 'none';
     }, 5000)
+}
+
+function getCurrentHost() {
+    return new Promise((resolve, reject) => {
+        StorageArea.get([KEY_HOSTNAME], results => {
+            if (results) {
+                resolve(new Host(results[KEY_HOSTNAME]));
+            } else reject();
+        })
+    })
 }
 
 function handleFormKeydown() {

@@ -1,8 +1,12 @@
 import  {vsPath} from "../../shared/monacoSettings.js";
-import {deleteHost} from "../../background/host.js";
+import {StorageArea} from "../../background/backgroundState.js";
 
 let sites = null;
 let editors = {};
+
+function deleteHost(key) {
+    StorageArea.remove([key]).then(() => {});
+}
 
 function updateSite(input) {
     const li = input.parentElement;
