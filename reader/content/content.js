@@ -348,16 +348,12 @@ async function contentInitHost() {
     }
 }
 
-/*
-message from background/actions.js
- */
 function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
 
 export function main() {
     console.log("*** contentscript loaded for jreader!");
-    // inspectBackgroundColor();
     contentInitHost().then(() => {
         getClassAndIdNames();
     });
