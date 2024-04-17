@@ -52,14 +52,11 @@ function getJcReaderHost(url) {
 }
 
 function injectStyle(css, id) {
-    if (!document.getElementById(id)) {
-        const styleElement = document.createElement('style');
-        styleElement.id = id;
-        styleElement.innerHTML = css;
-        document.head.appendChild(styleElement);
-    } else {
-        document.getElementById(id).innerHTML = css;
-    }
+    removeStyle(id);
+    const styleElement = document.createElement('style');
+    styleElement.id = id;
+    styleElement.innerHTML = css;
+    document.head.appendChild(styleElement);
 }
 
 function removeStyle(id) {
@@ -221,6 +218,7 @@ function reinjectStyles() {
     /* default styles */
     injectStyle(custom.default, 'splash-custom-default-style');
     injectStyle(defaultText, 'splash-default-style');
+    hideAnnoying();
 }
 
 function toggleDark() {
@@ -352,11 +350,24 @@ function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
 
+function hideAnnoying() {
+    // experimental
+    for (const selector of [
+        '.article__content-sign-up',
+        '.share-nav',
+        '#n-exponea-bottom-slot'
+    ]) {
+        const element = document.querySelector(selector);
+        if (element) element.style.display = 'none';
+    }
+}
+
 export function main() {
     console.log("*** contentscript loaded for jreader!");
     contentInitHost().then(() => {
         getClassAndIdNames();
     });
     chrome.runtime.onMessage.addListener(messageListener);
+    hideAnnoying();
 }
 
