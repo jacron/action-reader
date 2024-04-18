@@ -56,7 +56,7 @@ function setName(name) {
     document.getElementById('delete-site').style.visibility = 'visible';
 }
 
-function reSetName(name) {
+function reSetName() {
     const anchor = document.getElementById('site-name');
     anchor.innerText = '';
     document.getElementById('delete-site').style.visibility = 'hidden';
@@ -188,10 +188,24 @@ function _listSites(sites) {
 
 function listSites() {
     chrome.storage.local.get(null, sites1 => {
-        console.log(sites1);
+        // console.log(sites1);
         _listSites(sites1);
         sites = sites1;
     });
+}
+
+function filterSites(text) {
+    for (const site of document.querySelectorAll('#sites-list li')) {
+        site.style.display = site.querySelector('a').textContent.indexOf(text) === -1 ?
+            'none' : 'block';
+    }
+}
+
+function filterOnInput() {
+    const input = document.getElementById('input-filter');
+    input.addEventListener('input', () => {
+        filterSites(input.value);
+    })
 }
 
 function init() {
@@ -204,6 +218,7 @@ function init() {
     initToggle();
     initDelete();
     listSites();
+    filterOnInput();
 }
 
 init();
