@@ -18,7 +18,7 @@
             <div id="tabs">
                 <div class="default">reader</div>
                 <div class="dark">dark</div>
-                <div class="selector">selector</div>
+                <div class="selector">misc.</div>
                 <div class="_default">_reader</div>
                 <div class="_dark">_dark</div>
             </div>
@@ -30,11 +30,11 @@
         <div class="horizontal-spacer"></div>
         <div class="general-controls" id="general-controls">
             <div id="general-toggle">
-                <span class="label">reader</span>
+                <span class="label">^R&nbsp;reader</span>
                 <span class="switch on" id="general-toggle-switch"></span>
             </div>
             <div id="dark-toggle">
-                <span class="label">dark&nbsp;mode</span>
+                <span class="label">^D&nbsp;dark</span>
                 <span class="switch on" id="dark-toggle-switch"></span>
             </div>
         </div>
@@ -50,9 +50,21 @@
     <div class="editor" id="editor-selector">
         <div class="description"></div>
         <div class="the-editor small"></div>
-        <div class="">
-            <label for="editor-input-delay">Delay (ms)</label>
-            <input type="search" id="editor-input-delay">
+        <div class="misc">
+            <p>
+                <label for="select-selectors">selector</label>
+                <br>
+                <textarea id="select-selectors"></textarea>
+            </p>
+            <p>
+                <label for="hide-selectors">hide</label>
+                <br>
+                <textarea id="hide-selectors"></textarea>
+            </p>
+            <p>
+                <label for="editor-input-delay">Delay (ms)</label>
+                <input type="search" id="editor-input-delay">
+            </p>
             <p id="delay-saved-msg" style="display: none">Delay has been saved.</p>
         </div>
     </div>
