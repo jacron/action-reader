@@ -1,18 +1,20 @@
 import {injectStyle, removeStyle} from "./content.js";
 import {decomment, validateExactLength, validateMinLength} from "./util.js";
+import {_createToggleButton} from "./button.js";
 
-function createButton(caption, style, clickhandler) {
-    const button = document.createElement('button');
-    button.style.position = 'fixed';
-    button.style.right = '10px';
-    button.style.zIndex = '999';
-    for (const key of Object.keys(style)) {
-        button.style[key] = style[key];
-    }
-    button.textContent = caption;
-    button.onclick = clickhandler;
-    return button;
-}
+/*
+@toggle:
+
+@toggle sidebar #sidebar false
+@toggle hide_pro_icons article:has(span.sr-only) false
+caption, selector, initial
+
+@toggle-style:
+
+@toggle-style sidebar style1 true begin
+caption, styleId, initial
+
+ */
 
 function toggleOneElement(element) {
     if (element.style.display === 'none') {
@@ -31,23 +33,15 @@ function toggleElements(selector) {
     }
 }
 
+function createToggleStyleButton(caption, styleId, initial, lines, line) {
+    _createToggleButton(caption, initial, () => toggleStyle(styleId, lines, line));
+}
+
 function createToggleButton(caption, selector, initial) {
-    const button = createButton(caption.replace(/_/g, ' '), {
-        top: '60px'
-    }, () => {
-        toggleElements(selector);
-    });
-    document.body.appendChild(button);
-    console.log('*** ', initial);
-    if (initial !== 'false') {
-        setTimeout(() => {
-            toggleElements(selector);
-        }, 1000);
-    }
+    _createToggleButton(caption, initial, () => toggleElements(selector));
 }
 
 function cssFromLines(lines, line) {
-    // get the style for inserting/removing in head
     const styleLines = [];
     let found = false;
     for (const _line of lines) {
@@ -62,8 +56,6 @@ function cssFromLines(lines, line) {
             found = true;
         }
     }
-    // console.log(styleLines);
-    // injectStyle(styleLines.join('\n'), styleId);
     return styleLines.join(('\n'));
 }
 
@@ -75,24 +67,7 @@ function toggleStyle(styleId, lines, line) {
     }
 }
 
-function createToggleStyleButton(caption, styleId, initial, lines, line) {
-    const button = createButton(caption.replace(/_/g, ' '), {
-        top: '60px'
-    }, () => {
-        toggleStyle(styleId, lines, line);
-    });
-    document.body.appendChild(button);
-    console.log('*** ', initial);
-    if (initial !== 'false') {
-        setTimeout(() => {
-            toggleStyle(styleId, lines, line);
-        }, 1000);
-    }
-}
-
 function parseFunction(line, lines) {
-    // console.log(line) // /* @toggle sidebar #sidebar false */
-    // of: /* @toggle hide_pro_icons article:has(span.sr-only) false */
     const declaration = decomment(line);
     const w = declaration.split(' ');
     if (!validateMinLength(w, 1)) return;
@@ -101,9 +76,7 @@ function parseFunction(line, lines) {
         createToggleButton(w[1], w[2], w[3]);
     }
     if (w[0] === '@toggle-style') {
-        // /* @toggle-style sidebar style1 true begin */
         if (!validateExactLength(w, 5)) return;
-        // caption, styleId, initial
         createToggleStyleButton(w[1], w[2], w[3], lines, line);
     }
 }
