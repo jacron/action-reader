@@ -56,6 +56,7 @@ function editorOptions(doc) {
 }
 
 function _initEditor(doc, editorElement) {
+    console.log(doc)
     /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
 
     require(['vs/editor/editor.main'], () => {
@@ -90,4 +91,4 @@ function setEditor(doc) {
     }
 }
 
-export {setEditor, setDirty}
+export {setEditor, setDirty, _initEditor, editorOptions}

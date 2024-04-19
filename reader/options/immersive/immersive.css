@@ -1,0 +1,33 @@
+html {
+    background-color: #00485b;
+}
+body {
+    /*width: 800px;*/
+    margin: auto;
+    background-color: #eeffff;
+    padding: 8px;
+}
+.container {
+    display: flex;
+    gap: 12px;
+}
+.monaco-editor {
+    /*width: 440px !important;*/
+}
+.editor {
+    border: 2px solid blue;
+    text-align: left;
+    height: calc(100% - 80px);
+    width: 400px;
+    margin-top: 6px;
+    background-color: #777;
+}
+#editor-dark {
+    left: 560px;
+}
+.the-editor {
+    height: calc(100% - 22px);
+}
+.column {
+    height: 700px;
+}
