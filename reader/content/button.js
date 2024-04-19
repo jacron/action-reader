@@ -1,8 +1,5 @@
 function createButton(caption, style, clickhandler) {
     const button = document.createElement('button');
-    button.style.position = 'fixed';
-    button.style.right = '10px';
-    button.style.zIndex = '999';
     for (const key of Object.keys(style)) {
         button.style[key] = style[key];
     }
@@ -11,13 +8,31 @@ function createButton(caption, style, clickhandler) {
     return button;
 }
 
+function toggleInvert(button) {
+    if (button.style.filter === 'invert(1)') {
+        button.style.filter = 'none';
+    } else {
+        button.style.filter = 'invert(1)'
+    }
+}
+
 function _createToggleButton(caption, initial, cb) {
     const button = createButton(caption.replace(/_/g, ' '), {
-        top: '60px'
-    }, cb);
+        top: '60px',
+        position: 'fixed',
+        right: '10px',
+        zIndex: '999',
+        filter: 'invert(1)'
+    }, () => {
+        cb();
+        toggleInvert(button);
+    });
     document.body.appendChild(button);
     if (initial !== 'false') {
-        setTimeout(cb, 1000);
+        setTimeout(() => {
+            cb();
+            toggleInvert(button);
+        }, 1000);
     }
 }
 
