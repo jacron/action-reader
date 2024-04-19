@@ -1,6 +1,7 @@
 import {background} from "./backgroundState.js";
 import {withActiveTab} from "../shared/activeTab.js";
 import {getJcReaderHost} from "../lib/util.js";
+import {messageToContent} from "../shared/popuplib.js";
 
 const KEY_OPENED_HOST = '_opened_host';
 
@@ -26,7 +27,8 @@ function openEditors() {
     if (!background.winId) {
         withActiveTab().then(tab => {
             chrome.windows.get(tab.windowId, curWin => {
-                chrome.storage.local.set({[KEY_OPENED_HOST]: getJcReaderHost(tab.url)});
+                chrome.storage.local
+                    .set({[KEY_OPENED_HOST]: getJcReaderHost(tab.url)}).then();
                 createWin(curWin);
             })
         })
@@ -45,4 +47,21 @@ function closeEditors() {
     }
 }
 
-export {openEditors, createWin, closeEditors}
+function commandListener(command) {
+    switch(command) {
+        case 'open-editors':
+            openEditors();
+            break;
+        case 'close-editors':
+            closeEditors();
+            break;
+        case 'toggle-reader':
+            messageToContent({message: 'toggleReader'})
+            break;
+        case 'toggle-dark':
+            messageToContent({message: 'toggleDark'})
+            break;
+    }
+}
+
+export {openEditors, commandListener}
