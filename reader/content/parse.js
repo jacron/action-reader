@@ -1,3 +1,6 @@
+import {injectStyle, removeStyle} from "./content.js";
+import {decomment, validateExactLength, validateMinLength} from "./util.js";
+
 function createButton(caption, style, clickhandler) {
     const button = document.createElement('button');
     button.style.position = 'fixed';
@@ -29,7 +32,7 @@ function toggleElements(selector) {
 }
 
 function createToggleButton(caption, selector, initial) {
-    const button = createButton(caption, {
+    const button = createButton(caption.replace(/_/g, ' '), {
         top: '60px'
     }, () => {
         toggleElements(selector);
@@ -43,23 +46,65 @@ function createToggleButton(caption, selector, initial) {
     }
 }
 
-function decomment(s) {
-    return s.replace('/* ', '').replace(' */', '').trim();
+function cssFromLines(lines, line) {
+    // get the style for inserting/removing in head
+    const styleLines = [];
+    let found = false;
+    for (const _line of lines) {
+        if (found) {
+            if (_line.startsWith('@end')) {
+                break;
+            } else {
+                styleLines.push(_line);
+            }
+        }
+        if (line === _line) {
+            found = true;
+        }
+    }
+    // console.log(styleLines);
+    // injectStyle(styleLines.join('\n'), styleId);
+    return styleLines.join(('\n'));
 }
 
-function parseFunction(line) {
+function toggleStyle(styleId, lines, line) {
+    if (document.getElementById(styleId)) {
+        removeStyle(styleId);
+    } else {
+        injectStyle(cssFromLines(lines, line), styleId);
+    }
+}
+
+function createToggleStyleButton(caption, styleId, initial, lines, line) {
+    const button = createButton(caption.replace(/_/g, ' '), {
+        top: '60px'
+    }, () => {
+        toggleStyle(styleId, lines, line);
+    });
+    document.body.appendChild(button);
+    console.log('*** ', initial);
+    if (initial !== 'false') {
+        setTimeout(() => {
+            toggleStyle(styleId, lines, line);
+        }, 1000);
+    }
+}
+
+function parseFunction(line, lines) {
     // console.log(line) // /* @toggle sidebar #sidebar false */
     // of: /* @toggle hide_pro_icons article:has(span.sr-only) false */
-
     const declaration = decomment(line);
     const w = declaration.split(' ');
-    if (w.length !== 4) {
-        console.error('*** wrong function declaration in style');
-        return;
-    }
+    if (!validateMinLength(w, 1)) return;
     if (w[0] === '@toggle') {
-        // console.log('*** caption', w[1]);
+        if (!validateExactLength(w, 4)) return;
         createToggleButton(w[1], w[2], w[3]);
+    }
+    if (w[0] === '@toggle-style') {
+        // /* @toggle-style sidebar style1 true begin */
+        if (!validateExactLength(w, 5)) return;
+        // caption, styleId, initial
+        createToggleStyleButton(w[1], w[2], w[3], lines, line);
     }
 }
 
@@ -67,7 +112,7 @@ function parseFunctionInStyle(style) {
     const lines = style.split('\n');
     for (const line of lines) {
         if (line.startsWith('/* @')) {
-            parseFunction(line);
+            parseFunction(line, lines);
         }
     }
 }
