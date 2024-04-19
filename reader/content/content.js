@@ -1,11 +1,8 @@
+import {parseFunctionInStyle} from "./parse.js";
 
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
-// const KEY_BOOLEAN_GENERAL_READER = '_readerOn';
-// const KEY_BOOLEAN_GENERAL_DARK = '_darkOn';
-// const KEY_BOOLEAN_CUSTOM_READER = 'readerOn';
-// const KEY_BOOLEAN_CUSTOM_DARK = 'darkOn';
 
 const keysGeneral = {
     default: '_default',
@@ -287,45 +284,35 @@ function getClassAndIdNames() {
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
 }
 
-// function undefinedOrTrue(x) {
-//     return x === undefined || x === true;
-// }
-
-async function setDefaultStyles(settings, websiteProps, immersive) {
-    // if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_READER])) {
-    //     if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_READER])) {
+async function setDefaultStyles(websiteProps, immersive) {
     if (immersive) {
         const defaultStyleObject = await fromStorage(keysGeneral.default);
         const defaultStyle = defaultStyleObject[keysGeneral.default];
         injectStyle(defaultStyle, styleIds.general.default);
         initedHost.defaultText = defaultStyle;
     }
-        // }
-        injectStyle(websiteProps.default, styleIds.custom.default);
-    // }
+    parseFunctionInStyle(websiteProps.default);
+    injectStyle(websiteProps.default, styleIds.custom.default);
 }
 
-async function setDarkStyles(settings, websiteProps, immersive) {
-    // if (undefinedOrTrue(settings[KEY_BOOLEAN_GENERAL_DARK])) {
-    //     if (undefinedOrTrue(websiteProps[KEY_BOOLEAN_CUSTOM_DARK])) {
+async function setDarkStyles(websiteProps, immersive) {
     if (immersive) {
         const darkStyleObject = await fromStorage(keysGeneral.dark);
         const darkStyle = darkStyleObject[keysGeneral.dark];
         injectStyle(darkStyle, styleIds.general.dark);
         initedHost.darkText = darkStyle;
     }
-        // }
-        injectStyle(websiteProps.dark, styleIds.custom.dark);
-        document.body.classList.add('dark');
-    // }
+    injectStyle(websiteProps.dark, styleIds.custom.dark);
+    document.body.classList.add('dark');
 }
 
-async function setStyles(websiteProps, settings) {
+async function setStyles(websiteProps) {
     initedHost.custom = websiteProps;
     if (websiteProps && websiteProps.active === 'on') {
+        /* als er geen selector aanwezig is of van toepassing is, is immersive false */
         const immersive = select(websiteProps.selector);
-        await setDefaultStyles(settings, websiteProps, immersive);
-        await setDarkStyles(settings, websiteProps, immersive);
+        await setDefaultStyles(websiteProps, immersive);
+        await setDarkStyles(websiteProps, immersive);
     }
 }
 
@@ -334,10 +321,9 @@ async function contentInitHost() {
     const hostName = getJcReaderHost(document.location.href);
     console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
-    const settings = null;  // placehodler for obsolete
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
-        await setStyles(websitePropsObject[hostName], settings);
+        await setStyles(websitePropsObject[hostName]);
         getHostDelay(hostName).then(delay => {
             if (delay) {
                 setTimeout(() => reinjectStyles(), +delay);
