@@ -11,14 +11,19 @@ function createButton(caption, style, clickhandler) {
     return button;
 }
 
-function toggleElement(selector) {
-    const element = document.querySelector(selector);
-    if (element) {
-        console.log('*** ', element.style.display)
-        if (element.style.display === 'none') {
-            element.style.display = 'block';
-        } else {
-            element.style.display = 'none';
+function toggleOneElement(element) {
+    if (element.style.display === 'none') {
+        element.style.display = 'block';
+    } else {
+        element.style.display = 'none';
+    }
+}
+
+function toggleElements(selector) {
+    const elements = document.querySelectorAll(selector);
+    if (elements) {
+        for (const element of elements) {
+            toggleOneElement(element);
         }
     }
 }
@@ -27,13 +32,13 @@ function createToggleButton(caption, selector, initial) {
     const button = createButton(caption, {
         top: '60px'
     }, () => {
-        toggleElement(selector);
+        toggleElements(selector);
     });
     document.body.appendChild(button);
     console.log('*** ', initial);
     if (initial !== 'false') {
         setTimeout(() => {
-            toggleElement(selector);
+            toggleElements(selector);
         }, 1000);
     }
 }
@@ -44,6 +49,8 @@ function decomment(s) {
 
 function parseFunction(line) {
     // console.log(line) // /* @toggle sidebar #sidebar false */
+    // of: /* @toggle hide_pro_icons article:has(span.sr-only) false */
+
     const declaration = decomment(line);
     const w = declaration.split(' ');
     if (w.length !== 4) {
