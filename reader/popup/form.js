@@ -66,6 +66,20 @@ function replace() {
     console.log(popup.activeDoc.editor.getSupportedActions());
 }
 
+function macro1() {
+    const text =
+`body {
+    background-color: #242424 !important;
+    color: #eee !important;
+}
+`
+    // popup.activeDoc.editor.trigger('keyboard', 'type', {text});
+    const selection = popup.activeDoc.editor.getSelection();
+    const id = { major: 1, minor: 1 };
+    const op = {identifier: id, range: selection, text: text, forceMoveMarkers: true};
+    popup.activeDoc.editor.executeEdits("my-source", [op]);
+}
+
 function handleFormClickActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
@@ -75,6 +89,7 @@ function handleFormClickActions() {
         // ['general-toggle-switch', toggleGeneralSettings],
         // ['dark-toggle-switch', toggleDarkSettings],
         ['cmd-replace', replace],
+        ['cmd-macro-1', macro1]
     ];
     for (const binding of clickBindings) {
         const [id, func] = binding;
