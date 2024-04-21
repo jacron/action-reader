@@ -1,5 +1,5 @@
 import {injectStyle, removeStyle} from "../../content/content.js";
-import {decomment, validateExactLength, validateMinLength} from "../../content/util.js";
+import {decomment, validateExactLength} from "../../content/util.js";
 import {_createToggleButton} from "../../content/button.js";
 
 function toggleOneElement(element) {
@@ -53,25 +53,33 @@ function toggleStyle(styleId, lines, line) {
     }
 }
 
-function parseFunction(line, lines) {
+function storeAnnoying(lines, line, cb) {
+    cb(cssFromLines(lines, line));
+}
+
+function parseFunction(line, lines, cb) {
     const declaration = decomment(line);
     const w = declaration.split(' ');
-    if (!validateMinLength(w, 1)) return;
-    if (w[0] === '@toggle') {
-        if (!validateExactLength(w, 4)) return;
-        createToggleButton(w[1], w[2], w[3]);
-    }
-    if (w[0] === '@toggle-style') {
-        if (!validateExactLength(w, 5)) return;
-        createToggleStyleButton(w[1], w[2], w[3], lines, line);
+    switch (w[0]) {
+        case '@toggle':
+            if (!validateExactLength(w, 4)) return;
+            createToggleButton(w[1], w[2], w[3]);
+            break;
+        case '@toggle-style':
+            if (!validateExactLength(w, 5)) return;
+            createToggleStyleButton(w[1], w[2], w[3], lines, line);
+            break;
+        case  '@annoying':
+            storeAnnoying(lines, line, cb);
+            break;
     }
 }
 
-function parseFunctionInStyle(customStyle) {
+function parseFunctionInStyle(customStyle, cb) {
     const lines = customStyle.split('\n');
     for (const line of lines) {
         if (line.startsWith('/* @')) {
-            parseFunction(line, lines);
+            parseFunction(line, lines, cb);
         }
     }
 }

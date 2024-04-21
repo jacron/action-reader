@@ -6,6 +6,9 @@ import {deleteReaderArticle, reSelect, select} from "./select.js";
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
 
+/* ft.com has some hard to hide elements */
+let annoying = [];
+
 function getHostDelay(hostName) {
     const keys = [hostName];
     return new Promise((resolve) => {
@@ -101,6 +104,7 @@ function reinjectStyles() {
     /* default styles */
     injectStyle(custom.default, 'splash-custom-default-style');
     injectStyle(defaultText, 'splash-default-style');
+    /* correct later injected styles */
     hideAnnoying();
 }
 
@@ -177,7 +181,7 @@ async function setDefaultStyles(websiteProps, immersive) {
         injectStyle(defaultStyle, styleIds.general.default);
         initedHost.defaultText = defaultStyle;
     }
-    parseFunctionInStyle(websiteProps.default);
+    parseFunctionInStyle(websiteProps.default, results => annoying = results);
     injectStyle(websiteProps.default, styleIds.custom.default);
 }
 
@@ -223,14 +227,17 @@ function messageListener(req, sender, sendResponse) {
 }
 
 function hideAnnoying() {
-    // experimental
-    for (const selector of [
-        '.article__content-sign-up',
-        '.share-nav',
-        '#n-exponea-bottom-slot'
-    ]) {
-        const element = document.querySelector(selector);
-        if (element) element.style.display = 'none';
+    if (annoying.length) {
+        for (const selector of annoying.split('\n')) {
+            console.log(selector)
+            try {
+                const element = document.querySelector(selector);
+                if (element) element.style.display = 'none';
+            } catch (e) {
+                console.error(e)
+            }
+        }
+
     }
 }
 
@@ -238,9 +245,9 @@ export function main() {
     console.log("*** contentscript loaded for jreader!");
     contentInitHost().then(() => {
         getClassAndIdNames();
+        hideAnnoying();
     });
     chrome.runtime.onMessage.addListener(messageListener);
-    hideAnnoying();
 }
 
 export {injectStyle, removeStyle}
