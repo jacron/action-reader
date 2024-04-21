@@ -1,3 +1,6 @@
+import {initedHost, keysGeneral, StorageArea, styleIds} from "./constants.js";
+import {injectStyle} from "./content.js";
+
 function createArticle(nodes) {
     const article = document.createElement('div');
     for (let node of nodes) {
@@ -40,11 +43,36 @@ function getNodes(selector) {
     return nodes;
 }
 
+function removeElements(selector) {
+    const elements = document.head.querySelectorAll(selector);
+    for (const element of elements) {
+        document.head.removeChild(element);
+    }
+}
+
+function replaceHead() {
+    removeElements('link[rel=stylesheet]');
+    removeElements('link[rel=preload]');
+    removeElements('link[rel=preconnect]');
+    removeElements('style');
+    removeElements('script');
+    StorageArea.get([keysGeneral.default, keysGeneral.dark], results => {
+        const defaultStyle = results[keysGeneral.default];
+        injectStyle(defaultStyle, styleIds.general.default);
+        initedHost.defaultText = defaultStyle;
+        const darkStyle = results[keysGeneral.dark];
+        injectStyle(darkStyle, styleIds.general.dark);
+        initedHost.darkext = darkStyle;
+    });
+}
+
 function injectArticle(nodes) {
     const readerArticle = createArticle(nodes);
     const container = createContainer();
     container.appendChild(readerArticle);
+    replaceHead();
     setTimeout(() => {
+        document.body.innerHTML = '';
         document.body.appendChild(container);
         console.log('readerArticle appended');
         readerArticle.focus();
