@@ -24,6 +24,8 @@ function insertText(text) {
 function createMacroButton(nr, caption, text) {
     const button = document.createElement('button');
     button.textContent = caption.replace(/_/g, ' ');
+    button.setAttribute('data-key', nr);
+    button.setAttribute('title', '^' + nr);
     button.addEventListener('click', () => insertText(text));
     return button;
 }

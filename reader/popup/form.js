@@ -113,6 +113,17 @@ function handleFormKeydown() {
             });
         }
     })
+    document.addEventListener('keydown', (e) => {
+        const buttons = document.querySelectorAll('#macros button');
+        // console.log(e)
+        if (e.ctrlKey) {
+            for (const button of buttons) {
+                if (button.getAttribute('data-key') === e.key) {
+                    button.click();
+                }
+            }
+        }
+    })
 }
 
 export {handleFormClickActions, handleFormKeydown, showExisting, showNew, save, apply}
