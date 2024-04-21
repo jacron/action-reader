@@ -5,12 +5,12 @@ import {_initEditor} from "../shared/editor/editor.js";
 function hideEditors() {
     for (const entry of Object.entries(monacoDocuments)) {
         const id = entry[1].id;
-        document.getElementById(id).style.visibility = 'hidden';
+        document.getElementById(id).style.display = 'none';  //.visibility = 'hidden';
     }
 }
 
 function showEditor(doc) {
-    document.getElementById(doc.id).style.visibility = 'visible';
+    document.getElementById(doc.id).style.display = 'block';  //visibility = 'visible';
     if (doc.editor) {
         doc.editor.focus();
     }
@@ -32,7 +32,7 @@ function initEditor(doc) {
     const editorElement = editorElementContainer.querySelector('.the-editor');
     const descriptionElement = editorElementContainer.querySelector('.description');
     descriptionElement.innerText = doc.description.replace('@site', popup.activeHost);
-    editorElementContainer.style.visibility = 'visible';
+    editorElementContainer.style.display = 'block';  //.visibility = 'visible';
     _initEditor(doc, editorElement);
 }
 

@@ -24,8 +24,7 @@ button:hover {
 }
 #existing-reader-dialog,
 #new-reader-dialog {
-  position: relative;
-  height: calc(100% - 40px);
+  height: calc(100% - 100px);
   text-align: center;
   display: none;
 }
@@ -33,17 +32,18 @@ button:hover {
   top: 20px;
   line-height: 1.6;
 }
-.controls {
-  position: absolute;
-  bottom: -16px;
+.controls,
+#macros {
   width: 100%;
   text-align: left;
+  margin-top: 16px;
+}
+.controls {
 }
 .controls a {
   color: #eeffff;
   text-decoration: none;
   float: right;
-  position: relative;
   top: 5px;
 }
 .controls a:hover {
@@ -56,9 +56,8 @@ button:hover {
   border: 2px solid blue;
   text-align: left;
   height: calc(100% - 80px);
-  position: absolute;
   width: 100%;
-  visibility: hidden;
+  display: none;
   margin-top: 6px;
   background-color: #777;
 }
@@ -81,8 +80,6 @@ button:hover {
   height: 100%;
 }
 #reader-delete {
-  /*position: absolute;*/
-  /*right: 0;*/
   padding: 2px 8px;
   float: right;
 }

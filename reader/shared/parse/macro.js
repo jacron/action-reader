@@ -14,25 +14,6 @@ function macroFromLines(lines, line, nr) {
     return null;
 }
 
-function parseMacro(nr) {
-    return new Promise((resolve, reject) => {
-        StorageArea.get([keysGeneral.default], results => {
-            const defaultStyle = results[keysGeneral.default];
-            const lines = defaultStyle.split('\n');
-            for (const line of lines) {
-                if (line.startsWith('/* @')) {
-                    const text = macroFromLines(lines, line, nr);
-                    if (text) {
-                        resolve(text);
-                        return;
-                    }
-                }
-            }
-            reject();
-        });
-    })
-}
-
 function insertText(text) {
     const selection = popup.activeDoc.editor.getSelection();
     const id = { major: 1, minor: 1 };
@@ -41,9 +22,8 @@ function insertText(text) {
 }
 
 function createMacroButton(nr, caption, text) {
-    // console.log(nr, caption, text);
     const button = document.createElement('button');
-    button.textContent = caption;
+    button.textContent = caption.replace(/_/g, ' ');
     button.addEventListener('click', () => insertText(text));
     return button;
 }
@@ -68,4 +48,4 @@ function parseMacroInStyle() {
     });
 }
 
-export {parseMacro, parseMacroInStyle}
+export {parseMacroInStyle}
