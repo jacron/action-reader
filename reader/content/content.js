@@ -1,5 +1,6 @@
 import {parseFunctionInStyle} from "../shared/parse/parse.js";
-import {initedHost, KEY_CLASSES, KEY_IDS, keysGeneral, StorageArea, styleIds} from "./constants.js";
+import {initedHost, KEY_CLASSES, KEY_IDS, KEY_ATTRIBUTES,
+    keysGeneral, StorageArea, styleIds} from "./constants.js";
 import {deleteReaderArticle, reSelect, select} from "./select.js";
 
 
@@ -161,6 +162,7 @@ function getClassAndIdNames() {
     /* gebruik een set om dubbelen te voorkomen */
     const classes = new Set();
     const ids = new Set();
+    const attributes = new Set();
 
     document.querySelectorAll('*').forEach(element => {
         element.classList.forEach(className => {
@@ -169,9 +171,32 @@ function getClassAndIdNames() {
         if (element.id) {
             ids.add(element.id);
         }
+        for (const attribute of element.attributes) {
+            attributes.add(attribute.name);
+        }
     });
     StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
     StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
+    StorageArea.set({[KEY_ATTRIBUTES]: Array.from(attributes)}).then();
+}
+
+function messageListener(req, sender, sendResponse) {
+    initActions(req, sendResponse);
+}
+
+function hideAnnoying() {
+    if (annoying.length) {
+        for (const selector of annoying.split('\n')) {
+            console.log(selector)
+            try {
+                const element = document.querySelector(selector);
+                if (element) element.style.display = 'none';
+            } catch (e) {
+                console.error(e)
+            }
+        }
+
+    }
 }
 
 async function setDefaultStyles(websiteProps, immersive) {
@@ -219,25 +244,6 @@ async function contentInitHost() {
                 setTimeout(() => reinjectStyles(), +delay);
             }
         })
-    }
-}
-
-function messageListener(req, sender, sendResponse) {
-    initActions(req, sendResponse);
-}
-
-function hideAnnoying() {
-    if (annoying.length) {
-        for (const selector of annoying.split('\n')) {
-            console.log(selector)
-            try {
-                const element = document.querySelector(selector);
-                if (element) element.style.display = 'none';
-            } catch (e) {
-                console.error(e)
-            }
-        }
-
     }
 }
 

@@ -1,6 +1,7 @@
 const StorageArea = chrome.storage.local;
 const KEY_CLASSES = "hostClasses";
 const KEY_IDS = 'hostIds';
+const KEY_ATTRIBUTES = 'hostAttributes';
 
 const keysGeneral = {
     default: '_default',
@@ -22,4 +23,4 @@ let initedHost = {
     defaultText: null
 }
 
-export {StorageArea, KEY_CLASSES, KEY_IDS, styleIds, initedHost, keysGeneral}
+export {StorageArea, KEY_CLASSES, KEY_IDS, KEY_ATTRIBUTES, styleIds, initedHost, keysGeneral}
