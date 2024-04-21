@@ -1,6 +1,5 @@
 import {parseFunctionInStyle} from "../shared/parse/parse.js";
 import {initedHost, KEY_CLASSES, KEY_IDS, keysGeneral, StorageArea, styleIds} from "./constants.js";
-import {parseMacroInStyle} from "../shared/parse/macro.js";
 
 
 /* initieel is readerOn true, als een soort quasi global hier */
@@ -271,7 +270,6 @@ async function setDefaultStyles(websiteProps, immersive) {
         initedHost.defaultText = defaultStyle;
     }
     parseFunctionInStyle(websiteProps.default);
-    parseMacroInStyle(defaultStyle);
     injectStyle(websiteProps.default, styleIds.custom.default);
 }
 

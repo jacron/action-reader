@@ -8,3 +8,7 @@ caption, selector, initial
 
 @toggle-style sidebar style1 true begin
 caption, styleId, initial
+
+@macro:
+
+@macro 1 begin-dark

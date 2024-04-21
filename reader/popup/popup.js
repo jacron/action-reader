@@ -6,6 +6,7 @@ import {registerSuggestions} from "./suggestions.js";
 import {initDelay} from "./delay.js";
 import {handleKeyboardDown} from "./keyboardDown.js";
 import {initSwitches} from "./switches.js";
+import {parseMacroInStyle} from "../shared/parse/macro.js";
 
 const STORAGE = chrome.storage.local;
 const KEY_OPENED_HOST = '_opened_host';
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* require werkt hier dankzij monaco library */
     require.config({ paths: { vs: vsPath}});
     registerSuggestions();
+    parseMacroInStyle();
 });
 
 export {initHost}

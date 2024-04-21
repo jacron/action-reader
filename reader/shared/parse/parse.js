@@ -67,8 +67,8 @@ function parseFunction(line, lines) {
     }
 }
 
-function parseFunctionInStyle(style) {
-    const lines = style.split('\n');
+function parseFunctionInStyle(customStyle) {
+    const lines = customStyle.split('\n');
     for (const line of lines) {
         if (line.startsWith('/* @')) {
             parseFunction(line, lines);

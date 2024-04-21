@@ -4,7 +4,6 @@ import {Host} from "../background/host.js";
 import {initHost} from "./popup.js";
 import {StorageArea} from "../background/backgroundState.js";
 import {applyHost, saveHost} from "./saveHost.js";
-import {parseMacro} from "../shared/parse/macro.js";
 
 const KEY_HOSTNAME = 'hostname';
 
@@ -67,25 +66,13 @@ function replace() {
     console.log(popup.activeDoc.editor.getSupportedActions());
 }
 
-function macro1() {
-    parseMacro(1).then(text => {
-        const selection = popup.activeDoc.editor.getSelection();
-        const id = { major: 1, minor: 1 };
-        const op = {identifier: id, range: selection, text: text, forceMoveMarkers: true};
-        popup.activeDoc.editor.executeEdits("my-source", [op]);
-    })
-}
-
 function handleFormClickActions() {
     const clickBindings = [
         ['new-answer-no', closeMe],
         ['new-answer-yes', postNew],
         ['cmd-save', save],
         ['cmd-apply', apply],
-        // ['general-toggle-switch', toggleGeneralSettings],
-        // ['dark-toggle-switch', toggleDarkSettings],
         ['cmd-replace', replace],
-        ['cmd-macro-1', macro1]
     ];
     for (const binding of clickBindings) {
         const [id, func] = binding;
