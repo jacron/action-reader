@@ -1,0 +1,6 @@
+- content.js is modulair via index.js.
+- permissie nodig in manifest:
+  "web_accessible_resources": [{
+    "matches": ["<all_urls>"],
+    "resources": ["content/*", "shared/*"]
+  }],

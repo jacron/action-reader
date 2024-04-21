@@ -1,5 +1,6 @@
-import {parseFunctionInStyle} from "./parse.js";
+import {parseFunctionInStyle} from "../shared/parse/parse.js";
 import {initedHost, KEY_CLASSES, KEY_IDS, keysGeneral, StorageArea, styleIds} from "./constants.js";
+import {parseMacroInStyle} from "../shared/parse/macro.js";
 
 
 /* initieel is readerOn true, als een soort quasi global hier */
@@ -263,13 +264,14 @@ function getClassAndIdNames() {
 }
 
 async function setDefaultStyles(websiteProps, immersive) {
+    const defaultStyleObject = await fromStorage(keysGeneral.default);
+    const defaultStyle = defaultStyleObject[keysGeneral.default];
     if (immersive) {
-        const defaultStyleObject = await fromStorage(keysGeneral.default);
-        const defaultStyle = defaultStyleObject[keysGeneral.default];
         injectStyle(defaultStyle, styleIds.general.default);
         initedHost.defaultText = defaultStyle;
     }
     parseFunctionInStyle(websiteProps.default);
+    parseMacroInStyle(defaultStyle);
     injectStyle(websiteProps.default, styleIds.custom.default);
 }
 

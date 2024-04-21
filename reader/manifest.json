@@ -34,7 +34,7 @@
   }],
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
-    "resources": ["content/*"]
+    "resources": ["content/*", "shared/*/*"]
   }],
   "commands": {
     "open-editors": {

@@ -1,20 +1,6 @@
-import {injectStyle, removeStyle} from "./content.js";
-import {decomment, validateExactLength, validateMinLength} from "./util.js";
-import {_createToggleButton} from "./button.js";
-
-/*
-@toggle:
-
-@toggle sidebar #sidebar false
-@toggle hide_pro_icons article:has(span.sr-only) false
-caption, selector, initial
-
-@toggle-style:
-
-@toggle-style sidebar style1 true begin
-caption, styleId, initial
-
- */
+import {injectStyle, removeStyle} from "../../content/content.js";
+import {decomment, validateExactLength, validateMinLength} from "../../content/util.js";
+import {_createToggleButton} from "../../content/button.js";
 
 function toggleOneElement(element) {
     if (element.style.display === 'none') {
@@ -90,4 +76,4 @@ function parseFunctionInStyle(style) {
     }
 }
 
-export {parseFunctionInStyle}
+export {parseFunctionInStyle, cssFromLines}

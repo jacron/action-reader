@@ -1,5 +1,6 @@
 import {monacoDocuments} from "../shared/monacoSettings.js";
 import {popup} from "./popupState.js";
+import {_initEditor} from "../shared/editor/editor.js";
 
 function hideEditors() {
     for (const entry of Object.entries(monacoDocuments)) {
@@ -20,52 +21,6 @@ function setDirty(dirty, doc) {
     const tabs = document.getElementById('tabs');
     tabs.querySelector('.' + name).innerText =
         dirty ? name + '*' : name;
-}
-
-/**
- * https://github.com/Microsoft/monaco-editor/issues/353
- * Get the alternative version id of the model.
- * This alternative version id is not always incremented,
- * it will return the same values in the case of undo-redo.
- * @param model
- * @param doc
- */
-function checkDirty(model, doc) {
-    setDirty(doc.lastSavedVersion !== model.getAlternativeVersionId(),
-        doc);
-}
-
-function editorOptions(doc) {
-    return {
-        lineNumbers: false,
-        value: doc.text,
-        language: doc.language,
-        theme: 'vs-dark',
-        automaticLayout: true,
-        minimap: {
-            enabled: false
-        },
-        parameterHints: {
-            enabled: false
-        },
-        codeLens: false,
-        hover: {
-            enabled: false
-        },
-    };
-}
-
-function _initEditor(doc, editorElement) {
-    console.log(doc)
-    /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
-
-    require(['vs/editor/editor.main'], () => {
-        doc.editor = monaco.editor.create(editorElement, editorOptions(doc));
-        doc.editor.focus();
-        const model = doc.editor.getModel();
-        doc.lastSavedVersion = model.getAlternativeVersionId();
-        model.onDidChangeContent(() => checkDirty(model, doc))
-    });
 }
 
 function initEditor(doc) {
@@ -91,4 +46,4 @@ function setEditor(doc) {
     }
 }
 
-export {setEditor, setDirty, _initEditor, editorOptions}
+export {setEditor, setDirty}

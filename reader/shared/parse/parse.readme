@@ -1,0 +1,10 @@
+@toggle:
+
+@toggle sidebar #sidebar false
+@toggle hide_pro_icons article:has(span.sr-only) false
+caption, selector, initial
+
+@toggle-style:
+
+@toggle-style sidebar style1 true begin
+caption, styleId, initial

@@ -4,6 +4,7 @@ import {Host} from "../background/host.js";
 import {initHost} from "./popup.js";
 import {StorageArea} from "../background/backgroundState.js";
 import {applyHost, saveHost} from "./saveHost.js";
+import {parseMacro} from "../shared/parse/macro.js";
 
 const KEY_HOSTNAME = 'hostname';
 
@@ -67,17 +68,12 @@ function replace() {
 }
 
 function macro1() {
-    const text =
-`body {
-    background-color: #242424 !important;
-    color: #eee !important;
-}
-`
-    // popup.activeDoc.editor.trigger('keyboard', 'type', {text});
-    const selection = popup.activeDoc.editor.getSelection();
-    const id = { major: 1, minor: 1 };
-    const op = {identifier: id, range: selection, text: text, forceMoveMarkers: true};
-    popup.activeDoc.editor.executeEdits("my-source", [op]);
+    parseMacro(1).then(text => {
+        const selection = popup.activeDoc.editor.getSelection();
+        const id = { major: 1, minor: 1 };
+        const op = {identifier: id, range: selection, text: text, forceMoveMarkers: true};
+        popup.activeDoc.editor.executeEdits("my-source", [op]);
+    })
 }
 
 function handleFormClickActions() {
