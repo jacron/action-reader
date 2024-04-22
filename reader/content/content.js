@@ -198,7 +198,7 @@ async function setDarkStyles(websiteProps, immersive) {
     document.body.classList.add('dark');
 }
 
-async function setStyles(websiteProps) {
+async function setStyles(websiteProps, hostName) {
     /* als er geen selector aanwezig is of van toepassing is, is immersive false */
     const immersive = select(websiteProps.selector);
     await setDefaultStyles(websiteProps, immersive);
@@ -220,7 +220,7 @@ async function contentInitHost() {
         const websiteProps = websitePropsObject[hostName];
         initedHost.custom = websiteProps;
         if (websiteProps && websiteProps.active === 'on') {
-            await setStyles(websiteProps);
+            await setStyles(websiteProps, hostName);
         }
     }
 }
