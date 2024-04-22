@@ -1,28 +1,23 @@
-import {StorageArea} from "../background/backgroundState.js";
-import {KEY_ATTRIBUTES, KEY_CLASSES, KEY_IDS} from "../content/constants.js";
-
-// const KEY_CLASSES = "hostClasses";
-// const KEY_IDS = 'hostIds';
-// const KEY_ATTRIBUTES = 'hostAttributes';
+import {KEY_ATTRIBUTES, KEY_CLASSES, KEY_IDS, StorageArea} from "./constants.js";
 
 function makeSuggestions(sel) {
     /* mix classes en ids in selectors */
     const selectors = [];
-    sel[KEY_CLASSES].map(className => {
+    sel[KEY_CLASSES].forEach(className => {
         const name = '.' + className;
         selectors.push({
             label: name,
             insertText: name
         })
     })
-    sel[KEY_IDS].map(idName => {
+    sel[KEY_IDS].forEach(idName => {
         const name = '#' + idName;
         selectors.push({
             label: name,
             insertText: name
         })
     })
-    sel[KEY_ATTRIBUTES].map(attribute => {
+    sel[KEY_ATTRIBUTES].forEach(attribute => {
         const name = attribute;
         selectors.push({
             label: name,
@@ -50,4 +45,27 @@ function registerSuggestions() {
     });
 }
 
-export {registerSuggestions}
+function getClassAndIdNames() {
+    /* gebruik set om dubbelen te voorkomen */
+    const classes = new Set();
+    const ids = new Set();
+    const attributes = new Set();
+
+    document.querySelectorAll('*').forEach(element => {
+        element.classList.forEach(className => {
+            classes.add(className);
+        });
+        if (element.id) {
+            ids.add(element.id);
+        }
+        for (const attribute of element.attributes) {
+            attributes.add(attribute.name);
+        }
+    });
+    StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
+    StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
+    StorageArea.set({[KEY_ATTRIBUTES]: Array.from(attributes)}).then();
+
+}
+
+export {registerSuggestions, getClassAndIdNames}

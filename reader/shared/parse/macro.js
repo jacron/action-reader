@@ -1,5 +1,5 @@
 import {decomment, validateExactLength, validateMinLength} from "../../content/util.js";
-import {keysGeneral, StorageArea} from "../../content/constants.js";
+import {keysGeneral, StorageArea} from "../constants.js";
 import {cssFromLines} from "./parse.js";
 import {popup} from "../../popup/popupState.js";
 

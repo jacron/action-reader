@@ -2,7 +2,7 @@ import {handleFormClickActions, handleFormKeydown, showExisting, showNew} from '
 import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
-import {registerSuggestions} from "./suggestions.js";
+import {registerSuggestions} from "../shared/suggestions.js";
 import {initDelay} from "./delay.js";
 import {handleKeyboardDown} from "./keyboardDown.js";
 import {initSwitches} from "./switches.js";

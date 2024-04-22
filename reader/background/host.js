@@ -1,4 +1,4 @@
-import {StorageArea} from "./backgroundState.js";
+import {StorageArea} from "../shared/constants.js";
 
 class Host {
     constructor(name) {

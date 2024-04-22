@@ -1,4 +1,4 @@
-import {initedHost, keysGeneral, StorageArea, styleIds} from "./constants.js";
+import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
 import {injectStyle} from "./content.js";
 
 function createArticle(nodes) {

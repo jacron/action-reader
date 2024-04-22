@@ -1,7 +1,7 @@
 import {parseFunctionInStyle} from "../shared/parse/parse.js";
-import {initedHost, KEY_CLASSES, KEY_IDS, KEY_ATTRIBUTES,
-    keysGeneral, StorageArea, styleIds} from "./constants.js";
+import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
 import {deleteReaderArticle, reSelect, select} from "./select.js";
+import {getClassAndIdNames} from "../shared/suggestions.js";
 
 
 /* initieel is readerOn true, als een soort quasi global hier */
@@ -157,29 +157,6 @@ function fromStorage(keys) {
     });
 }
 
-function getClassAndIdNames() {
-    /* verzamel class namen voor autocomplete lijst in monaco editor */
-    /* gebruik een set om dubbelen te voorkomen */
-    const classes = new Set();
-    const ids = new Set();
-    const attributes = new Set();
-
-    document.querySelectorAll('*').forEach(element => {
-        element.classList.forEach(className => {
-            classes.add(className);
-        });
-        if (element.id) {
-            ids.add(element.id);
-        }
-        for (const attribute of element.attributes) {
-            attributes.add(attribute.name);
-        }
-    });
-    StorageArea.set({[KEY_CLASSES]: Array.from(classes)}).then();
-    StorageArea.set({[KEY_IDS]: Array.from(ids)}).then();
-    StorageArea.set({[KEY_ATTRIBUTES]: Array.from(attributes)}).then();
-}
-
 function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
@@ -247,8 +224,25 @@ async function contentInitHost() {
     }
 }
 
+function colorSeekr() {
+    for (const styleSheet of document.styleSheets) {
+        try {
+            for (let i = 0; i < styleSheet.cssRules.length; i++) {
+                const cssRule = styleSheet.cssRules[i];
+                if (cssRule.cssText.indexOf('color') !== -1 || cssRule.cssText.indexOf('background') !== -1) {
+                    console.log(cssRule.cssText)
+                }
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+}
+
 export function main() {
     console.log("*** contentscript loaded for jreader!");
+    // experimental
+    // colorSeekr();
     contentInitHost().then(() => {
         getClassAndIdNames();
         hideAnnoying();

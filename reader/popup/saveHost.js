@@ -1,6 +1,7 @@
 import {Host} from "../background/host.js";
-import {background, StorageArea} from "../background/backgroundState.js";
+import {background} from "../background/backgroundState.js";
 import {popup} from "./popupState.js";
+import {StorageArea} from "../shared/constants.js";
 
 const KEY_DEFAULT = '_default';
 const KEY_DARK = '_dark';

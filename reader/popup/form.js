@@ -2,7 +2,7 @@ import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
 import {Host} from "../background/host.js";
 import {initHost} from "./popup.js";
-import {StorageArea} from "../background/backgroundState.js";
+import {StorageArea} from "../shared/constants.js";
 import {applyHost, saveHost} from "./saveHost.js";
 
 const KEY_HOSTNAME = 'hostname';

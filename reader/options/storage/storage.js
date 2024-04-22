@@ -1,5 +1,5 @@
 import  {vsPath} from "../../shared/monacoSettings.js";
-import {StorageArea} from "../../background/backgroundState.js";
+import {StorageArea} from "../../shared/constants.js";
 
 let sites = null;
 let editors = {};
