@@ -1,4 +1,4 @@
-import {handleFormClickActions, handleFormKeydown, showExisting, showNew} from './form.js';
+import {handleFormEvents, showExisting, showNew} from './form.js';
 import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
@@ -18,6 +18,7 @@ function initEditors(results, _activeHost) {
     if (custom) {
         showExisting();
         document.getElementById('host-name').innerText = _activeHost;
+        document.getElementById('active-host').checked = custom.active === 'on';
         initTabs(custom, results[KEY_DEFAULT], results[KEY_DARK]);
         initSuperTabs();
         initSwitches(_activeHost, custom);
@@ -37,8 +38,7 @@ function initHost(_activeHost) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    handleFormClickActions();
-    handleFormKeydown();
+    handleFormEvents();
     handleTabClickActions();
     handleKeyboardDown();
     STORAGE.get([KEY_OPENED_HOST], results => {

@@ -24,7 +24,7 @@ function makeSuggestions(sel) {
             insertText: name
         })
     })
-    console.log(selectors)
+    // console.log(selectors)
     return selectors;
 }
 

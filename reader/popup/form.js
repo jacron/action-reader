@@ -113,9 +113,11 @@ function handleFormKeydown() {
             });
         }
     })
+}
+
+function handleMacroKeys() {
     document.addEventListener('keydown', (e) => {
         const buttons = document.querySelectorAll('#macros button');
-        // console.log(e)
         if (e.ctrlKey) {
             for (const button of buttons) {
                 if (button.getAttribute('data-key') === e.key) {
@@ -126,4 +128,20 @@ function handleFormKeydown() {
     })
 }
 
-export {handleFormClickActions, handleFormKeydown, showExisting, showNew, save, apply}
+function handleActive() {
+    document.getElementById('active-host').addEventListener('change', (e) => {
+        console.log(e.target.checked)
+        const host = new Host(popup.activeHost);
+        host.store({active: e.target.checked ? 'on' : 'off'});
+        applyHost();
+    })
+}
+
+function handleFormEvents() {
+    handleFormClickActions();
+    handleFormKeydown();
+    handleMacroKeys();
+    handleActive();
+}
+
+export {handleFormEvents, showExisting, showNew, save, apply}

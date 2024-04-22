@@ -199,13 +199,15 @@ async function setDarkStyles(websiteProps, immersive) {
 }
 
 async function setStyles(websiteProps) {
-    initedHost.custom = websiteProps;
-    if (websiteProps && websiteProps.active === 'on') {
-        /* als er geen selector aanwezig is of van toepassing is, is immersive false */
-        const immersive = select(websiteProps.selector);
-        await setDefaultStyles(websiteProps, immersive);
-        await setDarkStyles(websiteProps, immersive);
-    }
+    /* als er geen selector aanwezig is of van toepassing is, is immersive false */
+    const immersive = select(websiteProps.selector);
+    await setDefaultStyles(websiteProps, immersive);
+    await setDarkStyles(websiteProps, immersive);
+    getHostDelay(hostName).then(delay => {
+        if (delay) {
+            setTimeout(() => reinjectStyles(), +delay);
+        }
+    })
 }
 
 async function contentInitHost() {
@@ -215,12 +217,11 @@ async function contentInitHost() {
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
-        await setStyles(websitePropsObject[hostName]);
-        getHostDelay(hostName).then(delay => {
-            if (delay) {
-                setTimeout(() => reinjectStyles(), +delay);
-            }
-        })
+        const websiteProps = websitePropsObject[hostName];
+        initedHost.custom = websiteProps;
+        if (websiteProps && websiteProps.active === 'on') {
+            await setStyles(websiteProps);
+        }
     }
 }
 
