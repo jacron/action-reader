@@ -10,11 +10,12 @@ function deleteHost(key) {
 
 function updateSite(input) {
     const li = input.parentElement;
-    const span = li.querySelector('span');
-    if (!span) {
+    const anchor = li.querySelector('a');
+    if (!anchor) {
+        console.error('anchor not found!')
         return;
     }
-    const name = span.innerText.trim();
+    const name = anchor.innerText.trim();
     for (const [key, value] of Object.entries(sites)) {
         if (key === name) {
             value.active = input.checked ? 'on' : 'off';
