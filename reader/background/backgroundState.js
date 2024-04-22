@@ -1,10 +1,10 @@
 const background = {
-    activeUrl: null,
-    tTabId: null,
-    tabId: null,
+    tTabId: null,  // tab id of the popup window
     winId: null,
-    activeHost: null,
-    lastSavedVersion: null,
+    activeTab: {
+        tabId: null,  // tab id of the website from which the popup was opened
+        hostName: null
+    }
 };
 
 export {background}

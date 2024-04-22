@@ -240,6 +240,9 @@ function colorSeekr() {
     }
 }
 
+/**
+ * this export is making content.js a module
+ */
 export function main() {
     console.log("*** contentscript loaded for jreader!");
     // experimental

@@ -26,9 +26,12 @@ function createWin(curWin) {
 function openEditors() {
     if (!background.winId) {
         withActiveTab().then(tab => {
+            const hostName = getJcReaderHost(tab.url);
+            background.activeTab.tabId = tab.id;
+            background.activeTab.hostName = hostName;
             chrome.windows.get(tab.windowId, curWin => {
                 chrome.storage.local
-                    .set({[KEY_OPENED_HOST]: getJcReaderHost(tab.url)}).then();
+                    .set({[KEY_OPENED_HOST]: hostName}).then();
                 createWin(curWin);
             })
         })
@@ -64,4 +67,4 @@ function commandListener(command) {
     }
 }
 
-export {openEditors, commandListener}
+export {openEditors, closeEditors, commandListener}

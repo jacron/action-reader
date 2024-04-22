@@ -65,19 +65,12 @@ function _applyHost(tabId) {
 }
 
 function applyHost() {
-    const tabId = background.tabId;
-    if (!tabId) {
-        // NIET withActiveTab gebruiken!
-        chrome.tabs.query({
-            active: true
-        }, tabs => {
-            _applyHost(tabs[0].id);
-        })
-
-    } else {
-        console.log('!!! background.tabId toch gezet !!!');
-        _applyHost(tabId);
-    }
+    // NIET withActiveTab gebruiken!
+    chrome.tabs.query({
+        active: true
+    }, tabs => {
+        _applyHost(tabs[0].id);
+    })
 }
 
 export {saveHost, applyHost}
