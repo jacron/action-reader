@@ -16,6 +16,15 @@ function showEditor(doc) {
     }
 }
 
+function hasDirtyTab() {
+    for (const tab of document.querySelectorAll('#tabs > div')) {
+        if (tab.textContent.indexOf('*') !== -1) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function setDirty(dirty, doc) {
     const name = doc.name;
     const tabs = document.getElementById('tabs');
@@ -46,4 +55,4 @@ function setEditor(doc) {
     }
 }
 
-export {setEditor, setDirty}
+export {setEditor, setDirty, hasDirtyTab}

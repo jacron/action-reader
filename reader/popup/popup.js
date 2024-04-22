@@ -7,6 +7,7 @@ import {initDelay} from "./delay.js";
 import {handleKeyboardDown} from "./keyboardDown.js";
 import {initSwitches} from "./switches.js";
 import {parseMacroInStyle} from "../shared/parse/macro.js";
+import {hasDirtyTab} from "./editor.js";
 
 const STORAGE = chrome.storage.local;
 const KEY_OPENED_HOST = '_opened_host';
@@ -37,6 +38,14 @@ function initHost(_activeHost) {
     })
 }
 
+function handleWindowClose() {
+    window.onbeforeunload = function(e) {
+        if (hasDirtyTab()) {
+            e.returnValue = "wat is dat nou?";
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     handleFormEvents();
     handleTabClickActions();
@@ -48,6 +57,7 @@ document.addEventListener('DOMContentLoaded', function () {
     require.config({ paths: { vs: vsPath}});
     registerSuggestions();
     parseMacroInStyle();
+    handleWindowClose();
 });
 
 export {initHost}
