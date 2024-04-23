@@ -4,10 +4,8 @@
   "description": "Create your own view for a website",
   "main": "reader/background/actions.js",
   "dependencies": {
-    "monaco-editor": "^0.19.3",
-    "sass": "^1.26.3"
+    "monaco-editor": "^0.19.3"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
