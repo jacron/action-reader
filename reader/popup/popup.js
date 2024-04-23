@@ -26,6 +26,7 @@ function initEditors(results, _activeHost) {
     } else {
         showNew();
         document.getElementById('new-host-name').innerText = _activeHost;
+        document.getElementById('active-host').checked = 'on';
     }
     initDelay(_activeHost);
 }
