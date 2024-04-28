@@ -3,17 +3,6 @@ import {keysGeneral, StorageArea} from "../constants.js";
 import {cssFromLines} from "./parse.js";
 import {popup} from "../../popup/popupState.js";
 
-function macroFromLines(lines, line, nr) {
-    const declaration = decomment(line);
-    const w = declaration.split(' ');
-    if (!validateMinLength(w, 1)) return;
-    if (w[0] === '@macro' && +w[1] === nr) {
-        if (!validateExactLength(w, 3)) return null;
-        return cssFromLines(lines, line);
-    }
-    return null;
-}
-
 function insertText(text) {
     const selection = popup.activeDoc.editor.getSelection();
     const id = { major: 1, minor: 1 };

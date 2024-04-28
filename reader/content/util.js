@@ -12,7 +12,7 @@ function validateMinLength(w, len) {
 
 function validateExactLength(w, len) {
     if (w.length !== len) {
-        console.error('*** wrong number of arguments in function declaration in style');
+        console.error(`*** wrong number of arguments (${w.length}) in function declaration in style`);
         return false;
     }
     return true;

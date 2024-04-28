@@ -12,3 +12,6 @@ caption, styleId, initial
 @macro:
 
 @macro 1 begin-dark
+
+@contains "Over de auteur" b
+color: red;

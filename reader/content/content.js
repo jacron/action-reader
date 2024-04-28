@@ -183,8 +183,8 @@ async function setDefaultStyles(websiteProps, immersive) {
         injectStyle(defaultStyle, styleIds.general.default);
         initedHost.defaultText = defaultStyle;
     }
-    parseFunctionInStyle(websiteProps.default, results => annoying = results);
     injectStyle(websiteProps.default, styleIds.custom.default);
+    parseFunctionInStyle(websiteProps.default, results => annoying = results);
 }
 
 async function setDarkStyles(websiteProps, immersive) {

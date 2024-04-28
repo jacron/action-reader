@@ -1,6 +1,6 @@
 import {injectStyle, removeStyle} from "../../content/content.js";
 import {decomment, validateExactLength} from "../../content/util.js";
-import {_createToggleButton} from "../../content/button.js";
+import {_createToggleButton} from "./button.js";
 
 function toggleOneElement(element) {
     if (element.style.display === 'none') {
@@ -19,11 +19,13 @@ function toggleElements(selector) {
     }
 }
 
-function createToggleStyleButton(caption, styleId, initial, lines, line) {
+function createToggleStyleButton(options, lines, line) {
+    const {caption, styleId, initial} = options;
     _createToggleButton(caption, initial, () => toggleStyle(styleId, lines, line));
 }
 
-function createToggleButton(caption, selector, initial) {
+function createToggleButton(options) {
+    const {caption, selector, initial} = options;
     _createToggleButton(caption, initial, () => toggleElements(selector));
 }
 
@@ -53,8 +55,21 @@ function toggleStyle(styleId, lines, line) {
     }
 }
 
-function storeAnnoying(lines, line, cb) {
-    cb(cssFromLines(lines, line));
+function styleContaining(options, lines, line) {
+    const realText = options.text.replace(/_/g, ' ');
+    console.log('*** search content:' + realText)
+    for (const element of document.querySelectorAll(options.selector)) {
+        if (element.textContent === realText) {
+            console.log('*** found', element);
+            const rule = cssFromLines(lines, line).split('\n')[0];
+            const w = rule.split(' ');
+            if (w[0] === 'parent') {
+                const parent = element.parentElement;
+                parent.style[w[1]] = w[2] + ' !important';
+            }
+            break;
+        }
+    }
 }
 
 function parseFunction(line, lines, cb) {
@@ -63,14 +78,18 @@ function parseFunction(line, lines, cb) {
     switch (w[0]) {
         case '@toggle':
             if (!validateExactLength(w, 4)) return;
-            createToggleButton(w[1], w[2], w[3]);
+            createToggleButton({caption: w[1], selector: w[2], inital: w[3]});
             break;
         case '@toggle-style':
             if (!validateExactLength(w, 5)) return;
-            createToggleStyleButton(w[1], w[2], w[3], lines, line);
+            createToggleStyleButton({caption: w[1], styleId: w[2], initial: w[3]}, lines, line);
             break;
         case  '@annoying':
-            storeAnnoying(lines, line, cb);
+            cb(cssFromLines(lines, line));
+            break;
+        case '@contains':
+            if (!validateExactLength(w, 3)) return;
+            styleContaining({selector: w[1], text: w[2]}, lines, line);
             break;
     }
 }
