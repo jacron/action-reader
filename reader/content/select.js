@@ -1,28 +1,6 @@
 import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
 import {injectStyle} from "./content.js";
-
-const styleVault = {
-    stylesheet: {
-        selector: 'link[rel=stylesheet]',
-        elements: []
-    },
-    preload: {
-        selector: 'link[rel=preload]',
-        elements: []
-    },
-    preconnect: {
-        selector: 'link[rel=preconnect]',
-        elements: []
-    },
-    style: {
-        selector: 'style',
-        elements: []
-    },
-    script: {
-        selector: 'script',
-        elements: []
-    }
-}
+import {headToVault} from "./vault.js";
 
 function createArticle(nodes) {
     const article = document.createElement('div');
@@ -64,26 +42,6 @@ function getNodes(selector) {
         }
     }
     return nodes;
-}
-
-function headToVault() {
-    for (const key in styleVault) {
-        const vault = styleVault[key];
-        const elements = document.head.querySelectorAll(vault.selector);
-        vault.elements = [];
-        for (const element of elements) {
-            vault.elements.push(element);
-            document.head.removeChild(element);
-        }
-    }
-}
-
-function vaultToHead() {
-    for (const key in styleVault) {
-        for (const element of styleVault[key].elements) {
-            document.head.appendChild(element);
-        }
-    }
 }
 
 function replaceHead() {
@@ -147,4 +105,4 @@ function select(selector) {
     return false;
 }
 
-export {select, reSelect, deleteReaderArticle, vaultToHead}
+export {select, reSelect, deleteReaderArticle}

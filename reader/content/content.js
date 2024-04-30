@@ -1,7 +1,8 @@
 import {parseFunctionInStyle} from "../shared/parse/parse.js";
 import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
-import {deleteReaderArticle, reSelect, select, vaultToHead} from "./select.js";
+import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
+import {vaultToHead} from "./vault.js";
 
 
 /* initieel is readerOn true, als een soort quasi global hier */
