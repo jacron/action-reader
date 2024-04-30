@@ -1,5 +1,6 @@
 import  {vsPath} from "../../shared/monacoSettings.js";
 import {StorageArea} from "../../shared/constants.js";
+import {bind} from "../../lib/util.js";
 
 let sites = null;
 let editors = {};
@@ -209,6 +210,25 @@ function filterOnInput() {
     })
 }
 
+function onReaderLoad(e) {
+    const sites = JSON.parse(e.target.result);
+    // sitesData = sites;
+    _listSites(sites);
+}
+
+function importOptions(e) {
+    e.preventDefault();
+    const inputFile = document.getElementById('input-file');
+    const file = inputFile.files[0];
+    if (!file) {
+        alert('no file choosen');
+        return;
+    }
+    const fileReader = new FileReader();
+    fileReader.onload = onReaderLoad;
+    fileReader.readAsText(file);
+}
+
 function init() {
     /* require (2x) werkt hier dankzij monaco library */
     require.config({ paths: {
@@ -220,6 +240,10 @@ function init() {
     initDelete();
     listSites();
     filterOnInput();
+    bind('click', [
+        ['btn-import', importOptions],
+    ]);
+
 }
 
 init();

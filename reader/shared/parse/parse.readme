@@ -1,13 +1,23 @@
+Put these special rules in between css comments, e.g.
+/* @toggle */
+
+or
+
+/* @toggle-style ... begin
+...
+@end */
+
+
 @toggle:
 
 @toggle sidebar #sidebar false
 @toggle hide_pro_icons article:has(span.sr-only) false
-caption, selector, initial
+args: caption, selector, initial
 
 @toggle-style:
 
 @toggle-style sidebar style1 true begin
-caption, styleId, initial
+args: caption, styleId, initial
 
 @macro:
 
