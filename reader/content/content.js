@@ -1,6 +1,6 @@
 import {parseFunctionInStyle} from "../shared/parse/parse.js";
 import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
-import {deleteReaderArticle, reSelect, select} from "./select.js";
+import {deleteReaderArticle, reSelect, select, vaultToHead} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 
 
@@ -70,7 +70,7 @@ function replaceStyle(req) {
     injectStyle(req.css, req.id);
 }
 
-function removeStyles() {
+function removeMyStyles() {
     for (const theme in styleIds) {
         for (const styleId of Object.values(styleIds[theme])) {
             removeStyle(styleId);
@@ -83,8 +83,9 @@ function toggleGeneralContent(req) {
     if (mode) {
         contentInitHost().then();
     } else {
-        removeStyles();
+        removeMyStyles();
         deleteReaderArticle();
+        vaultToHead();
     }
 }
 
@@ -122,8 +123,9 @@ function toggleReader() {
     if (readerOn) {
         contentInitHost().then();
     } else {
-        removeStyles();
+        removeMyStyles();
         deleteReaderArticle();
+        vaultToHead();
     }
 }
 
@@ -225,28 +227,11 @@ async function contentInitHost() {
     }
 }
 
-function colorSeekr() {
-    for (const styleSheet of document.styleSheets) {
-        try {
-            for (let i = 0; i < styleSheet.cssRules.length; i++) {
-                const cssRule = styleSheet.cssRules[i];
-                if (cssRule.cssText.indexOf('color') !== -1 || cssRule.cssText.indexOf('background') !== -1) {
-                    console.log(cssRule.cssText)
-                }
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
-}
-
 /**
  * this export is making content.js a module
  */
 export function main() {
     console.log("*** contentscript loaded for jreader!");
-    // experimental
-    // colorSeekr();
     contentInitHost().then(() => {
         getClassAndIdNames();
         hideAnnoying();

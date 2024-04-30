@@ -1,6 +1,29 @@
 import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
 import {injectStyle} from "./content.js";
 
+const styleVault = {
+    stylesheet: {
+        selector: 'link[rel=stylesheet]',
+        elements: []
+    },
+    preload: {
+        selector: 'link[rel=preload]',
+        elements: []
+    },
+    preconnect: {
+        selector: 'link[rel=preconnect]',
+        elements: []
+    },
+    style: {
+        selector: 'style',
+        elements: []
+    },
+    script: {
+        selector: 'script',
+        elements: []
+    }
+}
+
 function createArticle(nodes) {
     const article = document.createElement('div');
     for (let node of nodes) {
@@ -43,19 +66,28 @@ function getNodes(selector) {
     return nodes;
 }
 
-function removeElements(selector) {
-    const elements = document.head.querySelectorAll(selector);
-    for (const element of elements) {
-        document.head.removeChild(element);
+function headToVault() {
+    for (const key in styleVault) {
+        const vault = styleVault[key];
+        const elements = document.head.querySelectorAll(vault.selector);
+        vault.elements = [];
+        for (const element of elements) {
+            vault.elements.push(element);
+            document.head.removeChild(element);
+        }
+    }
+}
+
+function vaultToHead() {
+    for (const key in styleVault) {
+        for (const element of styleVault[key].elements) {
+            document.head.appendChild(element);
+        }
     }
 }
 
 function replaceHead() {
-    removeElements('link[rel=stylesheet]');
-    removeElements('link[rel=preload]');
-    removeElements('link[rel=preconnect]');
-    removeElements('style');
-    removeElements('script');
+    headToVault();
     StorageArea.get([keysGeneral.default, keysGeneral.dark], results => {
         const defaultStyle = results[keysGeneral.default];
         injectStyle(defaultStyle, styleIds.general.default);
@@ -72,18 +104,11 @@ function injectArticle(nodes) {
     container.appendChild(readerArticle);
     replaceHead();
     setTimeout(() => {
-        document.body.innerHTML = '';
+        // document.body.innerHTML = '';
         document.body.appendChild(container);
         console.log('readerArticle appended');
         readerArticle.focus();
     }, 100);
-}
-
-function deleteReader() {
-    const article = document.getElementById('readercontainer');
-    if (article) {
-        document.body.removeChild(article);
-    }
 }
 
 function reSelect(req) {
@@ -91,7 +116,10 @@ function reSelect(req) {
 }
 
 function deleteReaderArticle() {
-    deleteReader();
+    const article = document.getElementById('readercontainer');
+    if (article) {
+        document.body.removeChild(article);
+    }
 }
 
 function setFocus() {
@@ -104,7 +132,7 @@ function setFocus() {
 }
 
 function select(selector) {
-    deleteReader();
+    deleteReaderArticle();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
         const nodes = getNodes(selectors);
@@ -119,4 +147,4 @@ function select(selector) {
     return false;
 }
 
-export {select, reSelect, deleteReaderArticle}
+export {select, reSelect, deleteReaderArticle, vaultToHead}
