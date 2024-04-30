@@ -164,13 +164,20 @@ function messageListener(req, sender, sendResponse) {
     initActions(req, sendResponse);
 }
 
+/**
+ * laat js elementen verbergen... maar let erop dat het element readerarticle een duplicaat is
+ * dus verberg alle elementen die op een selector passen
+ */
 function hideAnnoying() {
     if (annoying.length) {
         for (const selector of annoying.split('\n')) {
-            console.log(selector)
             try {
-                const element = document.querySelector(selector);
-                if (element) element.style.display = 'none';
+                const elements = document.querySelectorAll(selector);
+                if (elements) {
+                    for (const element of elements) {
+                        element.style.display = 'none';
+                    }
+                }
             } catch (e) {
                 console.error(e)
             }
