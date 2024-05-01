@@ -54,6 +54,7 @@ function commandListener(command) {
 }
 
 function messageListener(req, sender, sendResponse) {
+    console.log(req.message)
     if (req.message === 'close-editors') {
         window.close();
     }
@@ -63,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
     handleFormEvents();
     handleTabClickActions();
     handleKeyboardDown();
-    STORAGE.get([KEY_OPENED_HOST], results => {
+    chrome.storage.session.get([KEY_OPENED_HOST], results => {
         initHost(results[KEY_OPENED_HOST]);
     })
     /* require werkt hier dankzij monaco library */

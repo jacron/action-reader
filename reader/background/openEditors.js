@@ -2,10 +2,13 @@ import {getJcReaderHost} from "../lib/util.js";
 import {messageToContent} from "../shared/popuplib.js";
 import {background} from "./backgroundState.js";
 
+const KEY_OPENED_HOST = '_opened_host';
+
 function openEditors() {
     chrome.tabs.query({active: true}, ([tab]) => {
         background.tTabId = tab.id;
         background.activeHost = getJcReaderHost(tab.url);
+        chrome.storage.session.set({[KEY_OPENED_HOST]: background.activeHost}).then();
         chrome.sidePanel.open({tabId: tab.id}).then();
     })
 }
