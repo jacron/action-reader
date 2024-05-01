@@ -1,5 +1,4 @@
 import {Host} from "../background/host.js";
-import {background} from "../background/backgroundState.js";
 import {popup} from "./popupState.js";
 import {StorageArea} from "../shared/constants.js";
 
@@ -38,23 +37,27 @@ function saveHost() {
 }
 
 function injectCss(tabId) {
+
     const {text, styleId} = popup.activeDoc;
-    chrome.tabs.sendMessage(tabId, {
+    const message = {
         message: 'replaceStyle',
         css: text,
         id: styleId
-    });
+    }
+    chrome.tabs.sendMessage(tabId, message).then()
+        .catch(err => console.error('*** ' + err.message));
 }
 
 function reInjectMakeReader(selector, tabId) {
     chrome.tabs.sendMessage(tabId, {
         message: 'reSelect',
         selector
-    });
+    }).then();
 }
 
 function _applyHost(tabId) {
     console.log('*** in _applyHost');
+
     const {text, name} = popup.activeDoc;
     if (~['default', 'dark', '_default', '_dark'].indexOf(name )) {
         injectCss(tabId);
@@ -65,11 +68,12 @@ function _applyHost(tabId) {
 }
 
 function applyHost() {
-    // NIET withActiveTab gebruiken!
     chrome.tabs.query({
-        active: true
-    }, tabs => {
-        _applyHost(tabs[0].id);
+        active: true,
+        lastFocusedWindow: true
+    }, ([tab]) => {
+        console.log(tab.url)
+        _applyHost(tab.id);
     })
 }
 

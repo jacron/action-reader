@@ -47,6 +47,12 @@ function handleWindowClose() {
     }
 }
 
+function commandListener(command) {
+    if (command === 'close-editors') {
+        window.close()
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     handleFormEvents();
     handleTabClickActions();
@@ -59,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
     registerSuggestions();
     parseMacroInStyle();
     handleWindowClose();
+    chrome.commands.onCommand.addListener(commandListener);
 });
 
 export {initHost}

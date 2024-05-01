@@ -4,6 +4,7 @@
   "description": "Create your own view for a website",
   "main": "reader/background/actions.js",
   "dependencies": {
+    "@types/chrome": "^0.0.267",
     "monaco-editor": "^0.19.3"
   },
   "scripts": {

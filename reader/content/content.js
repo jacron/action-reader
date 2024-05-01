@@ -141,6 +141,7 @@ const actionBindings = {
 
 function initActions(req, sendResponse) {
     if (req.message) {
+        // console.log(req)
         const func = actionBindings[req.message];
         if (func) {
             func(req);
@@ -204,8 +205,10 @@ async function setDarkStyles(websiteProps, immersive) {
         injectStyle(darkStyle, styleIds.general.dark);
         initedHost.darkText = darkStyle;
     }
-    injectStyle(websiteProps.dark, styleIds.custom.dark);
-    document.body.classList.add('dark');
+    else {
+        injectStyle(websiteProps.dark, styleIds.custom.dark);
+        document.body.classList.add('dark');
+    }
 }
 
 async function setStyles(websiteProps, hostName) {
