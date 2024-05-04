@@ -122,6 +122,24 @@ function getSelectedText() {
     return editor.getModel().getValueInRange(selection);
 }
 
+function handleMetaKeyDown(key) {
+    if (key === 'v') {
+        navigator.clipboard.readText().then(text => {
+            insertText(text);
+        })
+    }
+    if (key === 'c') {
+        const selectedText = getSelectedText();
+        navigator.clipboard.writeText(selectedText).then();
+    }
+    if (key === 'x') {
+        const selectedText = getSelectedText();
+        navigator.clipboard.writeText(selectedText).then();
+        const editor = popup.activeDoc.editor;
+        editor.trigger(monaco.KeyCode.Delete, 'deleteLeft');
+    }
+}
+
 function handleMacroKeys() {
     document.addEventListener('keydown', (e) => {
         const buttons = document.querySelectorAll('#macros button');
@@ -132,14 +150,8 @@ function handleMacroKeys() {
                 }
             }
         }
-        if (e.metaKey && e.key === 'v') {
-            navigator.clipboard.readText().then(text => {
-                insertText(text);
-            })
-        }
-        if (e.metaKey && e.key === 'c') {
-            const selectedText = getSelectedText();
-            navigator.clipboard.writeText(selectedText).then();
+        if (e.metaKey) {
+            handleMetaKeyDown(e.key);
         }
     })
 }
