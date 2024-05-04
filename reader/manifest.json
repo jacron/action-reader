@@ -11,7 +11,8 @@
     "activeTab",
     "downloads",
     "contextMenus",
-    "sidePanel"
+    "sidePanel",
+    "clipboardRead"
   ],
   "icons": {
     "128": "images/reader white.png"

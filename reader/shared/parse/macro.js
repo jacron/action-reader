@@ -39,4 +39,4 @@ function parseMacroInStyle() {
     });
 }
 
-export {parseMacroInStyle}
+export {parseMacroInStyle, insertText}

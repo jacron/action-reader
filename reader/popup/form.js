@@ -4,6 +4,7 @@ import {Host} from "../background/host.js";
 import {initHost} from "./popup.js";
 import {StorageArea} from "../shared/constants.js";
 import {applyHost, saveHost} from "./saveHost.js";
+import {insertText} from "../shared/parse/macro.js";
 
 const KEY_HOSTNAME = 'hostname';
 
@@ -115,6 +116,12 @@ function handleFormKeydown() {
     })
 }
 
+function getSelectedText() {
+    const editor = popup.activeDoc.editor;
+    const selection = editor.getSelection();
+    return editor.getModel().getValueInRange(selection);
+}
+
 function handleMacroKeys() {
     document.addEventListener('keydown', (e) => {
         const buttons = document.querySelectorAll('#macros button');
@@ -124,6 +131,15 @@ function handleMacroKeys() {
                     button.click();
                 }
             }
+        }
+        if (e.metaKey && e.key === 'v') {
+            navigator.clipboard.readText().then(text => {
+                insertText(text);
+            })
+        }
+        if (e.metaKey && e.key === 'c') {
+            const selectedText = getSelectedText();
+            navigator.clipboard.writeText(selectedText).then();
         }
     })
 }
