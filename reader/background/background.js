@@ -28,7 +28,7 @@ function windowRemoved(winId) {
 }
 
 chrome.tabs.onUpdated.addListener(updateListener);
-chrome.tabs.onActivated.addListener(activateListener);
+// chrome.tabs.onActivated.addListener(activateListener);
 chrome.commands.onCommand.addListener(commandListener);
 chrome.windows.onRemoved.addListener(windowRemoved);
 
