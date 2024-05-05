@@ -2,10 +2,8 @@ import {updateBadge} from "./badge.js";
 import {background} from "./backgroundState.js";
 import {commandListener} from "./openEditors.js";
 
-function updateListener(_tabId, info) {
-    if (info.status === 'loading' || info.status === 'complete') {
-        updateBadge(info.url);
-    }
+function activatedListener(info) {
+    chrome.tabs.get(info.tabId, tab => updateBadge(tab.url));
 }
 
 function windowRemoved(winId) {
@@ -14,7 +12,15 @@ function windowRemoved(winId) {
     }
 }
 
-chrome.tabs.onUpdated.addListener(updateListener);
+function updatedListener(tabId) {
+    if (tabId) {
+        chrome.tabs.get(tabId, tab => updateBadge(tab.url));
+    }
+}
+
+chrome.tabs.onActivated.addListener(activatedListener);
+chrome.tabs.onUpdated.addListener(updatedListener);
 chrome.commands.onCommand.addListener(commandListener);
 chrome.windows.onRemoved.addListener(windowRemoved);
+
 

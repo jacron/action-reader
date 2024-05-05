@@ -1,15 +1,17 @@
 import {getJcReaderHost} from "../lib/util.js";
-import {Host} from "./host.js";
+import {getHostFieldValue} from "./host.js";
 
 function updateBadge(url) {
+    console.log(url)
     const activeHost = getJcReaderHost(url);
     if (!activeHost || activeHost.length === 0) {  // maybe the popup
         return;
     }
-    const host = new Host(activeHost);
-    host.isActive().then(activeOn => {
-        chrome.action.setBadgeText({text: activeOn ? 'on' : ''});
-    })
+    getHostFieldValue(activeHost, 'active')
+        .then(text => {
+            console.log(text)
+            chrome.action.setBadgeText({text: text}).then()
+        })
 }
 
 export {updateBadge}

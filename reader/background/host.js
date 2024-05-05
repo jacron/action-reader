@@ -35,4 +35,14 @@ class Host {
 
 }
 
-export { Host }
+function getHostFieldValue(hostname, field) {
+    return new Promise((resolve) => {
+        StorageArea.get([hostname], results => {
+            const obj = results[hostname];
+            if (obj) resolve(obj[field]);
+            else resolve(null);
+        });
+    })
+}
+
+export { Host, getHostFieldValue }
