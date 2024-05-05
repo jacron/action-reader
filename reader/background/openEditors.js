@@ -16,7 +16,7 @@ function openEditors() {
 
 function closeEditors() {
     chrome.runtime.sendMessage({message: 'close-editors'}).then()
-        .catch(err => console.error(err.message))
+        .catch(err => console.log(err.message))
 }
 
 function commandListener(command) {

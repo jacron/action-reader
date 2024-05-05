@@ -19,13 +19,13 @@ function saveHost() {
     const text = popup.activeDoc.text;
     switch (popup.activeDoc.name) {
         case 'default':
-            host.store({default: text});
+            host.storeSomething('default', text);
             break;
         case 'dark':
-            host.store({dark: text});
+            host.storeSomething('dark', text);
             break;
         case 'selector':
-            host.store({selector: text});
+            host.storeSomething('selector', text);
             break;
         case '_default':
             storeDefault(text);
@@ -45,7 +45,7 @@ function injectCss(tabId) {
         id: styleId
     }
     chrome.tabs.sendMessage(tabId, message).then()
-        .catch(err => console.error('*** ' + err.message));
+        .catch(err => console.log('*** ' + err.message));
 }
 
 function reInjectMakeReader(selector, tabId) {

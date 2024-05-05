@@ -109,7 +109,7 @@ function handleFormKeydown() {
         if (e.key === 'Enter') {
             console.log(inputDelay.value);
             getCurrentHost().then(host => {
-                host.store({delay: inputDelay.value});
+                host.storeSomething('delay', inputDelay.value);
                 showSavedDelayMsg();
             });
         }
@@ -160,7 +160,7 @@ function handleActive() {
     document.getElementById('active-host').addEventListener('change', (e) => {
         console.log(e.target.checked)
         const host = new Host(popup.activeHost);
-        host.store({active: e.target.checked ? 'on' : 'off'});
+        host.storeActive(e.target.checked);
         applyHost();
     })
 }

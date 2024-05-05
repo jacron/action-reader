@@ -7,51 +7,30 @@ class Host {
     selector = [];
     css = '';
 
-    store(changes) {
-        this.getCustom().then(response => {
-            const newHost = {};
-            if (changes) {
-                response = response[this.name];
-                if (!response) {
-                    newHost.default = changes.default || '';
-                    newHost.dark = changes.dark || '';
-                    newHost.selector = changes.selector || '';
-                    newHost.active = changes.active || 'on';
-                    newHost.delay = changes.delay;  // maybe null
-                } else {
-                    newHost.default = changes.default || response.default || '';
-                    newHost.dark = changes.dark || response.dark || '';
-                    newHost.selector = changes.selector || response.selector || '';
-                    newHost.active = changes.active || response.active || 'on';
-                    newHost.delay = changes.delay || response.delay;
-                }
-            }
-            StorageArea.set({[this.name]: newHost}, () => {});
-        });
-    }
-
     isActive() {
         return new Promise((resolve) => {
-            this.getCustom().then(response => {
-                const entries = Object.entries(response);
-                if (entries.length > 0) {
-                    const [site, options] = entries[0];
-                    if (site.length > 0 && options.active === 'on') {
-                        resolve(true);
-                    }
+            StorageArea.get([this.name], results => {
+                const obj = results[this.name];
+                if (obj && obj.active === 'on') {
+                    resolve(true);
+                } else {
+                    resolve(false);
                 }
-                resolve(false);
             });
         })
     }
 
-    getCustom() {
-        const keys = [this.name];
-        return new Promise((resolve) => {
-            StorageArea.get(keys, results => {
-                resolve(results)
-            });
-        });
+    storeActive(active) {
+        this.storeSomething('active', active ? 'on' : 'off');
+    }
+
+    storeSomething(field, value) {
+        StorageArea.get([this.name], results => {
+            let obj = results[this.name];
+            if (!obj) obj = {};
+            obj[field] = value;
+            StorageArea.set({[this.name]: obj}, () => {});
+        })
     }
 
 }
