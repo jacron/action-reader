@@ -1,40 +1,5 @@
 import {StorageArea} from "../shared/constants.js";
 
-class Host {
-    constructor(name) {
-        this.name = name;
-    }
-    selector = [];
-    css = '';
-
-    isActive() {
-        return new Promise((resolve) => {
-            StorageArea.get([this.name], results => {
-                const obj = results[this.name];
-                if (obj && obj.active === 'on') {
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            });
-        })
-    }
-
-    storeActive(active) {
-        this.storeSomething('active', active ? 'on' : 'off');
-    }
-
-    storeSomething(field, value) {
-        StorageArea.get([this.name], results => {
-            let obj = results[this.name];
-            if (!obj) obj = {};
-            obj[field] = value;
-            StorageArea.set({[this.name]: obj}, () => {});
-        })
-    }
-
-}
-
 function getHostFieldValue(hostname, field) {
     return new Promise((resolve) => {
         StorageArea.get([hostname], results => {
@@ -45,4 +10,24 @@ function getHostFieldValue(hostname, field) {
     })
 }
 
-export { Host, getHostFieldValue }
+function getCurrentHost() {
+    const KEY_HOSTNAME = 'hostname';
+    return new Promise((resolve, reject) => {
+        StorageArea.get([KEY_HOSTNAME], results => {
+            if (results) {
+                resolve(results[KEY_HOSTNAME]);
+            } else reject();
+        })
+    })
+}
+
+function setHostFieldValue(hostname, field, value) {
+    StorageArea.get([hostname], results => {
+        let obj = results[hostname];
+        if (!obj) obj = {};
+        obj[field] = value;
+        StorageArea.set({[hostname]: obj}, () => {});
+    })
+}
+
+export { getHostFieldValue, setHostFieldValue, getCurrentHost }

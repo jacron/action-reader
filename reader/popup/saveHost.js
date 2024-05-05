@@ -1,4 +1,4 @@
-import {Host} from "../background/host.js";
+import {setHostFieldValue} from "../background/host.js";
 import {popup} from "./popupState.js";
 import {StorageArea} from "../shared/constants.js";
 
@@ -14,18 +14,17 @@ function storeDark(css) {
 }
 
 function saveHost() {
-    const host = new Host(popup.activeHost);
     applyHost();
     const text = popup.activeDoc.text;
     switch (popup.activeDoc.name) {
         case 'default':
-            host.storeSomething('default', text);
+            setHostFieldValue(popup.activeHost, 'default', text);
             break;
         case 'dark':
-            host.storeSomething('dark', text);
+            setHostFieldValue(popup.activeHost, 'dark', text);
             break;
         case 'selector':
-            host.storeSomething('selector', text);
+            setHostFieldValue(popup.activeHost, 'selector', text);
             break;
         case '_default':
             storeDefault(text);

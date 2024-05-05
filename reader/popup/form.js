@@ -1,12 +1,10 @@
 import {setDirty} from "./editor.js";
 import {popup} from "./popupState.js";
-import {Host} from "../background/host.js";
+import {getCurrentHost, setHostFieldValue} from "../background/host.js";
 import {initHost} from "./popup.js";
 import {StorageArea} from "../shared/constants.js";
 import {applyHost, saveHost} from "./saveHost.js";
 import {insertText} from "../shared/parse/macro.js";
-
-const KEY_HOSTNAME = 'hostname';
 
 function closeMe() {
     close();
@@ -93,23 +91,13 @@ function showSavedDelayMsg () {
     }, 5000)
 }
 
-function getCurrentHost() {
-    return new Promise((resolve, reject) => {
-        StorageArea.get([KEY_HOSTNAME], results => {
-            if (results) {
-                resolve(new Host(results[KEY_HOSTNAME]));
-            } else reject();
-        })
-    })
-}
-
 function handleFormKeydown() {
     const inputDelay = document.getElementById('editor-input-delay');
     inputDelay.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             console.log(inputDelay.value);
             getCurrentHost().then(host => {
-                host.storeSomething('delay', inputDelay.value);
+                setHostFieldValue(host, 'delay', inputDelay.value);
                 showSavedDelayMsg();
             });
         }
@@ -158,9 +146,7 @@ function handleMacroKeys() {
 
 function handleActive() {
     document.getElementById('active-host').addEventListener('change', (e) => {
-        console.log(e.target.checked)
-        const host = new Host(popup.activeHost);
-        host.storeActive(e.target.checked);
+        setHostFieldValue(popup.activeHost, 'active', e.target.checked ? 'on' : 'off');
         applyHost();
     })
 }
