@@ -1,30 +1,25 @@
 import {KEY_ATTRIBUTES, KEY_CLASSES, KEY_IDS, StorageArea} from "./constants.js";
 
+function suggestion(s) {
+    return {label: s, insertText: s};
+}
+
 function makeSuggestions(sel) {
     /* mix classes en ids in selectors */
     const selectors = [];
+    for (const s of ['#readerarticle', '#readercontainer', '.dark']) {
+        selectors.push(suggestion(s));
+    }
     sel[KEY_CLASSES].forEach(className => {
-        const name = '.' + className;
-        selectors.push({
-            label: name,
-            insertText: name
-        })
+        selectors.push(suggestion('.' + className));
     })
     sel[KEY_IDS].forEach(idName => {
-        const name = '#' + idName;
-        selectors.push({
-            label: name,
-            insertText: name
-        })
+        selectors.push(suggestion('#' + idName));
     })
     sel[KEY_ATTRIBUTES].forEach(attribute => {
-        const name = attribute;
-        selectors.push({
-            label: name,
-            insertText: name
-        })
+        selectors.push(suggestion(attribute));
     })
-    // console.log(selectors)
+    console.log(selectors)
     return selectors;
 }
 
