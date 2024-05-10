@@ -8,20 +8,24 @@ or
 @end */
 
 
-@toggle:
+# @toggle:
 
 @toggle sidebar #sidebar false
 @toggle hide_pro_icons article:has(span.sr-only) false
 args: caption, selector, initial
 
-@toggle-style:
+# @toggle-style:
 
 @toggle-style sidebar style1 true begin
 args: caption, styleId, initial
 
-@macro:
+# @macro:
 
 @macro 1 begin-dark
 
-@contains "Over de auteur" b
+# @contains "Over de auteur" b
 color: red;
+
+# @redirect
+
+@redirect selector

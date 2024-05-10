@@ -2,8 +2,36 @@ import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constant
 import {injectStyle} from "./content.js";
 import {headToVault} from "./vault.js";
 
-function createArticle(nodes) {
+const ftSiteContentStyle = `
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    max-width: 780px;
+    min-width: 240px;
+    padding-left: 20px;
+    padding-right: 20px;
+    position: relative;
+    width: 100%;
+`;
+
+function headerTitle() {
+    const div = document.createElement('div');
+    const h2 = document.createElement('h2');
+    h2.textContent = document.title;
+    div.appendChild(h2);
+    const p = document.createElement(('p'));
+    p.textContent = document.querySelector('old-meta[name=description]').getAttribute('content');
+    div.appendChild(p);
+    div.style = ftSiteContentStyle;
+    return div;
+}
+
+function createArticle(nodes, useHeaderTitle) {
     const article = document.createElement('div');
+    if (useHeaderTitle) {
+        article.appendChild(headerTitle());
+    }
     for (let node of nodes) {
         if (node.cloneNode) {
             const clone = node.cloneNode(true);
@@ -56,8 +84,8 @@ function replaceHead() {
     });
 }
 
-function injectArticle(nodes) {
-    const readerArticle = createArticle(nodes);
+function injectArticle(nodes, useHeaderTitle) {
+    const readerArticle = createArticle(nodes, useHeaderTitle);
     const container = createContainer();
     container.appendChild(readerArticle);
     replaceHead();
@@ -89,13 +117,13 @@ function setFocus() {
     }, 1000)
 }
 
-function select(selector) {
+function select(selector, useHeaderTitle) {
     deleteReaderArticle();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
         const nodes = getNodes(selectors);
         if (nodes.length > 0) {
-            injectArticle(nodes);
+            injectArticle(nodes, useHeaderTitle);
             setFocus();
             return true;
         } else {

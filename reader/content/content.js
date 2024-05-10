@@ -213,7 +213,7 @@ async function setDarkStyles(websiteProps, immersive) {
 
 async function setStyles(websiteProps, hostName) {
     /* als er geen selector aanwezig is of van toepassing is, is immersive false */
-    const immersive = select(websiteProps.selector);
+    const immersive = select(websiteProps.selector, useHeaderTitle);
     await setDefaultStyles(websiteProps, immersive);
     await setDarkStyles(websiteProps, immersive);
     getHostDelay(hostName).then(delay => {
@@ -223,9 +223,11 @@ async function setStyles(websiteProps, hostName) {
     })
 }
 
-async function contentInitHost() {
+async function contentInitHost(hostName) {
     console.log('*** in contentInitHost');
-    const hostName = getJcReaderHost(document.location.href);
+    if (!hostName) {
+        hostName = getJcReaderHost(document.location.href);
+    }
     console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
@@ -238,12 +240,54 @@ async function contentInitHost() {
     }
 }
 
+const archiveIsUrl = 'https://archive.is/search/?q=';
+
+function redirectFt() {
+    const barrierPage = document.getElementById('barrier-page');
+    if (barrierPage) {
+        document.location.href = archiveIsUrl + document.location.href;
+    }
+}
+
+function clickLastIsItem() {
+    const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
+    if (divs) {
+        const lastDiv = divs[divs.length - 1];
+        if (lastDiv) {
+            const lastRef = lastDiv.querySelector('a');
+            lastRef.click();
+            return true;
+        }
+    }
+    return false;
+}
+
+function isReaderHost() {
+    const q = document.forms[0].querySelector('input[name=q]');
+    return getJcReaderHost(q.value);
+}
+
+function redirectIs() {
+    const hostName = getJcReaderHost(document.location.href);
+    if (hostName === 'archive.is') {
+        if (!clickLastIsItem()) {
+            useHeaderTitle = true;
+            return isReaderHost()
+        }
+    }
+    return null;
+}
+
+let useHeaderTitle = false;
+
 /**
  * this export is making content.js a module
  */
 export function main() {
     console.log("*** contentscript loaded for jreader!");
-    contentInitHost().then(() => {
+    redirectFt();
+    const host = redirectIs();
+    contentInitHost(host).then(() => {
         getClassAndIdNames();
         hideAnnoying();
     });
