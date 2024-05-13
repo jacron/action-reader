@@ -8,7 +8,6 @@ function updateBadge(url) {
     }
     getHostFieldValue(activeHost, 'active')
         .then(text => {
-            console.log(text)
             chrome.action.setBadgeText({text: text}).then()
         })
 }

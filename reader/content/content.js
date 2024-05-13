@@ -4,6 +4,8 @@ import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 import {vaultToHead} from "./vault.js";
 
+const archiveIsUrl = 'https://archive.is/search/?q=';
+
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
@@ -240,39 +242,46 @@ async function contentInitHost(hostName) {
     }
 }
 
-const archiveIsUrl = 'https://archive.is/search/?q=';
-
 function redirectFt() {
     const barrierPage = document.getElementById('barrier-page');
     if (barrierPage) {
-        document.location.href = archiveIsUrl + document.location.href;
+        document.location.href = `${archiveIsUrl}${document.location.href}`;
     }
 }
 
-function clickLastIsItem() {
+function lastThumbBlockItem() {
     const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
-    if (divs) {
+    if (divs.length) {
         const lastDiv = divs[divs.length - 1];
         if (lastDiv) {
-            const lastRef = lastDiv.querySelector('a');
-            lastRef.click();
-            return true;
+            return lastDiv.querySelector('a');
         }
     }
     return false;
 }
 
-function isReaderHost() {
+function todayReaderHost() {
     const q = document.forms[0].querySelector('input[name=q]');
     return getJcReaderHost(q.value);
 }
 
+function isNotGlobalSite(url) {
+    const w = url.split('/');
+    return w.length > 3;
+}
+
 function redirectIs() {
-    const hostName = getJcReaderHost(document.location.href);
-    if (hostName === 'archive.is') {
-        if (!clickLastIsItem()) {
+    if (getJcReaderHost(document.location.href) === 'archive.is') {
+        const lastHref = lastThumbBlockItem();
+        const savedFrom = document.forms[0].querySelector('input[name=q]').value;
+        const redirectedHost = getJcReaderHost(savedFrom);
+        if (lastHref) {
+            if (isNotGlobalSite(savedFrom)) {
+                lastHref.click();
+            }
+        } else {
             useHeaderTitle = true;
-            return isReaderHost()
+            return redirectedHost;
         }
     }
     return null;

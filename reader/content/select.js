@@ -90,7 +90,6 @@ function injectArticle(nodes, useHeaderTitle) {
     container.appendChild(readerArticle);
     replaceHead();
     setTimeout(() => {
-        // document.body.innerHTML = '';
         document.body.appendChild(container);
         console.log('readerArticle appended');
         readerArticle.focus();
