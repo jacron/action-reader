@@ -21,7 +21,7 @@ function _createToggleButton(caption, initial, cb) {
         top: '60px',
         position: 'fixed',
         right: '10px',
-        zIndex: '999',
+        zIndex: '9999999999',
         filter: 'invert(1)'
     }, () => {
         cb();
