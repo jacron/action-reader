@@ -65,7 +65,8 @@
     },
     "toggle-reader": {
       "suggested_key": {
-        "mac": "MacCtrl+R"
+        "mac": "MacCtrl+R",
+        "default": "Ctrl+R"
       },
       "description": "Toggle reader"
     }
