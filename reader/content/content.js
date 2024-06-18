@@ -4,8 +4,6 @@ import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 import {vaultToHead} from "./vault.js";
 
-const archiveIsUrl = 'https://archive.is/search/?q=';
-
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
@@ -225,9 +223,14 @@ async function setStyles(websiteProps, hostName) {
     })
 }
 
+/**
+ *
+ * @param hostName null|referer
+ * @returns {Promise<void>}
+ */
 async function contentInitHost(hostName) {
     console.log('*** in contentInitHost');
-    if (!hostName) {
+    if (hostName === null) {
         hostName = getJcReaderHost(document.location.href);
     }
     console.log('*** hostname=' + hostName)
@@ -242,13 +245,6 @@ async function contentInitHost(hostName) {
     }
 }
 
-function redirectFt() {
-    const barrierPage = document.getElementById('barrier-page');
-    if (barrierPage) {
-        document.location.href = `${archiveIsUrl}${document.location.href}`;
-    }
-}
-
 function lastThumbBlockItem() {
     const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
     if (divs.length) {
@@ -260,11 +256,6 @@ function lastThumbBlockItem() {
     return false;
 }
 
-function todayReaderHost() {
-    const q = document.forms[0].querySelector('input[name=q]');
-    return getJcReaderHost(q.value);
-}
-
 function isNotGlobalSite(url) {
     const w = url.split('/');
     return w.length > 3;
@@ -273,15 +264,16 @@ function isNotGlobalSite(url) {
 function redirectIs() {
     if (getJcReaderHost(document.location.href) === 'archive.is') {
         const lastHref = lastThumbBlockItem();
-        const savedFrom = document.forms[0].querySelector('input[name=q]').value;
-        const redirectedHost = getJcReaderHost(savedFrom);
+        const referer = document.forms[0].querySelector('input[name=q]').value;
+        const refererHost = getJcReaderHost(referer);
         if (lastHref) {
-            if (isNotGlobalSite(savedFrom)) {
+            if (isNotGlobalSite(referer)) {
                 lastHref.click();
+                return -1;
             }
         } else {
             useHeaderTitle = true;
-            return redirectedHost;
+            return refererHost;
         }
     }
     return null;
@@ -294,8 +286,9 @@ let useHeaderTitle = false;
  */
 export function main() {
     console.log("*** contentscript loaded for jreader!");
-    redirectFt();
     const host = redirectIs();
+    if (host === -1) return;
+    /* host is null or referer */
     contentInitHost(host).then(() => {
         getClassAndIdNames();
         hideAnnoying();
