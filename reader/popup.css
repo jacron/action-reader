@@ -24,7 +24,7 @@
     text-align: right;
 }
 .content {
-    padding: 24px;
+    padding: 0 24px 20px;
 }
 body {
     background-color: #00485b;
@@ -48,6 +48,6 @@ button {
 button:hover {
     background-color: #333;
 }
-#cmdOpenEditors:hover a {
+a.link {
     text-decoration: underline;
 }
