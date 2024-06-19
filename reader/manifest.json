@@ -44,17 +44,17 @@
   "commands": {
     "open-editors": {
       "suggested_key": {
-        "default": "Ctrl+Shift+J",
+        "default": "Alt+J",
         "mac": "MacCtrl+J"
       },
       "description": "Open editors"
     },
     "close-editors": {
       "suggested_key": {
-        "default": "Ctrl+Shift+K",
+        "default": "Alt+K",
         "mac": "MacCtrl+K"
       },
-      "description": "Open editors"
+      "description": "Close editors"
     },
     "toggle-dark": {
       "suggested_key": {
@@ -66,7 +66,7 @@
     "toggle-reader": {
       "suggested_key": {
         "mac": "MacCtrl+R",
-        "default": "Ctrl+R"
+        "default": "Ctrl+Shift+R"
       },
       "description": "Toggle reader"
     }
