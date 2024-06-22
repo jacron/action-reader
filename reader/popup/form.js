@@ -144,9 +144,20 @@ function handleMacroKeys() {
     })
 }
 
+function showHostActive(on) {
+    const hostName = document.getElementById('host-name');
+    if (on) {
+        hostName.classList.remove('non-active');
+    } else {
+        hostName.classList.add('non-active');
+    }
+}
+
 function handleActive() {
-    document.getElementById('active-host').addEventListener('change', (e) => {
+    const checkBox = document.getElementById('active-host');
+    checkBox.addEventListener('change', (e) => {
         setHostFieldValue(popup.activeHost, 'active', e.target.checked ? 'on' : 'off');
+        showHostActive(e.target.checked);
         applyHost();
     })
 }
@@ -158,4 +169,4 @@ function handleFormEvents() {
     handleActive();
 }
 
-export {handleFormEvents, showExisting, showNew, save, apply}
+export {handleFormEvents, showExisting, showNew, save, apply, showHostActive}

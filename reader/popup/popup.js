@@ -1,4 +1,4 @@
-import {handleFormEvents, showExisting, showNew} from './form.js';
+import {handleFormEvents, showExisting, showHostActive, showNew} from './form.js';
 import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
 import {popup} from "./popupState.js";
 import {vsPath} from "../shared/monacoSettings.js";
@@ -18,8 +18,16 @@ function initEditors(results, _activeHost) {
     const custom = results[_activeHost];
     if (custom) {
         showExisting();
-        document.getElementById('host-name').innerText = _activeHost;
-        document.getElementById('active-host').checked = custom.active === 'on';
+        const hostName = document.getElementById('host-name');
+        const checkBox = document.getElementById('active-host');
+        hostName.innerText = _activeHost;
+        if (custom.active === 'on') {
+            checkBox.checked = true;
+            showHostActive(true);
+        } else {
+            checkBox.checked = false;
+            showHostActive(false);
+        }
         initTabs(custom, results[KEY_DEFAULT], results[KEY_DARK]);
         initSuperTabs();
         initSwitches(_activeHost, custom);
