@@ -131,3 +131,6 @@ button:hover {
 .non-active {
   color: red;
 }
+.macro-btn {
+  cursor: move;
+}
