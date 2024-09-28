@@ -95,6 +95,8 @@ function parseFunction(line, lines, cb) {
 }
 
 function parseFunctionInStyle(customStyle, cb) {
+    if (!customStyle) return;
+    
     const lines = customStyle.split('\n');
     for (const line of lines) {
         if (line.startsWith('/* @')) {
