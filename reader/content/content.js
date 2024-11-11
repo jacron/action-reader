@@ -281,6 +281,28 @@ function redirectIs() {
 
 let useHeaderTitle = false;
 
+function imgClick(img) {
+    img.addEventListener('click', () => {
+        if (img.style.position === 'absolute') {
+            img.style.position = 'relative';
+        } else {
+            img.style.width = '100%';
+            img.style.position = 'absolute';
+            img.style.left = '0';
+        }
+    })
+}
+
+function imgMagnify() {
+    const imgs = document.getElementsByTagName('img');
+    // console.log(imgs)
+    setTimeout(() => {
+        for (let img of imgs) {
+            imgClick(img)
+        }
+    },1000)
+}
+
 /**
  * this export is making content.js a module
  */
@@ -292,6 +314,7 @@ export function main() {
     contentInitHost(host).then(() => {
         getClassAndIdNames();
         hideAnnoying();
+        imgMagnify();
     });
     chrome.runtime.onMessage.addListener(messageListener);
 }
