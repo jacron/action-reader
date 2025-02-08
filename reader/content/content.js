@@ -258,7 +258,9 @@ function lastThumbBlockItem() {
 
 function isNotGlobalSite(url) {
     const w = url.split('/');
-    return w.length > 3;
+    // console.log(url); // https://fd.nl/
+    // console.log(w); // (4) ['https:', '', 'fd.nl', '']
+    return w.length > 4;
 }
 
 function redirectIs() {
