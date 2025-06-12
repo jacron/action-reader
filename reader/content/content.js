@@ -281,6 +281,14 @@ function redirectIs() {
     return null;
 }
 
+function toArchiveOnBarrier() {
+    if (document.getElementById('barrier-page')) {
+        const w = document.location.href.split('?');
+        const url = 'https://archive.is/search/?q=' + w[0];
+        document.location.replace(url);
+    }
+}
+
 let useHeaderTitle = false;
 
 function imgClick(img) {
@@ -317,6 +325,7 @@ export function main() {
         getClassAndIdNames();
         hideAnnoying();
         imgMagnify();
+        toArchiveOnBarrier();
     });
     chrome.runtime.onMessage.addListener(messageListener);
 }
