@@ -1,3 +1,6 @@
+/* require werkt hier dankzij monaco library */
+/* global require */
+
 import {handleFormEvents, showExisting, showHostActive, showNew} from './form.js';
 import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
 import {popup} from "./popupState.js";
@@ -50,7 +53,9 @@ function initHost(_activeHost) {
 function handleWindowClose() {
     window.onbeforeunload = function(e) {
         if (hasDirtyTab()) {
-            e.returnValue = "wat is dat nou?";
+            // noinspection JSDeprecatedSymbols
+            e.returnValue = "";
+            return "";
         }
     }
 }
@@ -61,7 +66,7 @@ function commandListener(command) {
     }
 }
 
-function messageListener(req, sender, sendResponse) {
+function messageListener(req) {
     console.log(req.message)
     if (req.message === 'close-editors') {
         window.close();
@@ -75,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.storage.session.get([KEY_OPENED_HOST], results => {
         initHost(results[KEY_OPENED_HOST]);
     })
-    /* require werkt hier dankzij monaco library */
     require.config({ paths: { vs: vsPath}});
     registerSuggestions();
     parseMacroInStyle();

@@ -225,14 +225,11 @@ async function setStyles(websiteProps, hostName) {
 
 /**
  *
- * @param hostName null|referer
+ * @param {null|string} hostName (referer)
  * @returns {Promise<void>}
  */
-async function contentInitHost(hostName) {
+async function contentInitHost(hostName = null) {
     console.log('*** in contentInitHost');
-    if (hostName === null) {
-        hostName = getJcReaderHost(document.location.href);
-    }
     console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
@@ -245,40 +242,11 @@ async function contentInitHost(hostName) {
     }
 }
 
-function lastThumbBlockItem() {
-    const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
-    if (divs.length) {
-        const lastDiv = divs[divs.length - 1];
-        if (lastDiv) {
-            return lastDiv.querySelector('a');
-        }
-    }
-    return false;
-}
-
 function isNotGlobalSite(url) {
     const w = url.split('/');
     // console.log(url); // https://fd.nl/
     // console.log(w); // (4) ['https:', '', 'fd.nl', '']
     return w.length > 4;
-}
-
-function redirectIs() {
-    if (getJcReaderHost(document.location.href) === 'archive.is') {
-        const lastHref = lastThumbBlockItem();
-        const referer = document.forms[0].querySelector('input[name=q]').value;
-        const refererHost = getJcReaderHost(referer);
-        if (lastHref) {
-            if (isNotGlobalSite(referer)) {
-                lastHref.click();
-                return -1;
-            }
-        } else {
-            useHeaderTitle = true;
-            return refererHost;
-        }
-    }
-    return null;
 }
 
 function toArchiveOnBarrier() {
@@ -313,15 +281,54 @@ function imgMagnify() {
     },1000)
 }
 
+function lastThumbBlockItemHref() {
+    const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
+    if (divs.length) {
+        const lastDiv = divs[divs.length - 1];
+        if (lastDiv) {
+            return lastDiv.querySelector('a');
+        }
+    }
+    return false;
+}
+
+function onArchiveIs() {
+    const lastHref = lastThumbBlockItemHref();
+    const referer = document.forms[0].querySelector('input[name=q]').value;
+    console.log('referer=' + referer);
+    if (lastHref) {
+        if (isNotGlobalSite(referer)) {
+            lastHref.click(); // This stops further processing
+        } else {
+            return null;
+        }
+    } else {
+        useHeaderTitle = true;
+        // treat referer as hostName
+        return getJcReaderHost(referer);
+    }
+}
+
+function getCurrentHost() {
+    let hostName = getJcReaderHost(document.location.href);
+    if (hostName === 'archive.is') {
+        const newHostName = onArchiveIs();
+    //     if (newHostName) {
+    //         console.log('*** newHostName=' + newHostName);
+    //         return newHostName;
+    //     }
+    }
+    return hostName;
+}
+
 /**
  * this export is making content.js a module
  */
+// noinspection JSUnusedGlobalSymbols
 export function main() {
     console.log("*** contentscript loaded for jreader!");
-    const host = redirectIs();
-    if (host === -1) return;
-    /* host is null or referer */
-    contentInitHost(host).then(() => {
+    const hostName = getCurrentHost();
+    contentInitHost(hostName).then(() => {
         getClassAndIdNames();
         hideAnnoying();
         imgMagnify();

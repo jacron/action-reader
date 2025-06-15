@@ -19,11 +19,15 @@ function headerTitle() {
     const div = document.createElement('div');
     const h2 = document.createElement('h2');
     h2.textContent = document.title;
+    h2.className = 'reader-title';
     div.appendChild(h2);
-    const p = document.createElement(('p'));
-    p.textContent = document.querySelector('old-meta[name=description]').getAttribute('content');
-    div.appendChild(p);
-    div.style = ftSiteContentStyle;
+    const oldMeta = document.querySelector('old-meta[name=description]');
+    if (oldMeta) {
+        const p = document.createElement(('p'));
+        p.textContent = document.querySelector('old-meta[name=description]').getAttribute('content');
+        div.appendChild(p);
+    }
+    div.style.cssText = ftSiteContentStyle;
     return div;
 }
 

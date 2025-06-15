@@ -10,6 +10,11 @@ function closeMe() {
     close();
 }
 
+function getMonacoModel(editor) {
+    /** @type {monaco.editor.ITextModel} */
+    return editor.getModel();
+}
+
 function postNew() {
     console.log('activeHost', popup.activeHost);
     StorageArea.set({[popup.activeHost]: {}}, () => {
@@ -26,10 +31,8 @@ function save() {
     updateDocument();
     saveHost();
     popup.activeDoc.editor.focus();
-    popup.activeDoc.lastSavedVersion =
-        popup.activeDoc.editor
-            .getModel()
-            .getAlternativeVersionId();
+    const model = getMonacoModel(popup.activeDoc.editor);
+    popup.activeDoc.lastSavedVersion = model.getAlternativeVersionId();
     setDirty(false, popup.activeDoc);
 }
 
@@ -107,7 +110,7 @@ function handleFormKeydown() {
 function getSelectedText() {
     const editor = popup.activeDoc.editor;
     const selection = editor.getSelection();
-    return editor.getModel().getValueInRange(selection);
+    return getMonacoModel(editor).getValueInRange(selection);
 }
 
 function handleMetaKeyDown(key) {
