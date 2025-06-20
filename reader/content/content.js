@@ -229,8 +229,6 @@ async function setStyles(websiteProps, hostName) {
  * @returns {Promise<void>}
  */
 async function contentInitHost(hostName = null) {
-    console.log('*** in contentInitHost');
-    console.log('*** hostname=' + hostName)
     const websitePropsObject = await fromStorage(hostName);
     if (websitePropsObject) {  // host exists
         StorageArea.set({['hostname']: hostName}, () => {});
@@ -249,12 +247,25 @@ function isNotGlobalSite(url) {
     return w.length > 4;
 }
 
+function toArchive() {
+    console.log('*** toArchive called');
+    const w = document.location.href.split('?');
+    const url = 'https://archive.is/search/?q=' + w[0];
+    document.location.replace(url);
+}
+
 function toArchiveOnBarrier() {
-    if (document.getElementById('barrier-page')) {
-        const w = document.location.href.split('?');
-        const url = 'https://archive.is/search/?q=' + w[0];
-        document.location.replace(url);
+    const selectors = [
+        '#barrier-page', // Financial Times
+        '.teaser-content' // Washington Post
+    ]
+    for (const selector of selectors) {
+        if (document.querySelector(selector)) {
+            toArchive();
+            return true;
+        }
     }
+    return false;
 }
 
 let useHeaderTitle = false;
@@ -295,7 +306,7 @@ function lastThumbBlockItemHref() {
 function onArchiveIs() {
     const lastHref = lastThumbBlockItemHref();
     const referer = document.forms[0].querySelector('input[name=q]').value;
-    console.log('referer=' + referer);
+    // console.log('referer=' + referer);
     if (lastHref) {
         if (isNotGlobalSite(referer)) {
             lastHref.click(); // This stops further processing
@@ -334,13 +345,14 @@ export function main() {
         console.log('*** scrypto page detected, not running content script');
         return; // don't run on scrypto pages
     }
-    console.log("*** contentscript loaded for jreader!");
+    if (toArchiveOnBarrier()) return; // don't run on archive.is barrier pages
+
     const hostName = getCurrentHost();
+    console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
         getClassAndIdNames();
         hideAnnoying();
         imgMagnify();
-        toArchiveOnBarrier();
     });
     chrome.runtime.onMessage.addListener(messageListener);
 }
