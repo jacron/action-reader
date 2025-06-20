@@ -312,11 +312,15 @@ function onArchiveIs() {
 function getCurrentHost() {
     let hostName = getJcReaderHost(document.location.href);
     if (hostName === 'archive.is') {
-        const newHostName = onArchiveIs();
+        onArchiveIs()
+        /*
+        // If on archive.is, we need to get the hostName from the referer
+    // const newHostName = onArchiveIs();
     //     if (newHostName) {
     //         console.log('*** newHostName=' + newHostName);
     //         return newHostName;
     //     }
+         */
     }
     return hostName;
 }
@@ -326,6 +330,10 @@ function getCurrentHost() {
  */
 // noinspection JSUnusedGlobalSymbols
 export function main() {
+    if (document.location.href.indexOf('/scrypto/') > -1) {
+        console.log('*** scrypto page detected, not running content script');
+        return; // don't run on scrypto pages
+    }
     console.log("*** contentscript loaded for jreader!");
     const hostName = getCurrentHost();
     contentInitHost(hostName).then(() => {
