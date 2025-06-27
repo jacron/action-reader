@@ -257,7 +257,8 @@ function toArchive() {
 function toArchiveOnBarrier() {
     const selectors = [
         '#barrier-page', // Financial Times
-        '.teaser-content' // Washington Post
+        '.teaser-content', // Washington Post
+        '[data-tm-template=PURCHASE_EXCL__OVERLAY]', // De Morgen
     ]
     for (const selector of selectors) {
         if (document.querySelector(selector)) {
@@ -346,7 +347,9 @@ export function main() {
         return; // don't run on scrypto pages
     }
     if (toArchiveOnBarrier()) return; // don't run on archive.is barrier pages
-
+    setTimeout(() => {
+        toArchiveOnBarrier();
+    }, 1000); // check again after 1 second
     const hostName = getCurrentHost();
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
