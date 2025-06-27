@@ -5,7 +5,7 @@
   "main": "reader/background/actions.js",
   "dependencies": {
     "@types/chrome": "^0.0.267",
-    "monaco-editor": "^0.19.3"
+    "monaco-editor": "^0.52.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
