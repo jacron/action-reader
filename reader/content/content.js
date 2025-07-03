@@ -3,7 +3,17 @@ import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constant
 import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 import {vaultToHead} from "./vault.js";
+import {correctHeaderScroll} from "./correctionOnPageNavigation.js";
 
+const barrierSelectors = [
+    '#barrier-page', // Financial Times
+    '.teaser-content', // Washington Post
+    '[data-tm-template=PURCHASE_EXCL__OVERLAY]', // De Morgen
+]
+const avoidablePages = [
+    'nrc.nl/scrypto/',
+    'nrc.nl/regio/'
+];
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
@@ -255,12 +265,7 @@ function toArchive() {
 }
 
 function toArchiveOnBarrier() {
-    const selectors = [
-        '#barrier-page', // Financial Times
-        '.teaser-content', // Washington Post
-        '[data-tm-template=PURCHASE_EXCL__OVERLAY]', // De Morgen
-    ]
-    for (const selector of selectors) {
+    for (const selector of barrierSelectors) {
         if (document.querySelector(selector)) {
             toArchive();
             return true;
@@ -325,16 +330,39 @@ function getCurrentHost() {
     let hostName = getJcReaderHost(document.location.href);
     if (hostName === 'archive.is') {
         onArchiveIs()
-        /*
-        // If on archive.is, we need to get the hostName from the referer
-    // const newHostName = onArchiveIs();
-    //     if (newHostName) {
-    //         console.log('*** newHostName=' + newHostName);
-    //         return newHostName;
-    //     }
-         */
     }
     return hostName;
+}
+
+function openArchiveMostRecentFound(hostName) {
+    if (hostName === 'archive.is') {
+        // If on 'archive.is', we need to handle the click on the last thumbnail.
+        const lastHref = lastThumbBlockItemHref();
+        if (lastHref) {
+            lastHref.addEventListener('click', () => {
+                setTimeout(() => {
+                    const newHostName = onArchiveIs();
+                    if (newHostName) {
+                        contentInitHost(newHostName).then(() => {
+                            getClassAndIdNames();
+                            hideAnnoying();
+                            imgMagnify();
+                        });
+                    }
+                }, 1000);
+            });
+        }
+    }
+}
+
+function isAvoidablePage() {
+    for (const avoidable of avoidablePages) {
+        if (document.location.href.indexOf(avoidable) > -1) {
+            console.log(`*** ${avoidable} page detected, not running content script`);
+            return true; // don't run on these pages
+        }
+    }
+    return false;
 }
 
 /**
@@ -342,11 +370,9 @@ function getCurrentHost() {
  */
 // noinspection JSUnusedGlobalSymbols
 export function main() {
-    if (document.location.href.indexOf('/scrypto/') > -1) {
-        console.log('*** scrypto page detected, not running content script');
-        return; // don't run on scrypto pages
-    }
-    if (toArchiveOnBarrier()) return; // don't run on archive.is barrier pages
+    if (isAvoidablePage()) return; // don't run on avoidable pages
+    if (toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
+
     setTimeout(() => {
         toArchiveOnBarrier();
     }, 1000); // check again after 1 second
@@ -358,6 +384,9 @@ export function main() {
         imgMagnify();
     });
     chrome.runtime.onMessage.addListener(messageListener);
+
+    openArchiveMostRecentFound(hostName);
+    correctHeaderScroll(hostName);
 }
 
 export {injectStyle, removeStyle}
