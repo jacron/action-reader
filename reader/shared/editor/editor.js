@@ -1,4 +1,3 @@
-/* global require */
 /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
 
 import {editorOptions} from "./editor.options.js";

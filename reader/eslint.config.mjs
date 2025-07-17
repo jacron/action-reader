@@ -9,8 +9,8 @@ export default defineConfig([
       "node_modules",
       "monaco",
       "test my sass",
-      "**/*.d.ts"
-
+      "**/*.d.ts",
+      "globals"
     ]
   },
   {
