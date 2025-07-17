@@ -1,6 +1,6 @@
 import {initedHost, keysGeneral, StorageArea, styleIds} from "../shared/constants.js";
-import {injectStyle} from "./content.js";
 import {headToVault} from "./vault.js";
+import {injectStyle} from "./styles.js";
 
 const ftSiteContentStyle = `
     margin-bottom: 20px;

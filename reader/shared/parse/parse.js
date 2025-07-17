@@ -1,6 +1,6 @@
-import {injectStyle, removeStyle} from "../../content/content.js";
 import {decomment, validateExactLength} from "../../content/util.js";
 import {_createToggleButton} from "./button.js";
+import {injectStyle, removeStyle} from "../../content/styles.js";
 
 function toggleOneElement(element) {
     if (element.style.display === 'none') {
@@ -96,7 +96,7 @@ function parseFunction(line, lines, cb) {
 
 function parseFunctionInStyle(customStyle, cb) {
     if (!customStyle) return;
-    
+
     const lines = customStyle.split('\n');
     for (const line of lines) {
         if (line.startsWith('/* @')) {

@@ -1,5 +1,6 @@
 import {KEY_ATTRIBUTES, KEY_CLASSES, KEY_IDS, StorageArea} from "./constants.js";
 
+
 function suggestion(s) {
     return {label: s, insertText: s};
 }

@@ -20,7 +20,7 @@ function adjustScroll(headerHeight) {
     });
 }
 
-function getHeaderHeight(selectors) {
+function getHeaderHeight() {
     let headerHeight = 0;
     const headerSelectors = [
         '#main-navigation',

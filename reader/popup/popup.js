@@ -1,5 +1,4 @@
 /* require werkt hier dankzij monaco library */
-/* global require */
 
 import {handleFormEvents, showExisting, showHostActive, showNew} from './form.js';
 import {initTabs, initSuperTabs, handleTabClickActions} from './tab.js';
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 window.MonacoEnvironment = {
-    getWorkerUrl: function (moduleId, label) {
+    getWorkerUrl: function () { // moduleId, label
         return chrome.runtime.getURL('monaco/vs/base/worker/workerMain.js');
     }
 };

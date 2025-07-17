@@ -1,6 +1,6 @@
 {
-  "name": "JReader",
-  "version": "1.1.1",
+  "name": "jreader",
+  "version": "1.2",
   "description": "Create your own view for a website",
   "main": "reader/background/actions.js",
   "dependencies": {
@@ -8,8 +8,15 @@
     "monaco-editor": "^0.52.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --format unix"
   },
   "author": "Jan H Croonen",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "eslint": "^9.31.0",
+    "eslint-formatter-unix": "^8.40.0",
+    "globals": "^16.3.0"
+  }
 }

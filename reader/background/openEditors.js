@@ -1,7 +1,6 @@
 import {getJcReaderHost} from "../lib/util.js";
 import {messageToContent} from "../shared/popuplib.js";
 import {background} from "./backgroundState.js";
-import {withActiveTab} from "../shared/activeTab.js";
 
 const KEY_OPENED_HOST = '_opened_host';
 
