@@ -215,6 +215,7 @@ async function setDarkStyles(websiteProps, immersive) {
 
 async function setStyles(websiteProps, hostName) {
     /* als er geen selector aanwezig is of van toepassing is, is immersive false */
+    const useHeaderTitle = false; // obsolete
     const immersive = select(websiteProps.selector, useHeaderTitle);
     await setDefaultStyles(websiteProps, immersive);
     await setDarkStyles(websiteProps, immersive);
@@ -242,15 +243,6 @@ async function contentInitHost(hostName = null) {
     }
 }
 
-function isNotGlobalSite(url) {
-    const w = url.split('/');
-    // console.log(url); // https://fd.nl/
-    // console.log(w); // (4) ['https:', '', 'fd.nl', '']
-    return w.length > 4;
-}
-
-let useHeaderTitle = false;
-
 function imgClick(img) {
     img.addEventListener('click', () => {
         if (img.style.position === 'absolute') {
@@ -273,61 +265,8 @@ function imgMagnify() {
     },1000)
 }
 
-function lastThumbBlockItemHref() {
-    const divs = document.querySelectorAll('.THUMBS-BLOCK > div');
-    if (divs.length) {
-        const lastDiv = divs[divs.length - 1];
-        if (lastDiv) {
-            return lastDiv.querySelector('a');
-        }
-    }
-    return false;
-}
-
-function onArchiveIs() {
-    const lastHref = lastThumbBlockItemHref();
-    const referer = document.forms[0].querySelector('input[name=q]').value;
-    // console.log('referer=' + referer);
-    if (lastHref) {
-        if (isNotGlobalSite(referer)) {
-            lastHref.click(); // This stops further processing
-        } else {
-            return null;
-        }
-    } else {
-        useHeaderTitle = true;
-        // treat referer as hostName
-        return getJcReaderHost(referer);
-    }
-}
-
 function getCurrentHost() {
-    let hostName = getJcReaderHost(document.location.href);
-    if (hostName === 'archive.is') {
-        onArchiveIs()
-    }
-    return hostName;
-}
-
-function openArchiveMostRecentFound(hostName) {
-    if (hostName === 'archive.is') {
-        // If on 'archive.is', we need to handle the click on the last thumbnail.
-        const lastHref = lastThumbBlockItemHref();
-        if (lastHref) {
-            lastHref.addEventListener('click', () => {
-                setTimeout(() => {
-                    const newHostName = onArchiveIs();
-                    if (newHostName) {
-                        contentInitHost(newHostName).then(() => {
-                            getClassAndIdNames();
-                            hideAnnoying();
-                            imgMagnify();
-                        });
-                    }
-                }, 1000);
-            });
-        }
-    }
+    return getJcReaderHost(document.location.href);
 }
 
 /**
@@ -335,6 +274,8 @@ function openArchiveMostRecentFound(hostName) {
  */
 // noinspection JSUnusedGlobalSymbols
 export function main() {
+    const hostName = getCurrentHost();
+    console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     if (isAvoidablePage()) return; // don't run on avoidable pages
     if (isProbableBarrierPage()) {
         if (toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
@@ -343,7 +284,6 @@ export function main() {
             toArchiveOnBarrier();
         }, 1000); // check again after 1 second
     }
-    const hostName = getCurrentHost();
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
         getClassAndIdNames();
@@ -352,7 +292,6 @@ export function main() {
     });
     chrome.runtime.onMessage.addListener(messageListener);
 
-    openArchiveMostRecentFound(hostName);
     correctHeaderScroll(hostName);
 }
 

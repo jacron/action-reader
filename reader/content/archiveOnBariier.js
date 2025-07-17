@@ -1,3 +1,5 @@
+import {fetchArchiveContent} from "./fetchArchiveContent.js";
+
 const barrierSelectors = [
     '#barrier-page', // Financial Times
     '.teaser-content', // Washington Post
@@ -38,7 +40,8 @@ function toArchive() {
     console.log('*** toArchive called');
     const w = document.location.href.split('?');
     const url = 'https://archive.is/search/?q=' + w[0];
-    document.location.replace(url);
+    fetchArchiveContent(url);
+    // document.location.replace(url);
 }
 
 function toArchiveAgain() {
