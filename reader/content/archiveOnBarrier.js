@@ -41,7 +41,6 @@ function toArchive() {
     const w = document.location.href.split('?');
     const url = 'https://archive.is/search/?q=' + w[0];
     fetchArchiveContent(url);
-    // document.location.replace(url);
 }
 
 function toArchiveAgain() {
@@ -57,7 +56,6 @@ function toArchiveAgain() {
 function _toArchiveOnBarrier() {
     if (toArchiveAgain()) return true;
     if (delayableSites.includes(document.location.hostname)) {
-        console.log('Delayable site detected, waiting for barrier...');
         setTimeout(() => {
             if (toArchiveAgain()) return true;
             console.log('No barrier found');
@@ -69,11 +67,11 @@ function _toArchiveOnBarrier() {
 
 function toArchiveOnBarrier() {
     if (isProbableBarrierPage()) {
-        if (_toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
+        if (_toArchiveOnBarrier()) return true;
 
         setTimeout(() => {
-            _toArchiveOnBarrier();
-        }, 1000); // check again after 1 second
+            return _toArchiveOnBarrier();
+        }, 1000);
     }
 }
 

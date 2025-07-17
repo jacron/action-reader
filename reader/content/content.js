@@ -276,9 +276,9 @@ function getCurrentHost() {
 export function main() {
     const hostName = getCurrentHost();
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
-    if (isAvoidablePage()) return; // don't run on avoidable pages
-    toArchiveOnBarrier(); // go to archive on barrier pages
-    console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
+    if (isAvoidablePage()) return;
+    if (toArchiveOnBarrier()) return;
+    console.log(`*** running content init host for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
         getClassAndIdNames();
         hideAnnoying();
