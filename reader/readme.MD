@@ -44,3 +44,16 @@ npm i
 5. selector
 6. active
 
+## optioneel: voorkom errors bij laden
+1. kopieer node_modules/monaco-editor/min/vs naar monaco/vs
+2. in popup.html <script src="../monaco/vs/loader.js"></script>
+3. in manifest   "web_accessible_resources": [{
+   "matches": ["<all_urls>"],
+   "resources": [
+   "monaco/vs/**",
+...
+4. in popup.js window.MonacoEnvironment = {
+   getWorkerUrl: function (moduleId, label) {
+   return chrome.runtime.getURL('monaco/vs/base/worker/workerMain.js');
+   }
+   };

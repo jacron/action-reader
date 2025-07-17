@@ -1,10 +1,13 @@
+/* global require */
+/* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
+
 import {editorOptions} from "./editor.options.js";
 
 /**
  * https://github.com/Microsoft/monaco-editor/issues/353
- * Get the alternative version id of the model.
- * This alternative version id is not always incremented,
- * it will return the same values in the case of undo-redo.
+ * Get the alternative version ID of the model.
+ * This alternative version ID is not always incremented,
+ * it will return the same values about undo-redo.
  * @param model
  * @param doc
  */
@@ -26,7 +29,6 @@ function setDirty(dirty, doc) {
 }
 
 function _initEditor(doc, editorElement) {
-    /* require is hier mogelijk dankzij de loader van de monaco-editor lib, zie popup.html */
     require(['vs/editor/editor.main'], () => {
         doc.editor = monaco.editor.create(editorElement, editorOptions(doc));
         doc.editor.focus();

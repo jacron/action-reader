@@ -4,7 +4,7 @@ import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 import {vaultToHead} from "./vault.js";
 import {correctHeaderScroll} from "./correctionOnPageNavigation.js";
-import {isProbableBarrierPage, toArchiveOnBarrier} from "./archiveOnBariier.js";
+import {isProbableBarrierPage, toArchiveOnBarrier} from "./archiveOnBarrier.js";
 import {isAvoidablePage} from "./avoidable.js";
 
 /* initieel is readerOn true, als een soort quasi global hier */
@@ -277,13 +277,7 @@ export function main() {
     const hostName = getCurrentHost();
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     if (isAvoidablePage()) return; // don't run on avoidable pages
-    if (isProbableBarrierPage()) {
-        if (toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
-
-        setTimeout(() => {
-            toArchiveOnBarrier();
-        }, 1000); // check again after 1 second
-    }
+    toArchiveOnBarrier(); // go to archive on barrier pages
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
         getClassAndIdNames();

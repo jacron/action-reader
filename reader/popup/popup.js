@@ -88,4 +88,10 @@ document.addEventListener('DOMContentLoaded', function () {
     chrome.runtime.onMessage.addListener(messageListener);
 });
 
+window.MonacoEnvironment = {
+    getWorkerUrl: function (moduleId, label) {
+        return chrome.runtime.getURL('monaco/vs/base/worker/workerMain.js');
+    }
+};
+
 export {initHost}

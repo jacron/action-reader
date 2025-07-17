@@ -39,7 +39,12 @@
   }],
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
-    "resources": ["content/*", "shared/*/*", "shared/*"]
+    "resources": [
+      "monaco/vs/**",
+      "content/*",
+      "shared/*/*",
+      "shared/*"
+    ]
   }],
   "commands": {
     "open-editors": {
