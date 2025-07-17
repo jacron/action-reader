@@ -4,21 +4,13 @@ import {deleteReaderArticle, reSelect, select} from "./select.js";
 import {getClassAndIdNames} from "../shared/suggestions.js";
 import {vaultToHead} from "./vault.js";
 import {correctHeaderScroll} from "./correctionOnPageNavigation.js";
-
-const barrierSelectors = [
-    '#barrier-page', // Financial Times
-    '.teaser-content', // Washington Post
-    '[data-tm-template=PURCHASE_EXCL__OVERLAY]', // De Morgen
-]
-const avoidablePages = [
-    'nrc.nl/scrypto/',
-    'nrc.nl/regio/'
-];
+import {isProbableBarrierPage, toArchiveOnBarrier} from "./archiveOnBariier.js";
+import {isAvoidablePage} from "./avoidable.js";
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
 
-/* ft.com has some hard to hide elements */
+/* ft.com has some hard-to-hide elements */
 let annoying = [];
 
 function getHostDelay(hostName) {
@@ -257,23 +249,6 @@ function isNotGlobalSite(url) {
     return w.length > 4;
 }
 
-function toArchive() {
-    console.log('*** toArchive called');
-    const w = document.location.href.split('?');
-    const url = 'https://archive.is/search/?q=' + w[0];
-    document.location.replace(url);
-}
-
-function toArchiveOnBarrier() {
-    for (const selector of barrierSelectors) {
-        if (document.querySelector(selector)) {
-            toArchive();
-            return true;
-        }
-    }
-    return false;
-}
-
 let useHeaderTitle = false;
 
 function imgClick(img) {
@@ -355,27 +330,19 @@ function openArchiveMostRecentFound(hostName) {
     }
 }
 
-function isAvoidablePage() {
-    for (const avoidable of avoidablePages) {
-        if (document.location.href.indexOf(avoidable) > -1) {
-            console.log(`*** ${avoidable} page detected, not running content script`);
-            return true; // don't run on these pages
-        }
-    }
-    return false;
-}
-
 /**
  * this export is making content.js a module
  */
 // noinspection JSUnusedGlobalSymbols
 export function main() {
     if (isAvoidablePage()) return; // don't run on avoidable pages
-    if (toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
+    if (isProbableBarrierPage()) {
+        if (toArchiveOnBarrier()) return; // Go to 'archive.is' on barrier pages.
 
-    setTimeout(() => {
-        toArchiveOnBarrier();
-    }, 1000); // check again after 1 second
+        setTimeout(() => {
+            toArchiveOnBarrier();
+        }, 1000); // check again after 1 second
+    }
     const hostName = getCurrentHost();
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
