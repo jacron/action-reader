@@ -31,7 +31,6 @@ function isHomePage(href) {
     const slashes = url.split('/');
     // e.g. https://www.washingtonpost.com/
     if (slashes.length < 5) {
-        console.log('*** Home page detected');
         return true; // home page
     }
 }
@@ -39,7 +38,6 @@ function isHomePage(href) {
 function hasBarrierPage() {
     for (const site of barrierSites) {
         if (document.location.hostname.includes(site.hostname) && !isHomePage(document.location.href)) {
-            console.log(`*** ${site}: barrier-page detected`);
             return site;
         }
     }
@@ -47,7 +45,6 @@ function hasBarrierPage() {
 }
 
 function toArchive() {
-    console.log('*** toArchive called');
     const w = document.location.href.split('?');
     const url = 'https://archive.is/search/?q=' + w[0];
     fetchArchiveContent(url);
