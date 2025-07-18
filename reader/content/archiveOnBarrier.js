@@ -1,19 +1,27 @@
 import {fetchArchiveContent} from "./fetchArchiveContent.js";
 
-const barrierSelectors = [
-    '#barrier-page', // Financial Times
-    '.teaser-content', // Washington Post
-    '[data-tm-template=PURCHASE_EXCL__OVERLAY]', // De Morgen
-    '[class*=InContentBarrier]', // The New Yorker
-]
-const delayableSites = [
-    'www.newyorker.com', // The New Yorker
-];
-const probableBarrierSites = [
-    'www.ft.com', // Financial Times
-    'www.washingtonpost.com', // Washington Post
-    'www.demorgen.be', // De Morgen
-    'www.newyorker.com'
+const barrierSites = [
+    {
+        hostname: 'www.ft.com',
+        barrierSelector: '#barrier-page'
+    }, // Financial Times
+    {
+        hostname: 'www.washingtonpost.com',
+        barrierSelector: '.teaser-content'
+    },
+    {
+        hostname: 'www.demorgen.be',
+        barrierSelector: '[data-tm-template=PURCHASE_EXCL__OVERLAY]'
+    },
+    {
+        hostname: 'www.newyorker.com',
+        barrierSelector: '[class*=InContentBarrier]',
+        delay: 6000
+    },
+    {
+        hostname: 'www.wsj.com',
+        barrierSelector: '#cx-snippet-overlay-container'
+    }
 ]
 
 function isHomePage(href) {
@@ -28,13 +36,14 @@ function isHomePage(href) {
     }
 }
 
-function isProbableBarrierPage() {
-    for (const site of probableBarrierSites) {
-        if (document.location.hostname.includes(site) && !isHomePage(document.location.href)) {
+function hasBarrierPage() {
+    for (const site of barrierSites) {
+        if (document.location.hostname.includes(site.hostname) && !isHomePage(document.location.href)) {
             console.log(`*** ${site}: barrier-page detected`);
-            return true;
+            return site;
         }
     }
+    return null;
 }
 
 function toArchive() {
@@ -44,36 +53,35 @@ function toArchive() {
     fetchArchiveContent(url);
 }
 
-function toArchiveAgain() {
-    for (const selector of barrierSelectors) {
-        if (document.querySelector(selector)) {
-            toArchive();
-            return true;
-        }
+function toArchiveAgain(site) {
+    if (document.querySelector(site.barrierSelector)) {
+        toArchive();
+        return true;
     }
     return false;
 }
 
-function _toArchiveOnBarrier() {
-    if (toArchiveAgain()) return true;
-    if (delayableSites.includes(document.location.hostname)) {
+function _toArchiveOnBarrier(site) {
+    if (toArchiveAgain(site)) return true;
+    if (site.delay) {
         setTimeout(() => {
-            if (toArchiveAgain()) return true;
+            if (toArchiveAgain(site)) return true;
             console.log('No barrier found');
             return false;
-        }, 6000);
+        }, site.delay);
     }
     return false;
 }
 
 function toArchiveOnBarrier() {
-    if (isProbableBarrierPage()) {
-        if (_toArchiveOnBarrier()) return true;
+    const site = hasBarrierPage();
+    if (site) {
+        if (_toArchiveOnBarrier(site)) return true;
 
         setTimeout(() => {
-            return _toArchiveOnBarrier();
+            return _toArchiveOnBarrier(site);
         }, 1000);
     }
 }
 
-export { toArchiveOnBarrier, isProbableBarrierPage };
+export { toArchiveOnBarrier, hasBarrierPage };
