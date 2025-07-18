@@ -13,6 +13,7 @@ const probableBarrierSites = [
     'www.ft.com', // Financial Times
     'www.washingtonpost.com', // Washington Post
     'www.demorgen.be', // De Morgen
+    'www.newyorker.com'
 ]
 
 function isHomePage(href) {
