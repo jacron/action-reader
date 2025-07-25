@@ -7,7 +7,7 @@ import {toArchiveOnBarrier} from "./archiveOnBarrier.js";
 import {isAvoidablePage} from "./avoidable.js";
 import {contentInitHost} from "./initHost.js";
 import {injectStyle, removeMyStyles, removeStyle} from "./styles.js";
-import {hideAnnoying} from "./annoying.js";
+import {hideAnnoying, repairDynamicStyled} from "./annoying.js";
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
@@ -85,9 +85,13 @@ function toggleReader() {
     }
 }
 
+function _reSelect(req) {
+    reSelect(req, getHostName());
+}
+
 const actionBindings = {
     replaceStyle,
-    reSelect,
+    _reSelect,
     toggleGeneralContent,
     toggleDarkContent,
     toggleDark,
@@ -96,7 +100,6 @@ const actionBindings = {
 
 function initActions(req, sendResponse) {
     if (req.message) {
-        // console.log(req)
         const func = actionBindings[req.message];
         if (func) {
             func(req);
@@ -138,12 +141,23 @@ function getCurrentHost() {
     return getJcReaderHost(document.location.href);
 }
 
+let _hostname = null;
+
+function setHostName(hostName) {
+    _hostname = hostName
+}
+
+function getHostName() {
+    return _hostname
+}
+
 /**
  * this export is making content.js a module
  */
 // noinspection JSUnusedGlobalSymbols
 export function main() {
     const hostName = getCurrentHost();
+    setHostName(hostName);
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
     if (isAvoidablePage()) return;
     if (toArchiveOnBarrier()) return;
@@ -152,6 +166,7 @@ export function main() {
         getClassAndIdNames();
         hideAnnoying();
         imgMagnify();
+        repairDynamicStyled();
     });
     chrome.runtime.onMessage.addListener(messageListener);
 

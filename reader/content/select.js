@@ -31,11 +31,8 @@ function headerTitle() {
     return div;
 }
 
-function createArticle(nodes, useHeaderTitle) {
+function createArticle(nodes) {
     const article = document.createElement('div');
-    if (useHeaderTitle) {
-        article.appendChild(headerTitle());
-    }
     for (let node of nodes) {
         if (node.cloneNode) {
             const clone = node.cloneNode(true);
@@ -88,20 +85,25 @@ function replaceHead() {
     });
 }
 
-function injectArticle(nodes, useHeaderTitle) {
-    const readerArticle = createArticle(nodes, useHeaderTitle);
+function injectArticle(nodes, hostName) {
+    const readerArticle = createArticle(nodes);
     const container = createContainer();
     container.appendChild(readerArticle);
     replaceHead();
     setTimeout(() => {
-        document.body.appendChild(container);
-        console.log('readerArticle appended');
-        readerArticle.focus();
+        try {
+            document.body.appendChild(container);
+            console.log('readerArticle appended');
+            readerArticle.focus();
+        } catch (err) {
+            console.log(err.message);
+            console.log(hostName)
+        }
     }, 100);
 }
 
-function reSelect(req) {
-    select(req.selector);
+function reSelect(req, hostName) {
+    select(req.selector, hostName);
 }
 
 function deleteReaderArticle() {
@@ -120,13 +122,13 @@ function setFocus() {
     }, 1000)
 }
 
-function select(selector, useHeaderTitle) {
+function select(selector, hostName) {
     deleteReaderArticle();
     if (selector && selector.length > 0) {
         const selectors = selector.trim().split('\n');
         const nodes = getNodes(selectors);
         if (nodes.length > 0) {
-            injectArticle(nodes, useHeaderTitle);
+            injectArticle(nodes, hostName);
             setFocus();
             return true;
         } else {

@@ -1,5 +1,13 @@
 import {fetchArchiveContent} from "./fetchArchiveContent.js";
 
+/*
+| Syntax            | Description | Example                                                    |
+| ----------------- | ----------- | ---------------------------------------------------------- |
+| `[attr^="value"]` | Starts with | `a[href^="https://"]` matches links starting with HTTPS    |
+| `[attr$="value"]` | Ends with   | `img[src$=".jpg"]` matches all `.jpg` images               |
+| `[attr*="value"]` | Contains    | `div[class*="card"]` matches all classes containing "card" |
+
+ */
 const barrierSites = [
     {
         hostname: 'www.ft.com',
@@ -21,6 +29,10 @@ const barrierSites = [
     {
         hostname: 'www.wsj.com',
         barrierSelector: '#cx-snippet-overlay-container'
+    },
+    {
+        hostname: 'www.bloomberg.com',
+        barrierSelector: '[class^=media-ui-Placeholder_shimmeringLine-'
     }
 ]
 

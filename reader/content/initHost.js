@@ -62,8 +62,7 @@ function getHostDelay(hostName) {
 
 async function setStyles(websiteProps, hostName) {
     /* als er geen selector aanwezig is of van toepassing is, is immersive false */
-    const useHeaderTitle = false; // obsolete
-    const immersive = select(websiteProps.selector, useHeaderTitle);
+    const immersive = select(websiteProps.selector, hostName);
     await setDefaultStyles(websiteProps, immersive);
     await setDarkStyles(websiteProps, immersive);
     getHostDelay(hostName).then(delay => {

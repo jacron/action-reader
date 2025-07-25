@@ -9,8 +9,8 @@ export function setAnnoying(annoyingSelectors) {
 }
 
 /**
- * laat js elementen verbergen... maar let erop dat het element readerarticle een duplicaat is
- * dus verberg alle elementen die op een selector passen
+ * Laat js elementen verbergen... maar let erop dat het element readerarticle een
+ * duplicaat is,dus verberg alle elementen die op een selector passen.
  */
 export function hideAnnoying() {
     if (annoying.length) {
@@ -30,3 +30,15 @@ export function hideAnnoying() {
     }
 }
 
+export function repairDynamicStyled() {
+    // New York Times gives an element too much height.
+    const selector = '[data-testid=lazyimage-container]';
+    setTimeout( () => {
+        const elements = document.querySelectorAll(selector);
+        if (elements) {
+            for (const element of elements) {
+                element.style.height = 'auto';
+            }
+        }
+    }, 1000);
+}
