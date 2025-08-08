@@ -21,15 +21,22 @@ export function fetchArchiveContent(url) {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
             const lastHref = lastThumbBlockItemHref(doc);
-            const referer = doc.forms[0].querySelector('input[name=q]').value;
             if (lastHref) {
-                if (isNotGlobalSite(referer)) {
-                    console.log('*** Redirecting to last thumb block item:', lastHref.href);
-                    document.location.replace(lastHref.href);
-                } else {
+                if (doc.forms[0]) {
+                    const referer = doc.forms[0].querySelector('input[name=q]').value;
+                    if (isNotGlobalSite(referer)) {
+                        console.log('*** Redirecting to last thumb block item:', lastHref.href);
+                        document.location.replace(lastHref.href);
+                    } else {
+                        return null;
+                    }
+                }
+                else {
                     return null;
                 }
             }
+            console.log('*** No last thumb block item found');
+            document.location.replace(url);
         })
         .catch(error => {
             console.error('Error fetching archive:', error);
