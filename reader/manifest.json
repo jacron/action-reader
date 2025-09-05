@@ -43,6 +43,7 @@
   "web_accessible_resources": [{
     "matches": ["<all_urls>"],
     "resources": [
+      "assets/favicon/*",
       "monaco/vs/**",
       "content/*",
       "shared/*/*",

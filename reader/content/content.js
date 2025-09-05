@@ -8,7 +8,7 @@ import {isAvoidablePage} from "./avoidable.js";
 import {contentInitHost} from "./initHost.js";
 import {injectStyle, removeMyStyles, removeStyle} from "./styles.js";
 import {hideAnnoying, repairDynamicStyled} from "./annoying.js";
-import {barrierSites} from "./barriersites.js";
+import {replaceFaviconOnArchive} from "./replaceFaviconOnArchive.js";
 
 /* initieel is readerOn true, als een soort quasi global hier */
 let readerOn = true;
@@ -150,32 +150,6 @@ function setHostName(hostName) {
 
 function getHostName() {
     return _hostname
-}
-
-function originalHostOnArchive() {
-    const tds = document.querySelectorAll('td');
-    for (let td of tds) {
-        if (td.innerText.includes('from host ')) {
-            const a = td.querySelector('a');
-            const hostName = a.innerText;
-            return barrierSites.filter(s => s.hostname === hostName)[0];
-        }
-    }
-    return null;
-}
-
-function replaceFaviconOnArchive(hostName) {
-    if (hostName === 'archive.is') {
-        const originalHost = originalHostOnArchive();
-        if (!originalHost) return;
-
-        console.log(originalHost);
-        const link = document.querySelector('link[rel*="icon"]') || document.createElement('link');
-        link.type = 'image/x-icon';
-        link.rel = 'shortcut icon';
-        link.href = originalHost.favicon;
-        document.getElementsByTagName('head')[0].appendChild(link);
-    }
 }
 
 /**

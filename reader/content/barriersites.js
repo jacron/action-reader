@@ -2,32 +2,34 @@ export const barrierSites = [
     {
         hostname: 'www.ft.com',
         barrierSelector: '#barrier-page',
-        favicon: 'https://images.ft.com/v3/image/raw/ftlogo-v1%3Abrand-ft-logo-square-coloured?source=page-kit&format=svg'
+        favicon: 'ftlogo-v1_brand-ft-logo-square-coloured.svg'
     }, // Financial Times
     {
         hostname: 'www.washingtonpost.com',
+        hostname2: 'washingtonpost.com',
         barrierSelector: '.teaser-content',
-        favicon: 'https://www.washingtonpost.com/favicon.svg'
+        favicon: 'favicon-washingtonpost.svg'
     },
     {
         hostname: 'www.demorgen.be',
         barrierSelector: '[data-tm-template=PURCHASE_EXCL__OVERLAY]',
-        favicon: 'https://www.demorgen.be/static/favicon-196x196.png'
+        favicon: 'favicon-demorgen.png'
     },
     {
         hostname: 'www.newyorker.com',
-        favicon: 'https://www.newyorker.com/verso/static/thenewyorker-us/assets/favicon.ico',
-        delay: 6000
+        favicon: 'favicon-newyorker.ico',
+        barrierSelector: '[class^=InContentBarrierContainer-]',
+        delay: 5000
     },
     {
         hostname: 'www.wsj.com',
         barrierSelector: '#cx-snippet-overlay-container',
-        favicon: 'https://s.wsj.net/img/meta/wsj_favicon.svg'
+        favicon: 'wsj_favicon.svg'
     },
     {
         hostname: 'www.bloomberg.com',
         barrierSelector: '[class^=media-ui-Placeholder_shimmeringLine-',
-        favicon: 'https://www.bloomberg.com/favicon-black.png'
+        favicon: 'favicon-black.png'
     }
 ]
 
