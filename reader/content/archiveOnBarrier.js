@@ -1,4 +1,5 @@
 import {fetchArchiveContent} from "./fetchArchiveContent.js";
+import {barrierSites} from "./barriersites.js";
 
 /*
 | Syntax            | Description | Example                                                    |
@@ -8,34 +9,6 @@ import {fetchArchiveContent} from "./fetchArchiveContent.js";
 | `[attr*="value"]` | Contains    | `div[class*="card"]` matches all classes containing "card" |
 
  */
-const barrierSites = [
-    {
-        hostname: 'www.ft.com',
-        barrierSelector: '#barrier-page'
-    }, // Financial Times
-    {
-        hostname: 'www.washingtonpost.com',
-        barrierSelector: '.teaser-content'
-    },
-    {
-        hostname: 'www.demorgen.be',
-        barrierSelector: '[data-tm-template=PURCHASE_EXCL__OVERLAY]'
-    },
-    {
-        hostname: 'www.newyorker.com',
-        barrierSelector: '[class*=InContentBarrier]',
-        delay: 6000
-    },
-    {
-        hostname: 'www.wsj.com',
-        barrierSelector: '#cx-snippet-overlay-container'
-    },
-    {
-        hostname: 'www.bloomberg.com',
-        barrierSelector: '[class^=media-ui-Placeholder_shimmeringLine-'
-    }
-]
-
 function isHomePage(href) {
     // url without querystring
     const url = href.split('?')[0];
