@@ -1,3 +1,5 @@
+// import {barrierSites} from "./barriersites.js";
+
 import {barrierSites} from "./barriersites.js";
 
 function originalHostOnArchive() {
