@@ -1,6 +1,4 @@
-// import {barrierSites} from "./barriersites.js";
-
-import {barrierSites} from "./barriersites.js";
+import {specialSites} from "./specialSites.js";
 
 function originalHostOnArchive() {
     const tds = document.querySelectorAll('td');
@@ -8,9 +6,9 @@ function originalHostOnArchive() {
         if (td.innerText.includes('from host ')) {
             const a = td.querySelector('a');
             const hostName = a.innerText;
-            const site = barrierSites.filter(s => s.hostname === hostName)[0];
+            const site = specialSites.filter(s => s.hostname === hostName)[0];
             if (!site) {
-                return barrierSites.filter(s => s.hostname2 === hostName)[0];
+                return specialSites.filter(s => s.hostname2 === hostName)[0];
             }
             return site;
         }

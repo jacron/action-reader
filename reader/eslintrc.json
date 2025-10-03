@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "import/extensions": ["error", "always", {
+      "js": "always",
+      "jsx": "always",
+      "ts": "always",
+      "tsx": "always"
+    }]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
+}

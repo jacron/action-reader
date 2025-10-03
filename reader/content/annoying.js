@@ -26,7 +26,6 @@ export function hideAnnoying() {
                 console.error(e)
             }
         }
-
     }
 }
 

@@ -1,4 +1,4 @@
-export const barrierSites = [
+export const specialSites = [
     {
         hostname: 'www.ft.com',
         barrierSelector: '#barrier-page',

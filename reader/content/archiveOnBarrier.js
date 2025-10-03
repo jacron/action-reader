@@ -1,5 +1,5 @@
 import {fetchArchiveContent} from "./fetchArchiveContent.js";
-import {barrierSites} from "./barriersites.js";
+import {specialSites} from "./specialSites.js";
 
 /*
 | Syntax            | Description | Example                                                    |
@@ -21,7 +21,7 @@ function isHomePage(href) {
 }
 
 function hasBarrierPage() {
-    for (const site of barrierSites) {
+    for (const site of specialSites) {
         if (document.location.hostname.includes(site.hostname) && !isHomePage(document.location.href)) {
             return site;
         }
