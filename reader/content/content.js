@@ -152,16 +152,34 @@ function getHostName() {
     return _hostname
 }
 
+function removeAds() {
+    const selectors = [
+        '.n-layout__header-before', // Washington Post add
+        '.o-header__row.o-header__anon',
+        '#fides-overlay', // newyorker cookie nag
+    ]
+    for (let selector of selectors) {
+        const element = document.querySelector(selector);
+        // console.log('### Removing', element.length)
+        if (!element) continue;
+        element.remove();
+    }
+}
+
 /**
  * this export is making content.js a module
  */
 // noinspection JSUnusedGlobalSymbols
-export function main() {
+export async function main() {
     const hostName = getCurrentHost();
     setHostName(hostName);
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
-    if (isAvoidablePage()) return;
+    if (await isAvoidablePage()) return;
     if (toArchiveOnBarrier()) return;
+    setTimeout(() => {
+        removeAds()
+    }, 2000);
+
     console.log(`*** running content init host for jreader, in ${hostName}!`);
     contentInitHost(hostName).then(() => {
         getClassAndIdNames();
