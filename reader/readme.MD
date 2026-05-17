@@ -57,3 +57,13 @@ npm i
    return chrome.runtime.getURL('monaco/vs/base/worker/workerMain.js');
    }
    };
+
+## backend on port 3099
+
+In fetchArchiveContent.js an endpoint is used: http://localhost:3099/archive-thumbs?url=
+for Puppeteer-based thumbnail fetching.
+Usage is deprecated as not to make archive ban or block our ip.
+On sol the service is not available anymore. port 3099 has now been taken by 
+dashboard.sol.
+The call to this function now is commented out in main.js. In fact it is not 
+useful anymore as the proxy service handles redirecting to archive pretty well.

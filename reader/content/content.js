@@ -174,8 +174,8 @@ export async function main() {
     const hostName = getCurrentHost();
     setHostName(hostName);
     console.log(`*** contentscript loaded for jreader, in ${hostName}!`);
-    if (await isAvoidablePage()) return;
-    if (toArchiveOnBarrier()) return;
+    // if (await isAvoidablePage()) return;
+    // if (toArchiveOnBarrier()) return;
     setTimeout(() => {
         removeAds()
     }, 2000);
